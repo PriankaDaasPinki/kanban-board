@@ -1,0 +1,22 @@
+.boardStyle {
+  text-align: center;
+  margin-top: 80px;
+}
+
+.boardTitle{
+    text-align: left;
+    margin-left: 32%;
+}
+
+.taskColumnBoard {
+  display: flex;
+  /* justify-content: space-around; */
+  padding: 30px;
+  flex-shrink: 0;
+  overflow-x: auto;
+  /* border: 1px solid #ccc; */
+  /* overflow-y: scroll; */
+}
+
+
+  

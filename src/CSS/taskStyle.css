@@ -1,0 +1,31 @@
+.taskContainer {
+  border-radius: 7px;
+  padding: 1rem;
+  margin: 1 rem;
+  box-shadow: 0 0 4px 0.1 blue;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* .taskTitle {
+  
+} */
+
+.taskDesc {
+  text-align: justify;
+}
+
+.iconStyle {
+  display: flex;
+  justify-content: end;
+  padding: 2px;
+}
+
+
+
+.task {
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: white;
+  border-radius: 3px;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+}
