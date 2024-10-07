@@ -1,120 +1,21 @@
 /* src/App.css */
 /* Body and Sidebar Layout */
-body {
+/* body {
   display: flex;
-}
+} */
 
 .navbar{
   background-color: #EBECF0;
   padding: 0 !important;
+  position: fixed;
+  --bs-navbar-padding-y: 0;
 }
-
-.navContainer{
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-/* .navbar-brand{
-  margin: 0 !important;
-  max-width: 40%;
-} */
 
 .esquireLogo{
   height: auto;
-  width: 13%;
+  max-width: 10rem !important;
 }
 
-.navbar-nav .nav-link {
-  display: flex;
-  align-items: center;
-}
-
-.navbar-nav .nav-link i {
-  margin-right: 5px;
-}
-
-/* Card Styles */
-.card {
-  background-color: #ffffff;
-  border: none;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-.card-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.card-body {
-  padding: 20px;
-}
-
-/* Responsive Sidebar */
-@media (max-width: 992px) {
-  #sidebar {
-    transform: translateX(-100%);
-  }
-
-  #sidebar.active {
-    transform: translateX(0);
-  }
-
-  #main-content {
-    margin-left: 0;
-  }
-}
-
-.icon {
-  font-size: 2rem;
-}
-
-.iconSideBar {
-  margin: 0 1rem 0.3rem 0;
-  font-size: 1.5rem;
-}
-
-.iconSideBarDrop{
-  margin: 0 0 0.3rem 0.5rem;
-  font-size: 1.5rem;
-}
-
-.iconSideBarDropArrow {
-  transition: transform 0.3s ease;
-  transform: rotate(180deg);
-  /* transform: isDropdownOpen ? "rotate(180deg)" : "rotate(0deg)", */
-}
-
-.collapseStyle {
-  background-color: #6685a3;
-  margin-top: -1rem;
-  border-radius: 0 0 4px 4px;
-  display: flex;
-  flex-direction: column;
-  justify-items: center;
-  align-items: flex-start;
-  padding: 0.7rem 0 0.7rem 3rem;
-  ul{
-    text-align: left;
-  }
-}
-
-.link-light:hover {
-  background-color: #25384b;
-  padding: 0.2rem;
-}
-
-/* div.topMenu.vertical ul li.selected>div.name>span */
-
-.btnSideBar {
-  color: white;
-}
-
-.activeItem {
-  background-color: #6685a3;
-  margin: 0.5rem 0 0 0;
-}
 
 /* Nav Search bar */
 .search-bar {
@@ -161,7 +62,9 @@ input[type="submit"] {
 }
 @media only screen and (max-width: 600px) {
   .search-bar:hover {
-    width: 80%;
-    border-radius: 0% 30px 30px 15px;
+    display: block;
+    width: 200px;
+    padding: 0.4rem;
+    border-radius: 30px 30px 30px 30px;
   }
 }

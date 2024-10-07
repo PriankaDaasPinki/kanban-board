@@ -1,11 +1,11 @@
 .boardStyle {
   text-align: center;
-  margin-top: 80px;
+  margin-top: 7%;
 }
 
-.boardTitle{
-    text-align: left;
-    margin-left: 32%;
+.boardTitle {
+  text-align: left;
+  margin-left: 32%;
 }
 
 .taskColumnBoard {
@@ -13,10 +13,7 @@
   /* justify-content: space-around; */
   padding: 30px;
   flex-shrink: 0;
-  overflow-x: auto;
+  /* overflow-x: auto; */
   /* border: 1px solid #ccc; */
-  /* overflow-y: scroll; */
+  /* overflow-y: auto; */
 }
-
-
-  
