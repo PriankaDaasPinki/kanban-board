@@ -1,0 +1,12 @@
+.modal {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 0 !important;
+}
+
+
+.modal-content {
+  padding: 20px;
+  width: 600px !important;
+}

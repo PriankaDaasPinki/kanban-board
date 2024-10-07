@@ -1,6 +1,13 @@
 .boardStyle {
   text-align: center;
-  margin-top: 7%;
+  margin-top: 6%;
+}
+
+@media only screen and (max-width: 600px) {
+  .boardStyle {
+    text-align: center;
+    margin-top: 15%;
+  }
 }
 
 .boardTitle {

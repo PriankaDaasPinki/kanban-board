@@ -1,5 +1,5 @@
 import React from "react";
-import "../CSS/App.css";
+import "../CSS/nav.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import { IoSearch } from "react-icons/io5";
 import { Container, Form, Navbar } from "react-bootstrap";

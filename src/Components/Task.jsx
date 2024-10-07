@@ -31,10 +31,13 @@ export default function Task({ task, index }) {
           ref={provided.innerRef}
           isDragging={snapshot.isDragging}
         >
-          <h4 className="taskTitle">{task.title}</h4>
+          <div className="taskTitle">{task.title}</div>
           <div className="taskDesc">{task.content}</div>
-          <div className="iconStyle">
-            <FaUserSecret />
+          <div className="taskFooter">
+            <p className="dueDate">Date:</p>
+            <div className="iconStyle">
+              <FaUserSecret />
+            </div>
           </div>
         </Container>
       )}

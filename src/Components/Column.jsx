@@ -30,7 +30,7 @@ import "../CSS/columnStyle.css"
 export default function Column({ column, tasks }) {
   return (
     <div className="column">
-      <h2>{column.title}</h2>
+      <div className="column_title">{column.title}</div>
       <Droppable droppableId={column.id}>
         {(provided) => (
           <div
