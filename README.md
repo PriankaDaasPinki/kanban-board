@@ -1,3 +1,16 @@
+<div>Check the live view of the project<a href="https://kanban-board-esquire.netlify.app/">Live Show</a></div>
+
+
+
+
+
+
+
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

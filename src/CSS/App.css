@@ -1,13 +1,13 @@
 /* src/App.css */
-.addTaskIconApp{
+.addTaskIconApp {
   font-size: 2rem;
 }
 
-.addTaskDiv{
+.addTaskDiv {
   position: fixed;
   margin-top: 3%;
   /* padding: 0.3rem 0.5rem 0.3rem 0.5rem; */
-  background-color: #0D6EFD;
+  background-color: #0d6efd;
   border-top-right-radius: 10rem;
   border-bottom-right-radius: 10rem;
 }
@@ -15,15 +15,15 @@
 @media only screen and (max-width: 1000px) {
   .addTaskDiv {
     position: fixed;
-  /* padding: 0.3rem 0.5rem 0.3rem 0.5rem; */
-  background-color: #0D6EFD;
-  margin-top: 12%;
-  border-top-right-radius: 10rem;
-  border-bottom-right-radius: 10rem;
+    /* padding: 0.3rem 0.5rem 0.3rem 0.5rem; */
+    background-color: #0d6efd;
+    margin-top: 12%;
+    border-top-right-radius: 10rem;
+    border-bottom-right-radius: 10rem;
   }
 }
 
-.btn-primary{
+.btn-primary {
   border-top-right-radius: 10rem !important;
   border-bottom-right-radius: 10rem !important;
   padding: 0.3rem 0.5rem 0.3rem 1rem !important;
@@ -32,4 +32,3 @@
 /* .btn:hover{
   border-color: var(--bs-btn-hover-border-color);
 } */
-
