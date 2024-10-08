@@ -1,4 +1,4 @@
-<div>Check the live view of the project<a href="https://kanban-board-esquire.netlify.app/">Live Show</a></div>
+<div>Check the live view of the project  <br><a href="https://kanban-board-esquire.netlify.app/">Live Show</a></div>
 
 
 
