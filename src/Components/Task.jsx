@@ -1,8 +1,13 @@
-import React from "react";
+// import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import "../CSS/taskStyle.css";
 import styled from "styled-components";
-import { FaUserSecret } from "react-icons/fa";
+import { FaRegEdit, FaUserSecret } from "react-icons/fa";
+// import { useState } from "react";
+// import { Modal } from "react-bootstrap";
+// import { Button } from "react-bootstrap";
+
+// import handleEditShow from "./Board"
 
 const Container = styled.div`
   background-color: ${(props) => bgcolorChange(props)};
@@ -20,7 +25,10 @@ function bgcolorChange(props) {
     : "#fffada";
 }
 
-export default function Task({ task, index }) {
+export default function Task({ task, index, onEdit }) {
+  // const [showEdit, setShowEdit] = useState(false);
+  // const handleEditClose = () => setShowEdit(false);
+  // const handleEditShow = () => setShowEdit(true);
   return (
     <Draggable draggableId={task.id} index={index}>
       {(provided, snapshot) => (
@@ -30,7 +38,15 @@ export default function Task({ task, index }) {
           {...provided.dragHandleProps}
           ref={provided.innerRef}
           isDragging={snapshot.isDragging}
+          // onDoubleClick={() => onEdit(task.id, task.title, task.content)} // Double-click to start editing
         >
+          <div className="editIcon">
+            <FaRegEdit onClick={() => onEdit(task.id, task.title, task.content)}>
+              {/* <Modal show="true" onHide={handleEditClose}></Modal> */}
+              
+            </FaRegEdit>
+          </div>
+
           <div className="taskTitle">{task.title}</div>
           <div className="taskDesc">{task.content}</div>
           <div className="taskFooter">

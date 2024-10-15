@@ -3,6 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { MdOutlineAddTask } from "react-icons/md";
+import initialData from "../Data/initial-data";
 
 import "../CSS/addTaskModal.css";
 
@@ -11,6 +12,41 @@ function AddTaskModal() {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const [newTaskContent, setNewTaskContent] = useState(""); // state for the form input
+  const [data, setData] = useState(initialData);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Create a new task ID and new task object
+    const newTaskId = `task-${Object.keys(data.tasks).length + 1}`;
+    const newTask = { id: newTaskId, content: newTaskContent };
+
+    // Update the tasks object and add the task to the "To Do" column
+    const updatedTasks = {
+      ...data.tasks,
+      [newTaskId]: newTask,
+    };
+
+    const updatedColumn = {
+      ...data.columns["column-1"],
+      taskIds: [...data.columns["column-1"].taskIds, newTaskId],
+    };
+
+    const newState = {
+      ...data,
+      tasks: updatedTasks,
+      columns: {
+        ...data.columns,
+        [updatedColumn.id]: updatedColumn,
+      },
+    };
+
+    console.log(initialData);
+
+    setData(newState);
+    setNewTaskContent(""); // Clear the input field
+  };
 
   return (
     <>
@@ -23,6 +59,17 @@ function AddTaskModal() {
           <Modal.Title>Add New Task</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <div>
+            <form style={{ marginTop: "7rem" }} onSubmit={handleSubmit}>
+              <input
+                type="text"
+                placeholder="Enter new task"
+                value={newTaskContent}
+                onChange={(e) => setNewTaskContent(e.target.value)}
+              />
+              <button type="submit">Add Task</button>
+            </form>
+          </div>
           <Form>
             <Form.Group className="mb-3">
               <Form.Label>Task Name</Form.Label>
@@ -31,7 +78,10 @@ function AddTaskModal() {
 
             <Form.Group className="mb-3">
               <Form.Label>Task Description</Form.Label>
-              <Form.Control type="textarea" placeholder="Describe Your Task Here" />
+              <Form.Control
+                type="textarea"
+                placeholder="Describe Your Task Here"
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
