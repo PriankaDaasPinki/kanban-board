@@ -156,6 +156,29 @@ export default function Board(showModal) {
     setEditTaskContent(""); // Clear the edit field
   };
 
+  // Handle task deletion
+  const handleDeleteTask = (taskId, columnId) => {
+    const updatedTasks = { ...data.tasks };
+    delete updatedTasks[taskId]; // Remove task from tasks
+
+    // Remove the task from its column's taskIds
+    const updatedColumn = {
+      ...data.columns[columnId],
+      taskIds: data.columns[columnId].taskIds.filter((id) => id !== taskId),
+    };
+
+    const newState = {
+      ...data,
+      tasks: updatedTasks,
+      columns: {
+        ...data.columns,
+        [updatedColumn.id]: updatedColumn,
+      },
+    };
+
+    setData(newState);
+  };
+
   return (
     <>
       <DragDropContext onDragEnd={handleDragEnd}>
@@ -177,6 +200,7 @@ export default function Board(showModal) {
                   column={column}
                   tasks={tasks}
                   onEdit={handleEditStart}
+                  onDelete={handleDeleteTask}
                 />
               );
             })}

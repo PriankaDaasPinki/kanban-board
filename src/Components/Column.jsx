@@ -27,7 +27,7 @@ import "../CSS/columnStyle.css";
 //   );
 // }
 
-export default function Column({ column, tasks, onEdit }) {
+export default function Column({ column, tasks, onEdit, onDelete }) {
   return (
     <div className="column">
       <div className="column_title">{column.title}</div>
@@ -39,7 +39,14 @@ export default function Column({ column, tasks, onEdit }) {
             ref={provided.innerRef}
           >
             {tasks.map((task, index) => (
-              <Task key={task.id} task={task} index={index} onEdit={onEdit} />
+              <Task
+                key={task.id}
+                task={task}
+                index={index}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                columnId={column.id}
+              />
             ))}
             {provided.placeholder}
           </div>

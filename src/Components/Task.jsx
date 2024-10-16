@@ -3,6 +3,7 @@ import { Draggable } from "react-beautiful-dnd";
 import "../CSS/taskStyle.css";
 import styled from "styled-components";
 import { FaRegEdit, FaUserSecret } from "react-icons/fa";
+import { RiDeleteBin5Line } from "react-icons/ri";
 // import { useState } from "react";
 // import { Modal } from "react-bootstrap";
 // import { Button } from "react-bootstrap";
@@ -25,7 +26,14 @@ function bgcolorChange(props) {
     : "#fffada";
 }
 
-export default function Task({ task, index, onEdit }) {
+export default function Task({
+  task,
+  index,
+  onEdit,
+  onDelete,
+  columnId,
+  // onChangeAssignee,
+}) {
   // const [showEdit, setShowEdit] = useState(false);
   // const handleEditClose = () => setShowEdit(false);
   // const handleEditShow = () => setShowEdit(true);
@@ -40,18 +48,22 @@ export default function Task({ task, index, onEdit }) {
           isDragging={snapshot.isDragging}
           // onDoubleClick={() => onEdit(task.id, task.title, task.content)} // Double-click to start editing
         >
-          <div className="editIcon">
-            <FaRegEdit onClick={() => onEdit(task.id, task.title, task.content)}>
-              {/* <Modal show="true" onHide={handleEditClose}></Modal> */}
-              
-            </FaRegEdit>
+          <div className="editDeletionIcon">
+            <RiDeleteBin5Line
+              className="deleteIcon"
+              onClick={() => onDelete(task.id, columnId)}
+            />
+            <FaRegEdit
+              className="editIcon"
+              onClick={() => onEdit(task.id, task.title, task.content)}
+            />
           </div>
 
           <div className="taskTitle">{task.title}</div>
           <div className="taskDesc">{task.content}</div>
           <div className="taskFooter">
             <p className="dueDate">Date:</p>
-            <div className="iconStyle">
+            <div className="assigneeIcon">
               <FaUserSecret />
             </div>
           </div>
