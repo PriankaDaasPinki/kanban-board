@@ -62,17 +62,19 @@
   font-size: 1 rem;
 }
 
-
+/* 
 .assigneeIcon{font-size: 1 rem;}:hover{
   cursor: pointer;
-}
-/* .deleteIcon{
-  display: flex;
-  align-items: start;
-  justify-content:start;
 } */
 
-/* .deleteIcon:hover{
-  cursor: pointer;
-  font-size: 1 rem;
+/* 
+.dropdown {
+  position: absolute;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 120px;
+  z-index: 10 !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 } */

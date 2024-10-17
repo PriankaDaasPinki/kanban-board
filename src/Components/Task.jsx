@@ -4,6 +4,8 @@ import "../CSS/taskStyle.css";
 import styled from "styled-components";
 import { FaRegEdit, FaUserSecret } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
+// import { assigneeOptions } from "../Data/initial-data";
+// import { Dropdown } from "react-bootstrap";
 // import { useState } from "react";
 // import { Modal } from "react-bootstrap";
 // import { Button } from "react-bootstrap";
@@ -32,6 +34,8 @@ export default function Task({
   onEdit,
   onDelete,
   columnId,
+  // onShowDropdown,
+  // showDropdown,
   // onChangeAssignee,
 }) {
   // const [showEdit, setShowEdit] = useState(false);
@@ -55,7 +59,7 @@ export default function Task({
             />
             <FaRegEdit
               className="editIcon"
-              onClick={() => onEdit(task.id, task.title, task.content)}
+              onClick={() => onEdit(task.id, task.title, task.content, task.assignee)}
             />
           </div>
 
@@ -64,7 +68,28 @@ export default function Task({
           <div className="taskFooter">
             <p className="dueDate">Date:</p>
             <div className="assigneeIcon">
-              <FaUserSecret />
+              <FaUserSecret /> {task.assignee}
+              {/* <span onClick={() => onShowDropdown(task.id)}>
+              <FaUserSecret /> {task.assignee}
+              </span> */}
+              {/* <span className="assignee">
+                <span onClick={() => onShowDropdown(task.id)}>
+                  <FaUserSecret /> {task.assignee}
+                </span>
+                {showDropdown === task.id && (
+                  <div className="dropdown">
+                    {assigneeOptions.map((assignee) => (
+                      <a
+                        key={assignee}
+                        className="dropdown-item"
+                        onClick={() => onChangeAssignee(task.id, assignee)}
+                      >
+                        {assignee}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </span> */}
             </div>
           </div>
         </Container>

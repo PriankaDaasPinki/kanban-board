@@ -24,3 +24,16 @@
   /* border: 1px solid #ccc; */
   /* overflow-y: auto; */
 }
+
+.deleteWarning{
+  margin-top: 10%;
+}
+
+.okButton{
+  cursor: pointer;
+}
+
+.alartDiv{
+  top: 21%;
+  right: 0.1%;
+}

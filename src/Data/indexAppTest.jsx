@@ -198,7 +198,15 @@ function App() {
             const column = data.columns[columnId];
             const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
 
-            return <Column key={column.id} column={column} tasks={tasks} onEdit={handleEditStart} onDelete={handleDeleteTask} />;
+            return (
+              <Column
+                key={column.id}
+                column={column}
+                tasks={tasks}
+                onEdit={handleEditStart}
+                onDelete={handleDeleteTask}
+              />
+            );
           })}
         </div>
       </DragDropContext>
@@ -234,7 +242,14 @@ function Column({ column, tasks, onEdit, onDelete }) {
             ref={provided.innerRef}
           >
             {tasks.map((task, index) => (
-              <Task key={task.id} task={task} index={index} onEdit={onEdit} onDelete={onDelete} columnId={column.id} />
+              <Task
+                key={task.id}
+                task={task}
+                index={index}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                columnId={column.id}
+              />
             ))}
             {provided.placeholder}
           </div>
@@ -256,7 +271,10 @@ function Task({ task, index, onEdit, onDelete, columnId }) {
           onDoubleClick={() => onEdit(task.id, task.content)} // Double-click to start editing
         >
           {task.content}
-          <button onClick={() => onDelete(task.id, columnId)} className="delete-btn">
+          <button
+            onClick={() => onDelete(task.id, columnId)}
+            className="delete-btn"
+          >
             Delete
           </button>
         </div>

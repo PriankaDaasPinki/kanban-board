@@ -3,8 +3,10 @@
 import "./CSS/App.css";
 import Navbar from "./Components/Nav";
 import Board from "./Components/Board";
+import ScrollUpButton from "./Components/ScrollUpButton";
 // import AddTaskModal from "./Components/AddTaskModal";
 // import Column from "./Components/Column";
+import ApiDataTry from "./Data/ApiDataTry";
 
 // import initialData from "./Data/initial-data";
 
@@ -16,6 +18,8 @@ function App() {
         <AddTaskModal />
       </div> */}
       <Board />
+      {/* <ApiDataTry /> */}
+      <ScrollUpButton />
     </>
   );
 }

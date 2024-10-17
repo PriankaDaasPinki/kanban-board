@@ -27,6 +27,8 @@ import "../CSS/columnStyle.css";
 //   );
 // }
 
+//, onShowDropdown, showDropdown, onChangeAssignee
+
 export default function Column({ column, tasks, onEdit, onDelete }) {
   return (
     <div className="column">
@@ -46,6 +48,9 @@ export default function Column({ column, tasks, onEdit, onDelete }) {
                 onEdit={onEdit}
                 onDelete={onDelete}
                 columnId={column.id}
+                // onShowDropdown={onShowDropdown}
+                // showDropdown={showDropdown}
+                // onChangeAssignee={onChangeAssignee}
               />
             ))}
             {provided.placeholder}
