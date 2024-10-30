@@ -1,16 +1,8 @@
-// import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import "../CSS/taskStyle.css";
 import styled from "styled-components";
 import { FaRegEdit, FaUserSecret } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
-// import { assigneeOptions } from "../Data/initial-data";
-// import { Dropdown } from "react-bootstrap";
-// import { useState } from "react";
-// import { Modal } from "react-bootstrap";
-// import { Button } from "react-bootstrap";
-
-// import handleEditShow from "./Board"
 
 const Container = styled.div`
   background-color: ${(props) => bgcolorChange(props)};
@@ -34,13 +26,7 @@ export default function Task({
   onEdit,
   onDelete,
   columnId,
-  // onShowDropdown,
-  // showDropdown,
-  // onChangeAssignee,
 }) {
-  // const [showEdit, setShowEdit] = useState(false);
-  // const handleEditClose = () => setShowEdit(false);
-  // const handleEditShow = () => setShowEdit(true);
   return (
     <Draggable draggableId={task.id} index={index}>
       {(provided, snapshot) => (
@@ -69,27 +55,6 @@ export default function Task({
             <p className="dueDate">Date: {task.date}</p>
             <div className="assigneeIcon">
               <FaUserSecret /> {task.assignee}
-              {/* <span onClick={() => onShowDropdown(task.id)}>
-              <FaUserSecret /> {task.assignee}
-              </span> */}
-              {/* <span className="assignee">
-                <span onClick={() => onShowDropdown(task.id)}>
-                  <FaUserSecret /> {task.assignee}
-                </span>
-                {showDropdown === task.id && (
-                  <div className="dropdown">
-                    {assigneeOptions.map((assignee) => (
-                      <a
-                        key={assignee}
-                        className="dropdown-item"
-                        onClick={() => onChangeAssignee(task.id, assignee)}
-                      >
-                        {assignee}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </span> */}
             </div>
           </div>
         </Container>
@@ -97,33 +62,3 @@ export default function Task({
     </Draggable>
   );
 }
-
-// export default function Task(task, index) {
-//   return (
-//     <Draggable draggableId={`${task.id}`} key={task.id} index={index}>
-//       {(provided, snapshot) => (
-//         <Container
-//           {...provided.draggableProps}
-//           {...provided.dragHandleProps}
-//           ref={provided.innerRef}
-//           isDragging={snapshot.isDragging}
-//         >
-//           <div>
-//             <span>
-//               <small>#{task.id} </small>
-//             </span>
-//           </div>
-
-//           <div>
-//             <p>{task.title}</p>
-//           </div>
-
-//           <div>
-//           <FaUserSecret />
-//           </div>
-//           {provided.placeholder}
-//         </Container>
-//       )}
-//     </Draggable>
-//   );
-// }

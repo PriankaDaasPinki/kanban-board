@@ -61,7 +61,8 @@ export default function Board() {
         setData({ ...data, tasks: tasks, columns: updatedColumns });
       })
       .catch((error) => console.error("Error fetching users:", error));
-  });
+      // eslint-disable-next-line
+  }, []);
 
   //fetch data End
 
@@ -133,6 +134,7 @@ export default function Board() {
   const [newTaskContent, setNewTaskContent] = useState("");
   const [newTaskDate, setNewTaskDate] = useState("");
   const [newTaskAssignee, setNewTaskAssignee] = useState("");
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -221,7 +223,6 @@ export default function Board() {
   const [showDeleteWarning, setShowDeleteWarning] = useState(false); // Track delete warning visibility
   const [showDeleteWarningAfter, setShowDeleteWarningAfter] = useState(false); // Track delete warning visibility
 
-  // const ShowDeleteWarningAfter = () => setShowDeleteWarningAfter(false);
 
   // Show delete warning before deleting
   const handleDeleteTaskWarning = (taskId, columnId) => {
@@ -265,73 +266,6 @@ export default function Board() {
     setShowDeleteWarning(false);
     setTaskToDelete(null); // Reset taskToDelete when canceling
   };
-  // Handle task deletion
-  // const handleDeleteTask = (taskId, columnId) => {
-  //   const updatedTasks = { ...data.tasks };
-  //   delete updatedTasks[taskId]; // Remove task from tasks
-
-  //   // Remove the task from its column's taskIds
-  //   const updatedColumn = {
-  //     ...data.columns[columnId],
-  //     taskIds: data.columns[columnId].taskIds.filter((id) => id !== taskId),
-  //   };
-
-  //   const newState = {
-  //     ...data,
-  //     tasks: updatedTasks,
-  //     columns: {
-  //       ...data.columns,
-  //       [updatedColumn.id]: updatedColumn,
-  //     },
-  //   };
-
-  //   setData(newState);
-  // };
-
-  // Handle Assignee change   // handleAssignee
-  // const [showDropdown, setShowDropdown] = useState(null); // To control which dropdown is shown
-  // const handleShowDropdown = (taskId) => {
-  //   setShowDropdown(showDropdown === taskId ? null : taskId); // Toggle dropdown visibility for each task
-  // };
-
-  // Handle changing the assignee
-  // const handleChangeAssignee = (taskId, newAssignee) => {
-  //   const updatedTasks = {
-  //     ...data.tasks,
-  //     [taskId]: { ...data.tasks[taskId], assignee: newAssignee }, // Update the assignee for the task
-  //   };
-
-  //   const newState = {
-  //     ...data,
-  //     tasks: updatedTasks,
-  //   };
-
-  //   setData(newState);
-  //   setShowDropdown(null); // Hide dropdown after selection
-  // };
-
-  // const handleAssignee = (e) => {
-  //   e.preventDefault();
-
-  //   const updatedTasks = {
-  //     ...data.tasks,
-  //     [isEditing]: {
-  //       ...data.tasks[isEditing],
-  //       title: editTaskTitle,
-  //       content: editTaskContent,
-  //     }, // Update the content of the task being edited
-  //   };
-
-  //   const newState = {
-  //     ...data,
-  //     tasks: updatedTasks,
-  //   };
-
-  //   setData(newState);
-  //   setIsEditing(null); // Close the edit mode
-  //   setEditTaskTitle(""); // Clear the edit field
-  //   setEditTaskContent(""); // Clear the edit field
-  // };
 
   return (
     <>
@@ -342,7 +276,6 @@ export default function Board() {
               <MdOutlineAddTask className="addTaskIconApp" />
             </Button>
           </div>
-          {/* <h1 className="boardTitle">Project Progress Board</h1> */}
           <div className="taskColumnBoard">
             {data?.columnOrder?.map((columnId) => {
               const column = data?.columns[columnId];
@@ -357,10 +290,6 @@ export default function Board() {
                   tasks={tasks}
                   onEdit={handleEditStart}
                   onDelete={handleDeleteTaskWarning}
-                  // onDelete={handleDeleteTask}
-                  // onShowDropdown={handleShowDropdown}
-                  // showDropdown={showDropdown}
-                  // onChangeAssignee={handleChangeAssignee}
                 />
               );
             })}
@@ -452,30 +381,7 @@ export default function Board() {
           className="d-flex justify-content-evenly position-absolute alartDiv"
         >
           The task is deleted
-          {/* <div
-            className="p-2 okButton"
-            variant=""
-            onClick={ShowDeleteWarningAfter}
-          >
-            OK
-          </div> */}
         </Alert>
-
-        //setShowDeleteWarningAfter(false)
-
-        // <Modal show="true" className="deleteWarning">
-        //   <Modal.Body className="d-flex justify-content-evenly">
-        //     <h4>The task is deleted</h4>
-        //     <Button variant="secondary" onClick={ShowDeleteWarningAfter}>
-        //       OK
-        //     </Button>
-        //   </Modal.Body>
-        // </Modal>
-
-        // <Alert key="danger" variant="danger">
-        //   This is a alert with <Alert.Link href="#">an example link</Alert.Link>
-        //   . Give it a click if you like.
-        // </Alert>
       )}
 
       <Modal show={show} onHide={handleClose}>
