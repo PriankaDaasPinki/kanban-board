@@ -66,7 +66,7 @@ export default function Task({
           <div className="taskTitle">{task.title}</div>
           <div className="taskDesc">{task.content}</div>
           <div className="taskFooter">
-            <p className="dueDate">Date:</p>
+            <p className="dueDate">Date: {task.date}</p>
             <div className="assigneeIcon">
               <FaUserSecret /> {task.assignee}
               {/* <span onClick={() => onShowDropdown(task.id)}>

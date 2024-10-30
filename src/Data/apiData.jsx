@@ -47,7 +47,7 @@ export default function Api() {
 
   return (
     <>
-      <Board Data={data} />
+      <Board />
     </>
   );
 }

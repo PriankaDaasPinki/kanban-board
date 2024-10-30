@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import "../CSS/boardStyle.css";
 import Column from "./Column";
-import initialData, { assigneeOptions } from "../Data/initial-data";
+import { assigneeOptions } from "../Data/initial-data";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { MdOutlineAddTask } from "react-icons/md";
 
@@ -22,7 +22,14 @@ export default function Board() {
       "column-5": { id: "column-5", title: "Ongoing", taskIds: [] },
       "column-6": { id: "column-6", title: "Processing", taskIds: [] },
     },
-    columnOrder: ["column-1", "column-2", "column-3", "column-4", "column-5", "column-6"],
+    columnOrder: [
+      "column-1",
+      "column-2",
+      "column-3",
+      "column-4",
+      "column-5",
+      "column-6",
+    ],
     assigneeOptions: ["Ram", "Sam", "Madhu", "Unassigned"],
   });
 
@@ -36,9 +43,9 @@ export default function Board() {
           const taskId = `task-${user.id}`;
           tasks[taskId] = {
             id: taskId,
-            title: `${user.name}`, // Setting the user name as task title
-            content: `${user.email}`, // Setting email and phone as task description
-            assignee: user.company.name, // Setting company name as assignee
+            title: user.company.name, // Setting the user name as task title
+            content: user.email, // Setting email and phone as task description
+            assignee: user.name, // Setting company name as assignee  assignee: `hello ${user.name}`
           };
           return taskId;
         });
@@ -56,9 +63,7 @@ export default function Board() {
       .catch((error) => console.error("Error fetching users:", error));
   }, []);
 
-  //fetch data
-
-  console.log("data = ", data);
+  //fetch data End
 
   const handleDragEnd = (result) => {
     const { destination, source, draggableId } = result;
@@ -126,17 +131,20 @@ export default function Board() {
   //Add task start here
   const [newTaskTitle, setNewTaskTitle] = useState(""); // state for the form input
   const [newTaskContent, setNewTaskContent] = useState("");
+  const [newTaskDate, setNewTaskDate] = useState("");
+  const [newTaskAssignee, setNewTaskAssignee] = useState("");
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     // Create a new task ID and new task object
     const newTaskId = `task-${Object.keys(data.tasks).length + 1}`;
     const newTask = {
       id: newTaskId,
       title: newTaskTitle,
       content: newTaskContent,
-      assignee: "Unassigned",
+      date: newTaskDate || "",
+      assignee: newTaskAssignee || "Unassigned",
     };
 
     // Update the tasks object and add the task to the "To Do" column
@@ -146,8 +154,8 @@ export default function Board() {
     };
 
     const updatedColumn = {
-      ...data.columns["column-2"],
-      taskIds: [...data.columns["column-2"].taskIds, newTaskId],
+      ...data.columns["column-1"],
+      taskIds: [...data.columns["column-1"].taskIds, newTaskId],
     };
 
     const newState = {
@@ -162,6 +170,8 @@ export default function Board() {
     setData(newState);
     setNewTaskTitle(""); // Clear the input field
     setNewTaskContent(""); // Clear the input field
+    setNewTaskDate("");
+    setNewTaskAssignee("");
   };
 
   // Handle task edit start
@@ -257,72 +267,72 @@ export default function Board() {
     setTaskToDelete(null); // Reset taskToDelete when canceling
   };
   // Handle task deletion
-  const handleDeleteTask = (taskId, columnId) => {
-    const updatedTasks = { ...data.tasks };
-    delete updatedTasks[taskId]; // Remove task from tasks
+  // const handleDeleteTask = (taskId, columnId) => {
+  //   const updatedTasks = { ...data.tasks };
+  //   delete updatedTasks[taskId]; // Remove task from tasks
 
-    // Remove the task from its column's taskIds
-    const updatedColumn = {
-      ...data.columns[columnId],
-      taskIds: data.columns[columnId].taskIds.filter((id) => id !== taskId),
-    };
+  //   // Remove the task from its column's taskIds
+  //   const updatedColumn = {
+  //     ...data.columns[columnId],
+  //     taskIds: data.columns[columnId].taskIds.filter((id) => id !== taskId),
+  //   };
 
-    const newState = {
-      ...data,
-      tasks: updatedTasks,
-      columns: {
-        ...data.columns,
-        [updatedColumn.id]: updatedColumn,
-      },
-    };
+  //   const newState = {
+  //     ...data,
+  //     tasks: updatedTasks,
+  //     columns: {
+  //       ...data.columns,
+  //       [updatedColumn.id]: updatedColumn,
+  //     },
+  //   };
 
-    setData(newState);
-  };
+  //   setData(newState);
+  // };
 
   // Handle Assignee change   // handleAssignee
-  const [showDropdown, setShowDropdown] = useState(null); // To control which dropdown is shown
-  const handleShowDropdown = (taskId) => {
-    setShowDropdown(showDropdown === taskId ? null : taskId); // Toggle dropdown visibility for each task
-  };
+  // const [showDropdown, setShowDropdown] = useState(null); // To control which dropdown is shown
+  // const handleShowDropdown = (taskId) => {
+  //   setShowDropdown(showDropdown === taskId ? null : taskId); // Toggle dropdown visibility for each task
+  // };
 
   // Handle changing the assignee
-  const handleChangeAssignee = (taskId, newAssignee) => {
-    const updatedTasks = {
-      ...data.tasks,
-      [taskId]: { ...data.tasks[taskId], assignee: newAssignee }, // Update the assignee for the task
-    };
+  // const handleChangeAssignee = (taskId, newAssignee) => {
+  //   const updatedTasks = {
+  //     ...data.tasks,
+  //     [taskId]: { ...data.tasks[taskId], assignee: newAssignee }, // Update the assignee for the task
+  //   };
 
-    const newState = {
-      ...data,
-      tasks: updatedTasks,
-    };
+  //   const newState = {
+  //     ...data,
+  //     tasks: updatedTasks,
+  //   };
 
-    setData(newState);
-    setShowDropdown(null); // Hide dropdown after selection
-  };
+  //   setData(newState);
+  //   setShowDropdown(null); // Hide dropdown after selection
+  // };
 
-  const handleAssignee = (e) => {
-    e.preventDefault();
+  // const handleAssignee = (e) => {
+  //   e.preventDefault();
 
-    const updatedTasks = {
-      ...data.tasks,
-      [isEditing]: {
-        ...data.tasks[isEditing],
-        title: editTaskTitle,
-        content: editTaskContent,
-      }, // Update the content of the task being edited
-    };
+  //   const updatedTasks = {
+  //     ...data.tasks,
+  //     [isEditing]: {
+  //       ...data.tasks[isEditing],
+  //       title: editTaskTitle,
+  //       content: editTaskContent,
+  //     }, // Update the content of the task being edited
+  //   };
 
-    const newState = {
-      ...data,
-      tasks: updatedTasks,
-    };
+  //   const newState = {
+  //     ...data,
+  //     tasks: updatedTasks,
+  //   };
 
-    setData(newState);
-    setIsEditing(null); // Close the edit mode
-    setEditTaskTitle(""); // Clear the edit field
-    setEditTaskContent(""); // Clear the edit field
-  };
+  //   setData(newState);
+  //   setIsEditing(null); // Close the edit mode
+  //   setEditTaskTitle(""); // Clear the edit field
+  //   setEditTaskContent(""); // Clear the edit field
+  // };
 
   return (
     <>
@@ -496,12 +506,21 @@ export default function Board() {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Due Date</Form.Label>
-              <Form.Control type="date" />
+              <Form.Control
+                type="date"
+                value={newTaskDate}
+                onChange={(e) => setNewTaskDate(e.target.value)}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Assignee</Form.Label>
-              <Form.Control type="text" placeholder="Name of Assignee" />
+              <Form.Control
+                type="text"
+                placeholder="Name of Assignee"
+                value={newTaskAssignee}
+                onChange={(e) => setNewTaskAssignee(e.target.value)}
+              />
               <Form.Text className="text-muted">
                 Who is assigned for the task
               </Form.Text>
