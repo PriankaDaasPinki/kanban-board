@@ -61,7 +61,7 @@ export default function Board() {
         setData({ ...data, tasks: tasks, columns: updatedColumns });
       })
       .catch((error) => console.error("Error fetching users:", error));
-  }, []);
+  });
 
   //fetch data End
 
@@ -133,7 +133,6 @@ export default function Board() {
   const [newTaskContent, setNewTaskContent] = useState("");
   const [newTaskDate, setNewTaskDate] = useState("");
   const [newTaskAssignee, setNewTaskAssignee] = useState("");
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
