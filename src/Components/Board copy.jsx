@@ -1,66 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import "../CSS/boardStyle.css";
 import Column from "./Column";
 import initialData, { assigneeOptions } from "../Data/initial-data";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { MdOutlineAddTask } from "react-icons/md";
+// import ApiDataTry from "../Data/ApiDataTry";
+// import test from "./test";
 
-export default function Board() {
+export default function Board(Data) {
+  // const data1 = Data.Data;
+  console.log("1st in Board component");
+  const data1 = Data.Data;
+  const data2  = Data;
+  console.log('data1',data1);
+  console.log('data2',data2);
+
+  // console.log("initial data from board");
+  // console.log(initialData.columns);
+  // const [completed, setCompeted] = useState([]);
+  // const [incomplete, setIncompete] = useState([]);
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const [data, setData] = useState({
-    tasks: {},
-    columns: {
-      "column-1": { id: "column-1", title: "To Do", taskIds: [] },
-      "column-2": { id: "column-2", title: "In Progress", taskIds: [] },
-      "column-3": { id: "column-3", title: "Done", taskIds: [] },
-      "column-4": { id: "column-4", title: "Paused", taskIds: [] },
-      "column-5": { id: "column-5", title: "Ongoing", taskIds: [] },
-      "column-6": { id: "column-6", title: "Processing", taskIds: [] },
-    },
-    columnOrder: ["column-1", "column-2", "column-3", "column-4", "column-5", "column-6"],
-    assigneeOptions: ["Ram", "Sam", "Madhu", "Unassigned"],
-  });
+  const [data, setData] = useState(data1);
 
-  // Fetch user data as task data
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => response.json())
-      .then((users) => {
-        const tasks = {};
-        const taskIds = users.map((user) => {
-          const taskId = `task-${user.id}`;
-          tasks[taskId] = {
-            id: taskId,
-            title: `${user.name}`, // Setting the user name as task title
-            content: `${user.email}`, // Setting email and phone as task description
-            assignee: user.company.name, // Setting company name as assignee
-          };
-          return taskId;
-        });
+  console.log('data',data)
 
-        const updatedColumns = {
-          ...data.columns,
-          "column-1": {
-            ...data.columns["column-1"],
-            taskIds: taskIds, // Place all tasks initially in the "To Do" column
-          },
-        };
-
-        setData({ ...data, tasks: tasks, columns: updatedColumns });
-      })
-      .catch((error) => console.error("Error fetching users:", error));
-  }, []);
-
-  //fetch data
-
-  console.log("data = ", data);
 
   const handleDragEnd = (result) => {
+    console.log("inside function");
+    console.log(data1);
+
     const { destination, source, draggableId } = result;
 
     if (!destination) return;
@@ -132,34 +106,34 @@ export default function Board() {
 
     // Create a new task ID and new task object
     const newTaskId = `task-${Object.keys(data.tasks).length + 1}`;
-    const newTask = {
-      id: newTaskId,
-      title: newTaskTitle,
-      content: newTaskContent,
-      assignee: "Unassigned",
-    };
+    // const newTask = {
+    //   id: newTaskId,
+    //   title: newTaskTitle,
+    //   content: newTaskContent,
+    //   assignee: "Unassigned",
+    // };
 
     // Update the tasks object and add the task to the "To Do" column
-    const updatedTasks = {
-      ...data.tasks,
-      [newTaskId]: newTask,
-    };
+    // const updatedTasks = {
+    //   ...data.tasks,
+    //   [newTaskId]: newTask,
+    // };
 
-    const updatedColumn = {
-      ...data.columns["column-2"],
-      taskIds: [...data.columns["column-2"].taskIds, newTaskId],
-    };
+    // const updatedColumn = {
+    //   ...data.columns["column-1"],
+    //   taskIds: [...data.columns["column-1"].taskIds, newTaskId],
+    // };
 
-    const newState = {
-      ...data,
-      tasks: updatedTasks,
-      columns: {
-        ...data.columns,
-        [updatedColumn.id]: updatedColumn,
-      },
-    };
+    // const newState = {
+    //   ...data,
+    //   tasks: updatedTasks,
+    //   columns: {
+    //     ...data.columns,
+    //     [updatedColumn.id]: updatedColumn,
+    //   },
+    // };
 
-    setData(newState);
+    // setData(newState);
     setNewTaskTitle(""); // Clear the input field
     setNewTaskContent(""); // Clear the input field
   };
@@ -185,26 +159,26 @@ export default function Board() {
   const handleEditSubmit = (e) => {
     e.preventDefault();
 
-    const updatedTasks = {
-      ...data?.tasks,
-      [isEditing]: {
-        ...data.tasks[isEditing],
-        title: editTaskTitle,
-        content: editTaskContent,
-        assignee: editTaskAssignee,
-      }, // Update the content of the task being edited
-    };
+    // const updatedTasks = {
+    //   ...data?.tasks,
+    //   [isEditing]: {
+    //     ...data.tasks[isEditing],
+    //     title: editTaskTitle,
+    //     content: editTaskContent,
+    //     assignee: editTaskAssignee,
+    //   }, // Update the content of the task being edited
+    // };
 
-    const newState = {
-      ...data,
-      tasks: updatedTasks,
-    };
+    // const newState = {
+    //   ...data,
+    //   tasks: updatedTasks,
+    // };
 
-    setData(newState);
-    setIsEditing(null); // Close the edit mode
-    setEditTaskTitle(""); // Clear the edit field
-    setEditTaskContent(""); // Clear the edit field
-    setEditTaskAssignee(""); // Clear the edit field
+    // setData(newState);
+    // setIsEditing(null); // Close the edit mode
+    // setEditTaskTitle(""); // Clear the edit field
+    // setEditTaskContent(""); // Clear the edit field
+    // setEditTaskAssignee(""); // Clear the edit field
   };
 
   // Task Delete
@@ -257,72 +231,72 @@ export default function Board() {
     setTaskToDelete(null); // Reset taskToDelete when canceling
   };
   // Handle task deletion
-  const handleDeleteTask = (taskId, columnId) => {
-    const updatedTasks = { ...data.tasks };
-    delete updatedTasks[taskId]; // Remove task from tasks
+  // const handleDeleteTask = (taskId, columnId) => {
+  //   const updatedTasks = { ...data.tasks };
+  //   delete updatedTasks[taskId]; // Remove task from tasks
 
-    // Remove the task from its column's taskIds
-    const updatedColumn = {
-      ...data.columns[columnId],
-      taskIds: data.columns[columnId].taskIds.filter((id) => id !== taskId),
-    };
+  //   // Remove the task from its column's taskIds
+  //   const updatedColumn = {
+  //     ...data.columns[columnId],
+  //     taskIds: data.columns[columnId].taskIds.filter((id) => id !== taskId),
+  //   };
 
-    const newState = {
-      ...data,
-      tasks: updatedTasks,
-      columns: {
-        ...data.columns,
-        [updatedColumn.id]: updatedColumn,
-      },
-    };
+  //   const newState = {
+  //     ...data,
+  //     tasks: updatedTasks,
+  //     columns: {
+  //       ...data.columns,
+  //       [updatedColumn.id]: updatedColumn,
+  //     },
+  //   };
 
-    setData(newState);
-  };
+  //   setData(newState);
+  // };
 
   // Handle Assignee change   // handleAssignee
-  const [showDropdown, setShowDropdown] = useState(null); // To control which dropdown is shown
-  const handleShowDropdown = (taskId) => {
-    setShowDropdown(showDropdown === taskId ? null : taskId); // Toggle dropdown visibility for each task
-  };
+  // const [showDropdown, setShowDropdown] = useState(null); // To control which dropdown is shown
+  // const handleShowDropdown = (taskId) => {
+  //   setShowDropdown(showDropdown === taskId ? null : taskId); // Toggle dropdown visibility for each task
+  // };
 
   // Handle changing the assignee
-  const handleChangeAssignee = (taskId, newAssignee) => {
-    const updatedTasks = {
-      ...data.tasks,
-      [taskId]: { ...data.tasks[taskId], assignee: newAssignee }, // Update the assignee for the task
-    };
+  // const handleChangeAssignee = (taskId, newAssignee) => {
+  //   const updatedTasks = {
+  //     ...data.tasks,
+  //     [taskId]: { ...data.tasks[taskId], assignee: newAssignee }, // Update the assignee for the task
+  //   };
 
-    const newState = {
-      ...data,
-      tasks: updatedTasks,
-    };
+  //   const newState = {
+  //     ...data,
+  //     tasks: updatedTasks,
+  //   };
 
-    setData(newState);
-    setShowDropdown(null); // Hide dropdown after selection
-  };
+  //   setData(newState);
+  //   setShowDropdown(null); // Hide dropdown after selection
+  // };
 
-  const handleAssignee = (e) => {
-    e.preventDefault();
+  // const handleAssignee = (e) => {
+  //   e.preventDefault();
 
-    const updatedTasks = {
-      ...data.tasks,
-      [isEditing]: {
-        ...data.tasks[isEditing],
-        title: editTaskTitle,
-        content: editTaskContent,
-      }, // Update the content of the task being edited
-    };
+  //   const updatedTasks = {
+  //     ...data.tasks,
+  //     [isEditing]: {
+  //       ...data.tasks[isEditing],
+  //       title: editTaskTitle,
+  //       content: editTaskContent,
+  //     }, // Update the content of the task being edited
+  //   };
 
-    const newState = {
-      ...data,
-      tasks: updatedTasks,
-    };
+  //   const newState = {
+  //     ...data,
+  //     tasks: updatedTasks,
+  //   };
 
-    setData(newState);
-    setIsEditing(null); // Close the edit mode
-    setEditTaskTitle(""); // Clear the edit field
-    setEditTaskContent(""); // Clear the edit field
-  };
+  //   setData(newState);
+  //   setIsEditing(null); // Close the edit mode
+  //   setEditTaskTitle(""); // Clear the edit field
+  //   setEditTaskContent(""); // Clear the edit field
+  // };
 
   return (
     <>
@@ -337,9 +311,7 @@ export default function Board() {
           <div className="taskColumnBoard">
             {data?.columnOrder?.map((columnId) => {
               const column = data?.columns[columnId];
-              const tasks = column?.taskIds?.map(
-                (taskId) => data?.tasks[taskId]
-              );
+              const tasks = column?.taskIds?.map((taskId) => data?.tasks[taskId]);
 
               return (
                 <Column

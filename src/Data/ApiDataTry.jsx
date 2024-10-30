@@ -1,133 +1,113 @@
-// // import React from "react";
-// import React, { useState, useEffect } from "react";
-// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import React, { useState, useEffect } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+// import "./App.css";
 
-// export default function ApiDataTry() {
-//   const [data, setData] = useState({
-//     tasks: {},
-//     columns: {
-//       "column-1": { id: "column-1", title: "To Do", taskIds: [] },
-//       "column-2": { id: "column-2", title: "In Progress", taskIds: [] },
-//       "column-3": { id: "column-3", title: "Done", taskIds: [] },
-//     },
-//     columnOrder: ["column-1", "column-2", "column-3"],
-//   });
+const App = () => {
+  const [data, setData] = useState({
+    tasks: {},
+    columns: {
+      "column-1": { id: "column-1", title: "To Do", taskIds: [] },
+      "column-2": { id: "column-2", title: "In Progress", taskIds: [] },
+      "column-3": { id: "column-3", title: "Done", taskIds: [] },
+    },
+    columnOrder: ["column-1", "column-2", "column-3"],
+  });
 
-//   const [newTaskContent, setNewTaskContent] = useState("");
+  // Fetch user data as task data
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((users) => {
+        const tasks = {};
+        const taskIds = users.map((user) => {
+          const taskId = `task-${user.id}`;
+          tasks[taskId] = {
+            id: taskId,
+            title: `${user.name}`, // Setting the user name as task title
+            content: `${user.email}, Phone: ${user.phone}`, // Setting email and phone as task description
+            assignee: user.company.name, // Setting company name as assignee
+          };
+          return taskId;
+        });
 
-//   useEffect(() => {
-//     fetch("https://thetestingworldapi.com/api/studentsDetails?all", {
-//       mode: "no-cors" // Disables CORS checks (less secure)
-//     })
-//       .then((response) => response.json())
-//       .then((fetchedStudents) => {
-//         console.log("student1");
-//         const tasks = {};
-//         const taskIds = [];
+        const updatedColumns = {
+          ...data.columns,
+          "column-1": {
+            ...data.columns["column-1"],
+            taskIds: taskIds, // Place all tasks initially in the "To Do" column
+          },
+        };
 
-//         fetchedStudents.data.forEach((student) => {
-//           console.log("student");
-//           console.log(student);
-//           tasks[student.id] = {
-//             id: student.id,
-//             content: `${student.first_name} ${student.last_name}`,
-//             assignee: student.assignee || "Unassigned",
-//           };
-//           taskIds.push(student.id);
-//         });
+        setData({ ...data, tasks: tasks, columns: updatedColumns });
+      })
+      .catch((error) => console.error("Error fetching users:", error));
+  }, []);
 
-//         const updatedColumns = {
-//           ...data.columns,
-//           "column-1": {
-//             ...data.columns["column-1"],
-//             taskIds: taskIds,
-//           },
-//         };
+  return (
+    <DragDropContext
+      onDragEnd={(result) => {
+        const { destination, source, draggableId } = result;
 
-//         setData({ ...data, tasks: tasks, columns: updatedColumns });
-//       })
-//       .catch((error) => console.error("Error fetching students:", error));
-//   }, []);
+        if (!destination) return;
+        if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
+        const start = data.columns[source.droppableId];
+        const finish = data.columns[destination.droppableId];
 
-//     const newTask = {
-//       first_name: newTaskContent.split(" ")[0] || "First",
-//       last_name: newTaskContent.split(" ")[1] || "Last",
-//       assignee: "Unassigned",
-//     };
+        if (start === finish) {
+          const newTaskIds = Array.from(start.taskIds);
+          newTaskIds.splice(source.index, 1);
+          newTaskIds.splice(destination.index, 0, draggableId);
 
-//     fetch("https://thetestingworldapi.com/api/studentsDetails", {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(newTask),
-//     })
-//       .then((response) => response.json())
-//       .then((createdStudent) => {
-//         const newTaskId = createdStudent.id;
-//         const updatedTasks = {
-//           ...data.tasks,
-//           [newTaskId]: {
-//             id: newTaskId,
-//             content: `${createdStudent.first_name} ${createdStudent.last_name}`,
-//             assignee: createdStudent.assignee || "Unassigned",
-//           },
-//         };
+          const newColumn = { ...start, taskIds: newTaskIds };
 
-//         const updatedColumn = {
-//           ...data.columns["column-1"],
-//           taskIds: [...data.columns["column-1"].taskIds, newTaskId],
-//         };
+          setData({ ...data, columns: { ...data.columns, [newColumn.id]: newColumn } });
+        } else {
+          const startTaskIds = Array.from(start.taskIds);
+          startTaskIds.splice(source.index, 1);
+          const newStart = { ...start, taskIds: startTaskIds };
 
-//         const newState = {
-//           ...data,
-//           tasks: updatedTasks,
-//           columns: {
-//             ...data.columns,
-//             [updatedColumn.id]: updatedColumn,
-//           },
-//         };
+          const finishTaskIds = Array.from(finish.taskIds);
+          finishTaskIds.splice(destination.index, 0, draggableId);
+          const newFinish = { ...finish, taskIds: finishTaskIds };
 
-//         setData(newState);
-//         setNewTaskContent("");
-//       })
-//       .catch((error) => console.error("Error creating task:", error));
-//   };
+          setData({ ...data, columns: { ...data.columns, [newStart.id]: newStart, [newFinish.id]: newFinish } });
+        }
+      }}
+    >
+      {data.columnOrder.map((columnId) => {
+        const column = data.columns[columnId];
+        const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
 
-//   const handleChangeAssignee = (taskId, newAssignee) => {
-//     const updatedTask = { ...data.tasks[taskId], assignee: newAssignee };
+        return (
+          <Droppable key={column.id} droppableId={column.id}>
+            {(provided) => (
+              <div {...provided.droppableProps} ref={provided.innerRef} className="kanban-column">
+                <h2>{column.title}</h2>
+                {tasks.map((task, index) => (
+                  <Draggable key={task.id} draggableId={task.id} index={index}>
+                    {(provided) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        className="kanban-task"
+                      >
+                        <h3>{task.title}</h3>
+                        <p>{task.content}</p>
+                        <p><strong>Assignee:</strong> {task.assignee}</p>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        );
+      })}
+    </DragDropContext>
+  );
+};
 
-//     fetch(`https://thetestingworldapi.com/api/studentsDetails/${taskId}`, {
-//       method: "PUT",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({ assignee: newAssignee }),
-//     })
-//       .then((response) => response.json())
-//       .then(() => {
-//         const updatedTasks = {
-//           ...data.tasks,
-//           [taskId]: updatedTask,
-//         };
-
-//         setData({ ...data, tasks: updatedTasks });
-//       })
-//       .catch((error) => console.error("Error updating task:", error));
-//   };
-
-//   console.log(data);
-//   return (
-//     <div>
-//       {/* Your Kanban board with task components */}
-//       <form onSubmit={handleSubmit}>
-//         <input
-//           type="text"
-//           value={newTaskContent}
-//           onChange={(e) => setNewTaskContent(e.target.value)}
-//           placeholder="Enter new task"
-//         />
-//         <button type="submit">Add Task</button>
-//       </form>
-//     </div>
-//   );
-// }
+export default App;

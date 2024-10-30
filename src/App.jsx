@@ -6,7 +6,8 @@ import Board from "./Components/Board";
 import ScrollUpButton from "./Components/ScrollUpButton";
 // import AddTaskModal from "./Components/AddTaskModal";
 // import Column from "./Components/Column";
-import ApiDataTry from "./Data/ApiDataTry";
+// import ApiDataTry from "./Data/ApiDataTry";
+import Api from "./Data/apiData";
 
 // import initialData from "./Data/initial-data";
 
@@ -17,8 +18,8 @@ function App() {
       {/* <div className="addTaskDiv">
         <AddTaskModal />
       </div> */}
-      <Board />
-      {/* <ApiDataTry /> */}
+      {/* <Api /> */}
+      <Board />      
       <ScrollUpButton />
     </>
   );
