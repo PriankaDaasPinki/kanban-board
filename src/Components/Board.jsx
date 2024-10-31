@@ -33,6 +33,8 @@ export default function Board() {
     assigneeOptions: ["Ram", "Sam", "Madhu", "Unassigned"],
   });
 
+  const [loading, setLoading] = useState(false);
+
   // Fetch user data as task data
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
@@ -61,7 +63,7 @@ export default function Board() {
         setData({ ...data, tasks: tasks, columns: updatedColumns });
       })
       .catch((error) => console.error("Error fetching users:", error));
-      // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   //fetch data End
@@ -134,7 +136,6 @@ export default function Board() {
   const [newTaskContent, setNewTaskContent] = useState("");
   const [newTaskDate, setNewTaskDate] = useState("");
   const [newTaskAssignee, setNewTaskAssignee] = useState("");
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -168,6 +169,14 @@ export default function Board() {
       },
     };
 
+    setLoading(true);
+    // Simulate an API call
+    setTimeout(() => {
+      console.log("Saved task");
+      setLoading(false);
+      setShow(false);
+    }, 3000);
+
     setData(newState);
     setNewTaskTitle(""); // Clear the input field
     setNewTaskContent(""); // Clear the input field
@@ -187,6 +196,7 @@ export default function Board() {
     currentContent,
     currentAssignee
   ) => {
+    
     setIsEditing(taskId); // Set the task being edited
     setEditTaskTitle(currentTitle); // Populate the input with current task title
     setEditTaskContent(currentContent); // Populate the input with current task content
@@ -211,6 +221,13 @@ export default function Board() {
       tasks: updatedTasks,
     };
 
+    setLoading(true);
+    setTimeout(() => {
+      console.log("Updated task");
+      setLoading(false);
+      setShow(false);
+    }, 3000);
+
     setData(newState);
     setIsEditing(null); // Close the edit mode
     setEditTaskTitle(""); // Clear the edit field
@@ -222,7 +239,6 @@ export default function Board() {
   const [taskToDelete, setTaskToDelete] = useState(null); // Store task to delete
   const [showDeleteWarning, setShowDeleteWarning] = useState(false); // Track delete warning visibility
   const [showDeleteWarningAfter, setShowDeleteWarningAfter] = useState(false); // Track delete warning visibility
-
 
   // Show delete warning before deleting
   const handleDeleteTaskWarning = (taskId, columnId) => {
@@ -250,6 +266,14 @@ export default function Board() {
         [updatedColumn.id]: updatedColumn,
       },
     };
+
+    setLoading(true);
+    // Simulate an API call
+    setTimeout(() => {
+      console.log("Deleted task task");
+      setLoading(false);
+      setShow(false);
+    }, 3000);
 
     setData(newState);
     setShowDeleteWarning(false);
@@ -342,8 +366,8 @@ export default function Board() {
                 <Button variant="secondary" onClick={() => setIsEditing(null)}>
                   Close
                 </Button>
-                <Button type="submit" variant="danger" onClick={handleClose}>
-                  Update Task
+                <Button type="submit" variant="danger" disabled={loading}>
+                  {loading ? "Update Task..." : "Update Task"}
                 </Button>
               </Modal.Footer>
             </form>
@@ -435,8 +459,8 @@ export default function Board() {
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button type="submit" variant="danger" onClick={handleClose}>
-              Save
+            <Button type="submit" variant="danger" disabled={loading}>
+              {loading ? "Saving..." : "Save"}
             </Button>
           </Modal.Footer>
         </form>
