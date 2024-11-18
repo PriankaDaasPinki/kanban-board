@@ -12,6 +12,8 @@
   border-radius: 4px;
   min-width: 300px;
   padding: 10px;
+  max-height: 100vh;
+  overflow: auto;
 }
 
 .column_title {

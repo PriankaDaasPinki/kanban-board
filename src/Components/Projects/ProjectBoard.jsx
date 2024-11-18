@@ -3,20 +3,35 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { MdOutlineAddTask } from "react-icons/md";
 
-import "../CSS/boardStyle.css";
-import Column from "./Column";
-import { assigneeOptions } from "../Data/initial-data";
+import "../../CSS/boardStyle.css";
+import ProjectColumn from "./ProjectColumn";
+// import { assigneeOptions } from "../Data/initial-data";
 
-export default function Board() {
+export default function PojectBoard() {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const [data, setData] = useState({
-    tasks: {},
+    tasks: {
+      "Project-1": {
+        id: "Project-1",
+        title: "Project 1",
+        content:
+          "Project 1 Description, Project 1 Description ,Project 1 Description.",
+        assignee: "assignee Name",
+      },
+      "Project-2": {
+        id: "Project-2",
+        title: "Project 2",
+        content:
+          "Project 2 Description, Project 2 Description,Project 2 Description.",
+        assignee: "assignee Name",
+      },
+    },
     columns: {
-      "column-1": { id: "column-1", title: "Tasks", taskIds: [] },
+      "column-1": { id: "column-1", title: "Requirements", taskIds: ["Project-1","Project-2"] },
       "column-2": { id: "column-2", title: "Development", taskIds: [] },
       "column-3": { id: "column-3", title: "Testing", taskIds: [] },
       "column-4": { id: "column-4", title: "Debug", taskIds: [] },
@@ -29,35 +44,35 @@ export default function Board() {
   const [loading, setLoading] = useState(false);
 
   // Fetch user data as task data
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((response) => response.json())
-      .then((users) => {
-        const tasks = {};
-        const taskIds = users.map((user) => {
-          const taskId = `task-${user.id}`;
-          tasks[taskId] = {
-            id: taskId,
-            title: user.company.name, // Setting the user name as task title
-            content: user.email, // Setting email and phone as task description
-            assignee: user.name, // Setting company name as assignee  assignee: `hello ${user.name}`
-          };
-          return taskId;
-        });
+  // useEffect(() => {
+  //   fetch("https://jsonplaceholder.typicode.com/users")
+  //     .then((response) => response.json())
+  //     .then((users) => {
+  //       const tasks = {};
+  //       const taskIds = users.map((user) => {
+  //         const taskId = `task-${user.id}`;
+  //         tasks[taskId] = {
+  //           id: taskId,
+  //           title: user.company.name, // Setting the user name as task title
+  //           content: user.email, // Setting email and phone as task description
+  //           assignee: user.name, // Setting company name as assignee  assignee: `hello ${user.name}`
+  //         };
+  //         return taskId;
+  //       });
 
-        const updatedColumns = {
-          ...data.columns,
-          "column-1": {
-            ...data.columns["column-1"],
-            taskIds: taskIds, // Place all tasks initially in the "To Do" column
-          },
-        };
+  //       const updatedColumns = {
+  //         ...data.columns,
+  //         "column-1": {
+  //           ...data.columns["column-1"],
+  //           taskIds: taskIds, // Place all tasks initially in the "To Do" column
+  //         },
+  //       };
 
-        setData({ ...data, tasks: tasks, columns: updatedColumns });
-      })
-      .catch((error) => console.error("Error fetching users:", error));
-    // eslint-disable-next-line
-  }, []);
+  //       setData({ ...data, tasks: tasks, columns: updatedColumns });
+  //     })
+  //     .catch((error) => console.error("Error fetching users:", error));
+  //   // eslint-disable-next-line
+  // }, []);
 
   //fetch data End
 
@@ -292,8 +307,9 @@ export default function Board() {
               <MdOutlineAddTask className="addTaskIconApp" />
             </Button>
           </div>
+
           <div className="d-flex flex-column columnBoard">
-            <h2>All Task Of Your Project</h2>
+            <h2>All Projects</h2>
             <div className="taskColumnBoard">
               {data?.columnOrder?.map((columnId) => {
                 const column = data?.columns[columnId];
@@ -302,7 +318,7 @@ export default function Board() {
                 );
 
                 return (
-                  <Column
+                  <ProjectColumn
                     key={column?.id}
                     column={column}
                     tasks={tasks}
@@ -321,24 +337,24 @@ export default function Board() {
           <div className="edit-form">
             <form onSubmit={handleEditSubmit}>
               <Modal.Header>
-                <Modal.Title>Edit Task</Modal.Title>
+                <Modal.Title>Edit Project</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form.Group className="mb-3">
-                  <Form.Label>Task Name</Form.Label>
+                  <Form.Label>Project Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Named Your Task"
+                    placeholder="Named Your Poject"
                     value={editTaskTitle}
                     onChange={(e) => setEditTaskTitle(e.target.value)}
                   />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Task Description</Form.Label>
+                  <Form.Label>Project Requirements</Form.Label>
                   <Form.Control
                     as="textarea"
-                    placeholder="Describe Your Task Here"
+                    placeholder="Update Your Requirements"
                     value={editTaskContent}
                     onChange={(e) => setEditTaskContent(e.target.value)}
                   />
@@ -351,7 +367,7 @@ export default function Board() {
                     onChange={(e) => setEditTaskAssignee(e.target.value)}
                   >
                     <option value={editTaskAssignee}>{editTaskAssignee}</option>
-                    {assigneeOptions.map((assignee) => (
+                    {data.assigneeOptions.map((assignee) => (
                       <option value={assignee}>{assignee}</option>
                     ))}
                   </Form.Select>
@@ -406,24 +422,24 @@ export default function Board() {
       <Modal show={show} onHide={handleClose}>
         <form onSubmit={handleSubmit}>
           <Modal.Header closeButton>
-            <Modal.Title>Add New Task</Modal.Title>
+            <Modal.Title>Add New Project</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group className="mb-3">
-              <Form.Label>Task Name</Form.Label>
+              <Form.Label>Project Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Named Your Task"
+                placeholder="Named Your Project"
                 value={newTaskTitle}
                 onChange={(e) => setNewTaskTitle(e.target.value)}
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Task Description</Form.Label>
+              <Form.Label>Project Requirements</Form.Label>
               <Form.Control
                 as="textarea"
-                placeholder="Describe Your Task Here"
+                placeholder="Tell Your Requirements in Details"
                 value={newTaskContent}
                 onChange={(e) => setNewTaskContent(e.target.value)}
               />
@@ -438,16 +454,16 @@ export default function Board() {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Assignee</Form.Label>
+              <Form.Label>Cordinator</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Name of Assignee"
+                placeholder="Name of Project Cordinator"
                 value={newTaskAssignee}
                 onChange={(e) => setNewTaskAssignee(e.target.value)}
               />
-              <Form.Text className="text-muted">
-                Who is assigned for the task
-              </Form.Text>
+              {/* <Form.Text className="text-muted">
+                Who is esponsible for the task
+              </Form.Text> */}
             </Form.Group>
           </Modal.Body>
           <Modal.Footer>
