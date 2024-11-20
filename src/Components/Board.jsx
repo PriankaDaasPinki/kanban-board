@@ -16,13 +16,12 @@ export default function Board() {
   const [data, setData] = useState({
     tasks: {},
     columns: {
-      "column-1": { id: "column-1", title: "Tasks", taskIds: [] },
-      "column-2": { id: "column-2", title: "Development", taskIds: [] },
-      "column-3": { id: "column-3", title: "Testing", taskIds: [] },
-      "column-4": { id: "column-4", title: "Debug", taskIds: [] },
-      "column-5": { id: "column-5", title: "Implement & Traning", taskIds: [] },
+      "To Do": { id: "To Do", title: "To Do", taskIds: [] },
+      "In Progress": { id: "In Progress", title: "In Progress", taskIds: [] },
+      "Paused": { id: "Paused", title: "Paused", taskIds: [] },
+      "Completed": { id: "Completed", title: "Completed", taskIds: [] },
     },
-    columnOrder: ["column-1", "column-2", "column-3", "column-4", "column-5"],
+    columnOrder: ["To Do", "In Progress", "Paused", "Completed"],
     assigneeOptions: ["Ram", "Sam", "Madhu", "Unassigned"],
   });
 
@@ -47,8 +46,8 @@ export default function Board() {
 
         const updatedColumns = {
           ...data.columns,
-          "column-1": {
-            ...data.columns["column-1"],
+          "To Do": {
+            ...data.columns["To Do"],
             taskIds: taskIds, // Place all tasks initially in the "To Do" column
           },
         };

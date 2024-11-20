@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { MdOutlineAddTask } from "react-icons/md";
@@ -17,7 +17,7 @@ export default function PojectBoard() {
     tasks: {
       "Project-1": {
         id: "Project-1",
-        title: "Project 1",
+        title: "E-bit",
         content:
           "Project 1 Description, Project 1 Description ,Project 1 Description.",
         assignee: "assignee Name",
@@ -31,13 +31,17 @@ export default function PojectBoard() {
       },
     },
     columns: {
-      "column-1": { id: "column-1", title: "Requirements", taskIds: ["Project-1","Project-2"] },
-      "column-2": { id: "column-2", title: "Development", taskIds: [] },
-      "column-3": { id: "column-3", title: "Testing", taskIds: [] },
-      "column-4": { id: "column-4", title: "Debug", taskIds: [] },
-      "column-5": { id: "column-5", title: "Implement & Traning", taskIds: [] },
+      "Requirements": {
+        id: "Requirements",
+        title: "Requirements",
+        taskIds: ["Project-1", "Project-2"],
+      },
+      "Development": { id: "Development", title: "Development", taskIds: [] },
+      "Testing": { id: "Testing", title: "Testing", taskIds: [] },
+      "Debug": { id: "Debug", title: "Debug", taskIds: [] },
+      "Implement & Traning": { id: "Implement & Traning", title: "Implement & Traning", taskIds: [] },
     },
-    columnOrder: ["column-1", "column-2", "column-3", "column-4", "column-5"],
+    columnOrder: ["Requirements", "Development", "Testing", "Debug", "Implement & Traning"],
     assigneeOptions: ["Ram", "Sam", "Madhu", "Unassigned"],
   });
 
@@ -138,6 +142,8 @@ export default function PojectBoard() {
 
     setData(newState);
   };
+
+  // console.log(status);
 
   //Add task start here
   const [newTaskTitle, setNewTaskTitle] = useState(""); // state for the form input
