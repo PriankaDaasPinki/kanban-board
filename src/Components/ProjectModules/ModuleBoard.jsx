@@ -4,10 +4,10 @@ import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { MdOutlineAddTask } from "react-icons/md";
 
 import "../../CSS/boardStyle.css";
-import ProjectColumn from "./ProjectColumn";
+import ModuleColumn from "./ModuleColumn";
 // import { assigneeOptions } from "../Data/initial-data";
 
-export default function PojectBoard() {
+export default function ModuleBoard() {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -15,37 +15,54 @@ export default function PojectBoard() {
 
   const [data, setData] = useState({
     tasks: {
-      "Project-1": {
-        id: "Project-1",
-        title: "E-bit",
+      "Module-1": {
+        id: "Module-1",
+        title: "Inventory",
         content:
-          "Project 1 Description, Project 1 Description ,Project 1 Description.",
+          "Module 1 Description, Module 1 Description ,Module 1 Description.",
         assignee: "assignee Name",
       },
-      "Project-2": {
-        id: "Project-2",
-        title: "Project 2",
+      "Module-2": {
+        id: "Module-2",
+        title: "Billing",
         content:
-          "Project 2 Description, Project 2 Description,Project 2 Description.",
+          "Module 2 Description, Module 2 Description,Module 2 Description.",
+        assignee: "assignee Name",
+      },
+      "Module-3": {
+        id: "Module-3",
+        title: "Cart",
+        content:
+          "Module 3 Description, Module 3 Description,Module 3 Description.",
         assignee: "assignee Name",
       },
     },
     columns: {
-      "Requirements": {
+      Requirements: {
         id: "Requirements",
         title: "Requirements",
-        taskIds: ["Project-1", "Project-2"],
+        taskIds: ["Module-1", "Module-2", "Module-3"],
       },
-      "Development": { id: "Development", title: "Development", taskIds: [] },
-      "Testing": { id: "Testing", title: "Testing", taskIds: [] },
-      "Debug": { id: "Debug", title: "Debug", taskIds: [] },
-      "Implement & Traning": { id: "Implement & Traning", title: "Implement & Traning", taskIds: [] },
+      Development: { id: "Development", title: "Development", taskIds: [] },
+      Testing: { id: "Testing", title: "Testing", taskIds: [] },
+      Debug: { id: "Debug", title: "Debug", taskIds: [] },
+      "Implement & Traning": {
+        id: "Implement & Traning",
+        title: "Implement & Traning",
+        taskIds: [],
+      },
     },
-    columnOrder: ["Requirements", "Development", "Testing", "Debug", "Implement & Traning"],
+    columnOrder: [
+      "Requirements",
+      "Development",
+      "Testing",
+      "Debug",
+      "Implement & Traning",
+    ],
     assigneeOptions: ["Ram", "Sam", "Madhu", "Unassigned"],
   });
 
-  // console.log("data.columns.id  " + data.columns.Requirements.id);
+  console.log("data.columns.id  " + data.columns.Requirements.id);
 
   const [loading, setLoading] = useState(false);
 
@@ -188,10 +205,10 @@ export default function PojectBoard() {
     setLoading(true);
     // Simulate an API call
     setTimeout(() => {
-      console.log("Saved task");
+      // console.log("Saved Module");
       setLoading(false);
       setShow(false);
-    }, 3000);
+    }, 1000);
 
     setData(newState);
     setNewTaskTitle(""); // Clear the input field
@@ -317,7 +334,7 @@ export default function PojectBoard() {
           </div>
 
           <div className="d-flex flex-column columnBoard">
-            <h2>All Projects</h2>
+            <h2>Project's All Modules</h2>
             <div className="taskColumnBoard">
               {data?.columnOrder?.map((columnId) => {
                 const column = data?.columns[columnId];
@@ -326,7 +343,7 @@ export default function PojectBoard() {
                 );
 
                 return (
-                  <ProjectColumn
+                  <ModuleColumn
                     key={column?.id}
                     column={column}
                     tasks={tasks}
@@ -345,14 +362,14 @@ export default function PojectBoard() {
           <div className="edit-form">
             <form onSubmit={handleEditSubmit}>
               <Modal.Header>
-                <Modal.Title>Edit Project</Modal.Title>
+                <Modal.Title>Edit Module</Modal.Title>
               </Modal.Header>
               <Modal.Body>
                 <Form.Group className="mb-3">
-                  <Form.Label>Project Name</Form.Label>
+                  <Form.Label>Module Name</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Named Your Poject"
+                    placeholder="Named Your Poject's Module"
                     value={editTaskTitle}
                     onChange={(e) => setEditTaskTitle(e.target.value)}
                   />
@@ -386,7 +403,7 @@ export default function PojectBoard() {
                   Close
                 </Button>
                 <Button type="submit" variant="danger" disabled={loading}>
-                  {loading ? "Update Task..." : "Update Task"}
+                  {loading ? "Updating Module..." : "Update Module"}
                 </Button>
               </Modal.Footer>
             </form>
@@ -397,10 +414,10 @@ export default function PojectBoard() {
       {showDeleteWarning && (
         <Modal className="deleteWarning" show="true">
           <Modal.Header>
-            <Modal.Title>Delete Task</Modal.Title>
+            <Modal.Title>Delete Module</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <h4>Are you sure you want to delete this task?</h4>
+            <h4>Are you sure you want to delete this Module?</h4>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleCancelDelete}>
@@ -423,28 +440,28 @@ export default function PojectBoard() {
           variant="success"
           className="d-flex justify-content-evenly position-absolute alartDiv"
         >
-          The task is deleted
+          The Module is Deleted
         </Alert>
       )}
 
       <Modal show={show} onHide={handleClose}>
         <form onSubmit={handleSubmit}>
           <Modal.Header closeButton>
-            <Modal.Title>Add New Project</Modal.Title>
+            <Modal.Title>Add New Module</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Group className="mb-3">
-              <Form.Label>Project Name</Form.Label>
+              <Form.Label>Module Name</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Named Your Project"
+                placeholder="Named Your Project's Module"
                 value={newTaskTitle}
                 onChange={(e) => setNewTaskTitle(e.target.value)}
               />
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Project Requirements</Form.Label>
+              <Form.Label>Module Requirements</Form.Label>
               <Form.Control
                 as="textarea"
                 placeholder="Tell Your Requirements in Details"

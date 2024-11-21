@@ -25,6 +25,7 @@ export default function Board() {
     assigneeOptions: ["Ram", "Sam", "Madhu", "Unassigned"],
   });
 
+
   const [loading, setLoading] = useState(false);
 
   // Fetch user data as task data
@@ -148,8 +149,8 @@ export default function Board() {
     };
 
     const updatedColumn = {
-      ...data.columns["column-1"],
-      taskIds: [...data.columns["column-1"].taskIds, newTaskId],
+      ...data.columns["To Do"],
+      taskIds: [...data.columns["To Do"].taskIds, newTaskId],
     };
 
     const newState = {
@@ -292,7 +293,7 @@ export default function Board() {
             </Button>
           </div>
           <div className="d-flex flex-column columnBoard">
-            <h2>All Task Of Your Project</h2>
+            <h2>All Task Of Your Project's Module</h2>
             <div className="taskColumnBoard">
               {data?.columnOrder?.map((columnId) => {
                 const column = data?.columns[columnId];

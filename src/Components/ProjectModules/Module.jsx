@@ -23,7 +23,7 @@ function bgcolorChange(props) {
     : "#fffada";
 }
 
-export default function Project({ task, index, onEdit, onDelete, columnId }) {
+export default function Module({ task, index, onEdit, onDelete, columnId }) {
   // console.log("columnId " +columnId);
   const [view, setView] = useState(false);
   const handleViewClose = () => setView(false);
@@ -45,7 +45,7 @@ export default function Project({ task, index, onEdit, onDelete, columnId }) {
             {...provided.dragHandleProps}
             ref={provided.innerRef}
             isDragging={snapshot.isDragging}
-            onDoubleClick={() => (window.location.href = "/project-module")} // Double-click to start editing
+            onDoubleClick={() => (window.location.href = "/all-task")} // Double-click to start editing
           >
             <div className="editDeletionIcon">
               <FaRegEdit
@@ -81,26 +81,26 @@ export default function Project({ task, index, onEdit, onDelete, columnId }) {
       </Draggable>
       <Modal show={view} onHide={handleViewClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Project {task.title} Details</Modal.Title>
+          <Modal.Title>{task.title} Module Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            <strong>Project ID:</strong> {task.id}
+            <strong>Module ID:</strong> {task.id}
           </p>
           <p>
-            <strong>Project Name:</strong> {task.title}
+            <strong>Module Name:</strong> {task.title}
           </p>
           <p>
-            <strong>Project Requirements:</strong> {task.content}
+            <strong>Module Requirements:</strong> {task.content}
           </p>
           <p>
-            Project under supervision of <strong>{task.assignee}</strong>
+            Module under supervision of <strong>{task.assignee}</strong>
           </p>
           <p>
             <strong>Due Date:</strong> {task.date ? task.date : currentDate}
           </p>
           <p>
-            <strong>Project Status:</strong> {columnId}
+            <strong>Module Status:</strong> {columnId}
           </p>
         </Modal.Body>
         <Modal.Footer>
