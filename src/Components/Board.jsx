@@ -6,8 +6,18 @@ import { MdOutlineAddTask } from "react-icons/md";
 import "../CSS/boardStyle.css";
 import Column from "./Column";
 import { assigneeOptions } from "../Data/initial-data";
+// import { useSelector, useDispatch } from "react-redux";
+// import { getAllTasks } from "../Services/actions/taskActions";
 
 export default function Board() {
+  // const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   dispatch(getAllTasks());
+  // }, [dispatch]);
+
+  // const { error, isLoading, tasks } = useSelector((state) => state);
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -18,13 +28,12 @@ export default function Board() {
     columns: {
       "To Do": { id: "To Do", title: "To Do", taskIds: [] },
       "In Progress": { id: "In Progress", title: "In Progress", taskIds: [] },
-      "Paused": { id: "Paused", title: "Paused", taskIds: [] },
-      "Completed": { id: "Completed", title: "Completed", taskIds: [] },
+      Paused: { id: "Paused", title: "Paused", taskIds: [] },
+      Completed: { id: "Completed", title: "Completed", taskIds: [] },
     },
     columnOrder: ["To Do", "In Progress", "Paused", "Completed"],
     assigneeOptions: ["Ram", "Sam", "Madhu", "Unassigned"],
   });
-
 
   const [loading, setLoading] = useState(false);
 
@@ -292,6 +301,32 @@ export default function Board() {
               <MdOutlineAddTask className="addTaskIconApp" />
             </Button>
           </div>
+
+          {/* {isLoading && (
+            <div className="p-5 mt-5">
+              <h1>Loading......</h1>
+            </div>
+          )}
+          {error && (
+            <div className="p-5 mt-5">
+              <h1>{error}</h1>
+            </div>
+          )}
+          <div className="d-flex bg-color-red">
+            {tasks &&
+              tasks.map((taskDetails) => {
+                const { id, title } = taskDetails;
+                return (
+                  <div>
+                    <div className="col-md-2 p-2">
+                      <h5>{title.slice(title,10)}</h5>
+                      <h5>{id}</h5>
+                    </div>
+                  </div>
+                );
+              })}
+          </div> */}
+
           <div className="d-flex flex-column columnBoard">
             <h2>All Task Of Your Project's Module</h2>
             <div className="taskColumnBoard">
