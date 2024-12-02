@@ -1,7 +1,6 @@
-/*  /index.html  200
 
-/home                /
-/blog/my-post.php    /project-list
-/news                /project-module
+/                    /home
+/project-list        /Pages/Projects.jsx
+/Pages/Modules.jsx   /project-module
 /cuties              /all-task
-/*                   /
+/*                   /home
