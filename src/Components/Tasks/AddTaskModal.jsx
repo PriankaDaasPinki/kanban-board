@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { MdOutlineAddTask } from "react-icons/md";
-import initialData from "../Data/initial-data";
+import initialData from "../../Data/initial-data";
 
 import "../CSS/addTaskModal.css";
 

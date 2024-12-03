@@ -1,40 +1,84 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import "../CSS/boardStyle.css";
-import Column from "./Column";
-import initialData, { assigneeOptions } from "../Data/initial-data";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { MdOutlineAddTask } from "react-icons/md";
-// import ApiDataTry from "../Data/ApiDataTry";
-// import test from "./test";
+import { useSelector } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
+// import { getAllTasks } from "../Services/actions/taskActions";
 
-export default function Board(Data) {
-  // const data1 = Data.Data;
-  console.log("1st in Board component");
-  const data1 = Data.Data;
-  const data2  = Data;
-  console.log('data1',data1);
-  console.log('data2',data2);
+import "../../CSS/boardStyle.css";
+import Column from "./Column";
+import { assigneeOptions } from "../../Data/initial-data";
+import { useDispatch } from "react-redux";
+import { fetchTasks } from "./TasksSlice";
 
-  // console.log("initial data from board");
-  // console.log(initialData.columns);
-  // const [completed, setCompeted] = useState([]);
-  // const [incomplete, setIncompete] = useState([]);
+export default function Board() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, [dispatch]);
+  
+  const { isLoading, tasks, error } = useSelector(
+    (state) => state.tasksReducer
+  );  
+
+  console.log(isLoading);
+  console.log(tasks);
+  console.log(error);
 
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const [data, setData] = useState(data1);
+  const [data, setData] = useState({
+    tasks: {},
+    columns: {
+      "To Do": { id: "To Do", title: "To Do", taskIds: [] },
+      "In Progress": { id: "In Progress", title: "In Progress", taskIds: [] },
+      Paused: { id: "Paused", title: "Paused", taskIds: [] },
+      Completed: { id: "Completed", title: "Completed", taskIds: [] },
+    },
+    columnOrder: ["To Do", "In Progress", "Paused", "Completed"],
+    assigneeOptions: ["Ram", "Sam", "Madhu", "Unassigned"],
+  });
 
-  console.log('data',data)
+  const [loading, setLoading] = useState(false);
 
+  // Fetch user data as task data
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((response) => response.json())
+      .then((users) => {
+        const tasks = {};
+        const taskIds = users.map((user) => {
+          const taskId = `task-${user.id}`;
+          tasks[taskId] = {
+            id: taskId,
+            title: user.company.name, // Setting the user name as task title
+            content: user.email, // Setting email and phone as task description
+            assignee: user.name, // Setting company name as assignee  assignee: `hello ${user.name}`
+          };
+          return taskId;
+        });
+
+        const updatedColumns = {
+          ...data.columns,
+          "To Do": {
+            ...data.columns["To Do"],
+            taskIds: taskIds, // Place all tasks initially in the "To Do" column
+          },
+        };
+
+        setData({ ...data, tasks: tasks, columns: updatedColumns });
+      })
+      .catch((error) => console.error("Error fetching users:", error));
+    // eslint-disable-next-line
+  }, []);
+
+  //fetch data End
 
   const handleDragEnd = (result) => {
-    console.log("inside function");
-    console.log(data1);
-
     const { destination, source, draggableId } = result;
 
     if (!destination) return;
@@ -100,42 +144,54 @@ export default function Board(Data) {
   //Add task start here
   const [newTaskTitle, setNewTaskTitle] = useState(""); // state for the form input
   const [newTaskContent, setNewTaskContent] = useState("");
+  const [newTaskDate, setNewTaskDate] = useState("");
+  const [newTaskAssignee, setNewTaskAssignee] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     // Create a new task ID and new task object
     const newTaskId = `task-${Object.keys(data.tasks).length + 1}`;
-    // const newTask = {
-    //   id: newTaskId,
-    //   title: newTaskTitle,
-    //   content: newTaskContent,
-    //   assignee: "Unassigned",
-    // };
+    const newTask = {
+      id: newTaskId,
+      title: newTaskTitle,
+      content: newTaskContent,
+      date: newTaskDate || "",
+      assignee: newTaskAssignee || "Unassigned",
+    };
 
     // Update the tasks object and add the task to the "To Do" column
-    // const updatedTasks = {
-    //   ...data.tasks,
-    //   [newTaskId]: newTask,
-    // };
+    const updatedTasks = {
+      ...data.tasks,
+      [newTaskId]: newTask,
+    };
 
-    // const updatedColumn = {
-    //   ...data.columns["column-1"],
-    //   taskIds: [...data.columns["column-1"].taskIds, newTaskId],
-    // };
+    const updatedColumn = {
+      ...data.columns["To Do"],
+      taskIds: [...data.columns["To Do"].taskIds, newTaskId],
+    };
 
-    // const newState = {
-    //   ...data,
-    //   tasks: updatedTasks,
-    //   columns: {
-    //     ...data.columns,
-    //     [updatedColumn.id]: updatedColumn,
-    //   },
-    // };
+    const newState = {
+      ...data,
+      tasks: updatedTasks,
+      columns: {
+        ...data.columns,
+        [updatedColumn.id]: updatedColumn,
+      },
+    };
 
-    // setData(newState);
+    setLoading(true);
+    // Simulate an API call
+    setTimeout(() => {
+      console.log("Saved task");
+      setLoading(false);
+      setShow(false);
+    }, 3000);
+
+    setData(newState);
     setNewTaskTitle(""); // Clear the input field
     setNewTaskContent(""); // Clear the input field
+    setNewTaskDate("");
+    setNewTaskAssignee("");
   };
 
   // Handle task edit start
@@ -159,34 +215,39 @@ export default function Board(Data) {
   const handleEditSubmit = (e) => {
     e.preventDefault();
 
-    // const updatedTasks = {
-    //   ...data?.tasks,
-    //   [isEditing]: {
-    //     ...data.tasks[isEditing],
-    //     title: editTaskTitle,
-    //     content: editTaskContent,
-    //     assignee: editTaskAssignee,
-    //   }, // Update the content of the task being edited
-    // };
+    const updatedTasks = {
+      ...data?.tasks,
+      [isEditing]: {
+        ...data.tasks[isEditing],
+        title: editTaskTitle,
+        content: editTaskContent,
+        assignee: editTaskAssignee,
+      }, // Update the content of the task being edited
+    };
 
-    // const newState = {
-    //   ...data,
-    //   tasks: updatedTasks,
-    // };
+    const newState = {
+      ...data,
+      tasks: updatedTasks,
+    };
 
-    // setData(newState);
-    // setIsEditing(null); // Close the edit mode
-    // setEditTaskTitle(""); // Clear the edit field
-    // setEditTaskContent(""); // Clear the edit field
-    // setEditTaskAssignee(""); // Clear the edit field
+    setLoading(true);
+    setTimeout(() => {
+      console.log("Updated task");
+      setLoading(false);
+      setShow(false);
+    }, 3000);
+
+    setData(newState);
+    setIsEditing(null); // Close the edit mode
+    setEditTaskTitle(""); // Clear the edit field
+    setEditTaskContent(""); // Clear the edit field
+    setEditTaskAssignee(""); // Clear the edit field
   };
 
   // Task Delete
   const [taskToDelete, setTaskToDelete] = useState(null); // Store task to delete
   const [showDeleteWarning, setShowDeleteWarning] = useState(false); // Track delete warning visibility
   const [showDeleteWarningAfter, setShowDeleteWarningAfter] = useState(false); // Track delete warning visibility
-
-  // const ShowDeleteWarningAfter = () => setShowDeleteWarningAfter(false);
 
   // Show delete warning before deleting
   const handleDeleteTaskWarning = (taskId, columnId) => {
@@ -215,6 +276,14 @@ export default function Board(Data) {
       },
     };
 
+    setLoading(true);
+    // Simulate an API call
+    setTimeout(() => {
+      console.log("Deleted task task");
+      setLoading(false);
+      setShow(false);
+    }, 3000);
+
     setData(newState);
     setShowDeleteWarning(false);
     setTaskToDelete(null); // Clear the task to delete
@@ -230,73 +299,6 @@ export default function Board(Data) {
     setShowDeleteWarning(false);
     setTaskToDelete(null); // Reset taskToDelete when canceling
   };
-  // Handle task deletion
-  // const handleDeleteTask = (taskId, columnId) => {
-  //   const updatedTasks = { ...data.tasks };
-  //   delete updatedTasks[taskId]; // Remove task from tasks
-
-  //   // Remove the task from its column's taskIds
-  //   const updatedColumn = {
-  //     ...data.columns[columnId],
-  //     taskIds: data.columns[columnId].taskIds.filter((id) => id !== taskId),
-  //   };
-
-  //   const newState = {
-  //     ...data,
-  //     tasks: updatedTasks,
-  //     columns: {
-  //       ...data.columns,
-  //       [updatedColumn.id]: updatedColumn,
-  //     },
-  //   };
-
-  //   setData(newState);
-  // };
-
-  // Handle Assignee change   // handleAssignee
-  // const [showDropdown, setShowDropdown] = useState(null); // To control which dropdown is shown
-  // const handleShowDropdown = (taskId) => {
-  //   setShowDropdown(showDropdown === taskId ? null : taskId); // Toggle dropdown visibility for each task
-  // };
-
-  // Handle changing the assignee
-  // const handleChangeAssignee = (taskId, newAssignee) => {
-  //   const updatedTasks = {
-  //     ...data.tasks,
-  //     [taskId]: { ...data.tasks[taskId], assignee: newAssignee }, // Update the assignee for the task
-  //   };
-
-  //   const newState = {
-  //     ...data,
-  //     tasks: updatedTasks,
-  //   };
-
-  //   setData(newState);
-  //   setShowDropdown(null); // Hide dropdown after selection
-  // };
-
-  // const handleAssignee = (e) => {
-  //   e.preventDefault();
-
-  //   const updatedTasks = {
-  //     ...data.tasks,
-  //     [isEditing]: {
-  //       ...data.tasks[isEditing],
-  //       title: editTaskTitle,
-  //       content: editTaskContent,
-  //     }, // Update the content of the task being edited
-  //   };
-
-  //   const newState = {
-  //     ...data,
-  //     tasks: updatedTasks,
-  //   };
-
-  //   setData(newState);
-  //   setIsEditing(null); // Close the edit mode
-  //   setEditTaskTitle(""); // Clear the edit field
-  //   setEditTaskContent(""); // Clear the edit field
-  // };
 
   return (
     <>
@@ -307,26 +309,52 @@ export default function Board(Data) {
               <MdOutlineAddTask className="addTaskIconApp" />
             </Button>
           </div>
-          {/* <h1 className="boardTitle">Project Progress Board</h1> */}
-          <div className="taskColumnBoard">
-            {data?.columnOrder?.map((columnId) => {
-              const column = data?.columns[columnId];
-              const tasks = column?.taskIds?.map((taskId) => data?.tasks[taskId]);
 
-              return (
-                <Column
-                  key={column?.id}
-                  column={column}
-                  tasks={tasks}
-                  onEdit={handleEditStart}
-                  onDelete={handleDeleteTaskWarning}
-                  // onDelete={handleDeleteTask}
-                  // onShowDropdown={handleShowDropdown}
-                  // showDropdown={showDropdown}
-                  // onChangeAssignee={handleChangeAssignee}
-                />
-              );
-            })}
+          {/* {isLoading && (
+            <div className="p-5 mt-5">
+              <h1>Loading......</h1>
+            </div>
+          )}
+          {error && (
+            <div className="p-5 mt-5">
+              <h1>{error}</h1>
+            </div>
+          )}
+          <div className="d-flex bg-color-red">
+            {tasks &&
+              tasks.map((taskDetails) => {
+                const { id, title } = taskDetails;
+                return (
+                  <div>
+                    <div className="col-md-2 p-2">
+                      <h5>{title.slice(title,10)}</h5>
+                      <h5>{id}</h5>
+                    </div>
+                  </div>
+                );
+              })}
+          </div> */}
+
+          <div className="d-flex flex-column columnBoard">
+            <h2>All Task Of Your Project's Module</h2>
+            <div className="taskColumnBoard">
+              {data?.columnOrder?.map((columnId) => {
+                const column = data?.columns[columnId];
+                const tasks = column?.taskIds?.map(
+                  (taskId) => data?.tasks[taskId]
+                );
+
+                return (
+                  <Column
+                    key={column?.id}
+                    column={column}
+                    tasks={tasks}
+                    onEdit={handleEditStart}
+                    onDelete={handleDeleteTaskWarning}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
       </DragDropContext>
@@ -376,8 +404,8 @@ export default function Board(Data) {
                 <Button variant="secondary" onClick={() => setIsEditing(null)}>
                   Close
                 </Button>
-                <Button type="submit" variant="danger" onClick={handleClose}>
-                  Update Task
+                <Button type="submit" variant="danger" disabled={loading}>
+                  {loading ? "Update Task..." : "Update Task"}
                 </Button>
               </Modal.Footer>
             </form>
@@ -415,30 +443,7 @@ export default function Board(Data) {
           className="d-flex justify-content-evenly position-absolute alartDiv"
         >
           The task is deleted
-          {/* <div
-            className="p-2 okButton"
-            variant=""
-            onClick={ShowDeleteWarningAfter}
-          >
-            OK
-          </div> */}
         </Alert>
-
-        //setShowDeleteWarningAfter(false)
-
-        // <Modal show="true" className="deleteWarning">
-        //   <Modal.Body className="d-flex justify-content-evenly">
-        //     <h4>The task is deleted</h4>
-        //     <Button variant="secondary" onClick={ShowDeleteWarningAfter}>
-        //       OK
-        //     </Button>
-        //   </Modal.Body>
-        // </Modal>
-
-        // <Alert key="danger" variant="danger">
-        //   This is a alert with <Alert.Link href="#">an example link</Alert.Link>
-        //   . Give it a click if you like.
-        // </Alert>
       )}
 
       <Modal show={show} onHide={handleClose}>
@@ -468,12 +473,21 @@ export default function Board(Data) {
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Due Date</Form.Label>
-              <Form.Control type="date" />
+              <Form.Control
+                type="date"
+                value={newTaskDate}
+                onChange={(e) => setNewTaskDate(e.target.value)}
+              />
             </Form.Group>
 
             <Form.Group className="mb-3">
               <Form.Label>Assignee</Form.Label>
-              <Form.Control type="text" placeholder="Name of Assignee" />
+              <Form.Control
+                type="text"
+                placeholder="Name of Assignee"
+                value={newTaskAssignee}
+                onChange={(e) => setNewTaskAssignee(e.target.value)}
+              />
               <Form.Text className="text-muted">
                 Who is assigned for the task
               </Form.Text>
@@ -483,8 +497,8 @@ export default function Board(Data) {
             <Button variant="secondary" onClick={handleClose}>
               Close
             </Button>
-            <Button type="submit" variant="danger" onClick={handleClose}>
-              Save
+            <Button type="submit" variant="danger" disabled={loading}>
+              {loading ? "Saving..." : "Save"}
             </Button>
           </Modal.Footer>
         </form>

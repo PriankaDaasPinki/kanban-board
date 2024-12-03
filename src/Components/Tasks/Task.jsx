@@ -1,11 +1,12 @@
 import { Draggable } from "react-beautiful-dnd";
-import "../CSS/taskStyle.css";
 import styled from "styled-components";
 import { FaRegEdit, FaUserSecret } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { Button, Modal } from "react-bootstrap";
 import { GrStatusInfo, GrView } from "react-icons/gr";
 import { useState } from "react";
+
+import "../../CSS/taskStyle.css";
 
 const Container = styled.div`
   background-color: ${(props) => bgcolorChange(props)};
