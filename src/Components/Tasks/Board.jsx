@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { MdOutlineAddTask } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { FaRegEdit } from "react-icons/fa";
 // import { useSelector, useDispatch } from "react-redux";
 // import { getAllTasks } from "../Services/actions/taskActions";
 
 import "../../CSS/boardStyle.css";
 import Column from "./Column";
 import { assigneeOptions } from "../../Data/initial-data";
-import { useDispatch } from "react-redux";
-import { fetchTasks } from "./TasksSlice";
+import { addTask, deleteTask, fetchTasks, updateTask } from "./TasksSlice";
+
 
 export default function Board() {
   const dispatch = useDispatch();
@@ -18,14 +21,14 @@ export default function Board() {
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
-  
+
   const { isLoading, tasks, error } = useSelector(
     (state) => state.tasksReducer
-  );  
-
-  console.log(isLoading);
-  console.log(tasks);
-  console.log(error);
+  );
+  const onDeleteTask = (taskId) => {
+    dispatch(deleteTask(taskId));
+    // setShowDeleteWarning(true);
+  };
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -149,6 +152,15 @@ export default function Board() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    //redux toolkit test
+    const task = {
+      id: uuidv4(),
+      title: newTaskTitle,
+      completed: newTaskContent,
+    };
+    dispatch(addTask(task));
+
     // Create a new task ID and new task object
     const newTaskId = `task-${Object.keys(data.tasks).length + 1}`;
     const newTask = {
@@ -212,8 +224,17 @@ export default function Board() {
     setEditTaskAssignee(currentAssignee); // Populate the input with current task assignee
   };
 
+
+  const onEditTask = (taskId, currentTitle, currentContent) => {
+    dispatch(updateTask(taskId, currentTitle, currentContent));
+    // setShowDeleteWarning(true);
+  };
+
   const handleEditSubmit = (e) => {
-    e.preventDefault();
+    console.log(isEditing);
+    console.log(editTaskTitle);
+    console.log(editTaskContent);
+    e.preventDefault();    
 
     const updatedTasks = {
       ...data?.tasks,
@@ -310,7 +331,7 @@ export default function Board() {
             </Button>
           </div>
 
-          {/* {isLoading && (
+          {isLoading && (
             <div className="p-5 mt-5">
               <h1>Loading......</h1>
             </div>
@@ -320,20 +341,29 @@ export default function Board() {
               <h1>{error}</h1>
             </div>
           )}
-          <div className="d-flex bg-color-red">
+          {/* <button className="p-2 mt-5 mb-3" onClick={handleShow}>Add task</button> */}
+          <div className="d-flex flex-wrap bg-warning pt-5 mt-5 justify-content-center">
             {tasks &&
               tasks.map((taskDetails) => {
-                const { id, title } = taskDetails;
+                const { id, title, completed } = taskDetails;
                 return (
-                  <div>
-                    <div className="col-md-2 p-2">
-                      <h5>{title.slice(title,10)}</h5>
-                      <h5>{id}</h5>
+                  <div className="p-2 m-1 bg-secondary">
+                    <div className="d-flex align-items-center justify-content-between ps-3 pe-3">
+                      <RiDeleteBin5Line onClick={() => onDeleteTask(id)} />
+                      <FaRegEdit
+                        className="editIcon"
+                        onClick={() => handleEditStart(id, title, completed)}
+                      />
+                    </div>
+                    <div className="p-2 bg-secondary">
+                      <h6>{title.slice(title, 10)}</h6>
+                      <h6>{id}</h6>
+                      <h6>{completed}</h6>
                     </div>
                   </div>
                 );
               })}
-          </div> */}
+          </div>
 
           <div className="d-flex flex-column columnBoard">
             <h2>All Task Of Your Project's Module</h2>
@@ -362,6 +392,7 @@ export default function Board() {
       {isEditing && (
         <Modal show="true">
           <div className="edit-form">
+            
             <form onSubmit={handleEditSubmit}>
               <Modal.Header>
                 <Modal.Title>Edit Task</Modal.Title>

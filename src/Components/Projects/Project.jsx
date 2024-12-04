@@ -1,11 +1,13 @@
-import { Draggable } from "react-beautiful-dnd";
-import "../../CSS/taskStyle.css";
+// import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { FaRegEdit, FaUserSecret } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { GrStatusInfo, GrView } from "react-icons/gr";
 import { Modal, Button } from "react-bootstrap";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import "../../CSS/projectStyle.css";
 
 const Container = styled.div`
   background-color: ${(props) => bgcolorChange(props)};
@@ -23,11 +25,19 @@ function bgcolorChange(props) {
     : "#fffada";
 }
 
-export default function Project({ task, index, onEdit, onDelete, columnId }) {
+export default function Project({
+  id,
+  index,
+  projectTitle,
+  completed,
+  onEdit,
+  onDelete,
+}) {
   // console.log("columnId " +columnId);
   const [view, setView] = useState(false);
   const handleViewClose = () => setView(false);
   const handleView = () => setView(true);
+  const nevigate = useNavigate();
 
   const today = new Date();
   const month = today.getMonth() + 1;
@@ -37,70 +47,54 @@ export default function Project({ task, index, onEdit, onDelete, columnId }) {
 
   return (
     <>
-      <Draggable draggableId={task.id} index={index}>
-        {(provided, snapshot) => (
-          <Container
-            className="task taskContainer"
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            ref={provided.innerRef}
-            isDragging={snapshot.isDragging}
-            onDoubleClick={() => (window.location.href = "/project-module")} // Double-click to start editing
-          >
-            <div className="editDeletionIcon">
-              <FaRegEdit
-                className="editIcon"
-                onClick={() =>
-                  onEdit(task.id, task.title, task.content, task.assignee)
-                }
-              />
-              <GrView className="editIcon" onClick={handleView} />
-            </div>
+      <Container
+        className="project projectContainer p-4"
+        onDoubleClick={() => (nevigate("/project-module"))} // Double-click to start editing
+      >
+        <div className="editDeletionIcon">
+          <FaRegEdit
+            className="editIcon"
+            onClick={() => onEdit(id, projectTitle, completed)}
+          />
+          <GrView className="editIcon" onClick={handleView} />
+        </div>
 
-            <div className="taskTitle">{task.title}</div>
-            <div className="taskDesc">{task.content}</div>
-            <div className="taskFooter flex-column align-items-start">
-              <p className="dueDate">
-                Date: {task.date ? task.date : currentDate}
-              </p>
-              <div className="assigneeIcon">
-                <FaUserSecret /> {task.assignee}
-              </div>
-            </div>
-            <div className="mt-3 editDeletionIcon">
-              <RiDeleteBin5Line
-                className="deleteIcon text-red"
-                onClick={() => onDelete(task.id, columnId)}
-              />
-              <div className="d-flex align-items-center">
-                <GrStatusInfo /> <p className="m-0 ps-2">{columnId}</p>
-              </div>
-            </div>
-          </Container>
-        )}
-      </Draggable>
+        <div className="p-2">
+          <div className="taskTitle">{projectTitle}</div>
+          <div className="taskDesc">
+            {completed} {index}
+          </div>
+        </div>
+        <div className="taskFooter align-items-start">
+          <p className="dueDate">Date: {currentDate}</p>
+          <RiDeleteBin5Line
+            className="deleteIcon text-red"
+            onClick={() => onDelete(id)}
+          />
+        </div>
+      </Container>
       <Modal show={view} onHide={handleViewClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Project {task.title} Details</Modal.Title>
+          <Modal.Title>Project {projectTitle} Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            <strong>Project ID:</strong> {task.id}
+            <strong>Project ID:</strong> {id}
           </p>
           <p>
-            <strong>Project Name:</strong> {task.title}
+            <strong>Project Name:</strong> {projectTitle}
           </p>
           <p>
-            <strong>Project Requirements:</strong> {task.content}
+            <strong>Project Requirements:</strong> {completed}
           </p>
           <p>
-            Project under supervision of <strong>{task.assignee}</strong>
+            Project under supervision of <strong>assignee</strong>
           </p>
           <p>
-            <strong>Due Date:</strong> {task.date ? task.date : currentDate}
+            <strong>Due Date:</strong> {currentDate}
           </p>
           <p>
-            <strong>Project Status:</strong> {columnId}
+            <strong>Project Status:</strong> {completed}
           </p>
         </Modal.Body>
         <Modal.Footer>

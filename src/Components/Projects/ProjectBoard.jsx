@@ -1,189 +1,59 @@
-import React, { useState } from "react";
-import { DragDropContext } from "react-beautiful-dnd";
+import React, { useEffect, useState } from "react";
+// import { DragDropContext } from "react-beautiful-dnd";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { MdOutlineAddTask } from "react-icons/md";
+import { useDispatch } from "react-redux";
 
 import "../../CSS/boardStyle.css";
-import ProjectColumn from "./ProjectColumn";
-// import { assigneeOptions } from "../Data/initial-data";
+// import ProjectColumn from "./ProjectColumn";
+import { addProject, deleteProject, fetchProjects, updateProject } from "./ProjectSlice";
+import { useSelector } from "react-redux";
+import { RiDeleteBin5Line } from "react-icons/ri";
+// import { FaRegEdit } from "react-icons/fa";
+import Project from "./Project";
+import { v4 as uuidv4 } from "uuid";
 
 export default function PojectBoard() {
-  const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  useEffect(() => {
+    dispatch(fetchProjects());
+  }, [dispatch]);
 
-  const [data, setData] = useState({
-    tasks: {
-      "Project-1": {
-        id: "Project-1",
-        title: "E-bit",
-        content:
-          "Project 1 Description, Project 1 Description ,Project 1 Description.",
-        assignee: "assignee Name",
-      },
-      "Project-2": {
-        id: "Project-2",
-        title: "Project 2",
-        content:
-          "Project 2 Description, Project 2 Description,Project 2 Description.",
-        assignee: "assignee Name",
-      },
-    },
-    columns: {
-      "Requirements": {
-        id: "Requirements",
-        title: "Requirements",
-        taskIds: ["Project-1", "Project-2"],
-      },
-      "Development": { id: "Development", title: "Development", taskIds: [] },
-      "Testing": { id: "Testing", title: "Testing", taskIds: [] },
-      "Debug": { id: "Debug", title: "Debug", taskIds: [] },
-      "Implement & Traning": { id: "Implement & Traning", title: "Implement & Traning", taskIds: [] },
-    },
-    columnOrder: ["Requirements", "Development", "Testing", "Debug", "Implement & Traning"],
-    assigneeOptions: ["Ram", "Sam", "Madhu", "Unassigned"],
-  });
+  const { isLoading, projects, error } = useSelector(
+    (state) => state.projectsReducer
+  );
 
-  // console.log("data.columns.id  " + data.columns.Requirements.id);
-
-  const [loading, setLoading] = useState(false);
-
-  // Fetch user data as task data
-  // useEffect(() => {
-  //   fetch("https://jsonplaceholder.typicode.com/users")
-  //     .then((response) => response.json())
-  //     .then((users) => {
-  //       const tasks = {};
-  //       const taskIds = users.map((user) => {
-  //         const taskId = `task-${user.id}`;
-  //         tasks[taskId] = {
-  //           id: taskId,
-  //           title: user.company.name, // Setting the user name as task title
-  //           content: user.email, // Setting email and phone as task description
-  //           assignee: user.name, // Setting company name as assignee  assignee: `hello ${user.name}`
-  //         };
-  //         return taskId;
-  //       });
-
-  //       const updatedColumns = {
-  //         ...data.columns,
-  //         "column-1": {
-  //           ...data.columns["column-1"],
-  //           taskIds: taskIds, // Place all tasks initially in the "To Do" column
-  //         },
-  //       };
-
-  //       setData({ ...data, tasks: tasks, columns: updatedColumns });
-  //     })
-  //     .catch((error) => console.error("Error fetching users:", error));
-  //   // eslint-disable-next-line
-  // }, []);
-
-  //fetch data End
-
-  const handleDragEnd = (result) => {
-    const { destination, source, draggableId } = result;
-
-    if (!destination) return;
-
-    if (
-      destination.droppableId === source.droppableId &&
-      destination.index === source.index
-    ) {
-      return;
-    }
-
-    const start = data.columns[source.droppableId];
-    const finish = data.columns[destination.droppableId];
-
-    if (start === finish) {
-      const newTaskIds = Array.from(start.taskIds);
-      newTaskIds.splice(source.index, 1);
-      newTaskIds.splice(destination.index, 0, draggableId);
-
-      const newColumn = {
-        ...start,
-        taskIds: newTaskIds,
-      };
-
-      const newState = {
-        ...data,
-        columns: {
-          ...data.columns,
-          [newColumn.id]: newColumn,
-        },
-      };
-
-      setData(newState);
-      return;
-    }
-
-    const startTaskIds = Array.from(start.taskIds);
-    startTaskIds.splice(source.index, 1);
-    const newStart = {
-      ...start,
-      taskIds: startTaskIds,
-    };
-
-    const finishTaskIds = Array.from(finish.taskIds);
-    finishTaskIds.splice(destination.index, 0, draggableId);
-    const newFinish = {
-      ...finish,
-      taskIds: finishTaskIds,
-    };
-
-    const newState = {
-      ...data,
-      columns: {
-        ...data.columns,
-        [newStart.id]: newStart,
-        [newFinish.id]: newFinish,
-      },
-    };
-
-    setData(newState);
+  const onDeleteProject = (projectId) => {
+    dispatch(deleteProject(projectId));
   };
 
-  // console.log(status);
+  const onEdit = (projectId) => {
+    dispatch(updateProject(projectId));
+  };
 
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [loading, setLoading] = useState(false);
+
+ 
   //Add task start here
-  const [newTaskTitle, setNewTaskTitle] = useState(""); // state for the form input
+  const [newProjectTitle, setNewProjectTitle] = useState(""); // state for the form input
   const [newTaskContent, setNewTaskContent] = useState("");
   const [newTaskDate, setNewTaskDate] = useState("");
   const [newTaskAssignee, setNewTaskAssignee] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Create a new task ID and new task object
-    const newTaskId = `task-${Object.keys(data.tasks).length + 1}`;
-    const newTask = {
-      id: newTaskId,
-      title: newTaskTitle,
-      content: newTaskContent,
-      date: newTaskDate || "",
-      assignee: newTaskAssignee || "Unassigned",
-    };
 
-    // Update the tasks object and add the task to the "To Do" column
-    const updatedTasks = {
-      ...data.tasks,
-      [newTaskId]: newTask,
+    //redux toolkit test
+    const project = {
+      id: uuidv4(),
+      title: newProjectTitle,
+      completed: newTaskContent,
     };
-
-    const updatedColumn = {
-      ...data.columns["Requirements"],
-      taskIds: [...data.columns["Requirements"].taskIds, newTaskId],
-    };
-
-    const newState = {
-      ...data,
-      tasks: updatedTasks,
-      columns: {
-        ...data.columns,
-        [updatedColumn.id]: updatedColumn,
-      },
-    };
+    dispatch(addProject(project));
 
     setLoading(true);
     // Simulate an API call
@@ -193,8 +63,8 @@ export default function PojectBoard() {
       setShow(false);
     }, 3000);
 
-    setData(newState);
-    setNewTaskTitle(""); // Clear the input field
+    
+    setNewProjectTitle(""); // Clear the input field
     setNewTaskContent(""); // Clear the input field
     setNewTaskDate("");
     setNewTaskAssignee("");
@@ -218,37 +88,37 @@ export default function PojectBoard() {
     setEditTaskAssignee(currentAssignee); // Populate the input with current task assignee
   };
 
-  const handleEditSubmit = (e) => {
-    e.preventDefault();
+  // const handleEditSubmit = (e) => {
+  //   e.preventDefault();
 
-    const updatedTasks = {
-      ...data?.tasks,
-      [isEditing]: {
-        ...data.tasks[isEditing],
-        title: editTaskTitle,
-        content: editTaskContent,
-        assignee: editTaskAssignee,
-      }, // Update the content of the task being edited
-    };
+  //   const updatedTasks = {
+  //     ...data?.tasks,
+  //     [isEditing]: {
+  //       ...data.tasks[isEditing],
+  //       title: editTaskTitle,
+  //       content: editTaskContent,
+  //       assignee: editTaskAssignee,
+  //     }, // Update the content of the task being edited
+  //   };
 
-    const newState = {
-      ...data,
-      tasks: updatedTasks,
-    };
+  //   const newState = {
+  //     ...data,
+  //     tasks: updatedTasks,
+  //   };
 
-    setLoading(true);
-    setTimeout(() => {
-      console.log("Updated task");
-      setLoading(false);
-      setShow(false);
-    }, 3000);
+  //   setLoading(true);
+  //   setTimeout(() => {
+  //     console.log("Updated task");
+  //     setLoading(false);
+  //     setShow(false);
+  //   }, 3000);
 
-    setData(newState);
-    setIsEditing(null); // Close the edit mode
-    setEditTaskTitle(""); // Clear the edit field
-    setEditTaskContent(""); // Clear the edit field
-    setEditTaskAssignee(""); // Clear the edit field
-  };
+  //   setData(newState);
+  //   setIsEditing(null); // Close the edit mode
+  //   setEditTaskTitle(""); // Clear the edit field
+  //   setEditTaskContent(""); // Clear the edit field
+  //   setEditTaskAssignee(""); // Clear the edit field
+  // };
 
   // Task Delete
   const [taskToDelete, setTaskToDelete] = useState(null); // Store task to delete
@@ -262,43 +132,43 @@ export default function PojectBoard() {
   };
 
   // Confirm and proceed with delete
-  const handleConfirmDelete = () => {
-    const { taskId, columnId } = taskToDelete;
+  // const handleConfirmDelete = () => {
+  //   const { taskId, columnId } = taskToDelete;
 
-    const updatedTasks = { ...data.tasks };
-    delete updatedTasks[taskId];
+  //   const updatedTasks = { ...data.tasks };
+  //   delete updatedTasks[taskId];
 
-    const updatedColumn = {
-      ...data.columns[columnId],
-      taskIds: data.columns[columnId].taskIds.filter((id) => id !== taskId),
-    };
+  //   const updatedColumn = {
+  //     ...data.columns[columnId],
+  //     taskIds: data.columns[columnId].taskIds.filter((id) => id !== taskId),
+  //   };
 
-    const newState = {
-      ...data,
-      tasks: updatedTasks,
-      columns: {
-        ...data.columns,
-        [updatedColumn.id]: updatedColumn,
-      },
-    };
+  //   const newState = {
+  //     ...data,
+  //     tasks: updatedTasks,
+  //     columns: {
+  //       ...data.columns,
+  //       [updatedColumn.id]: updatedColumn,
+  //     },
+  //   };
 
-    setLoading(true);
-    // Simulate an API call
-    setTimeout(() => {
-      console.log("Deleted task task");
-      setLoading(false);
-      setShow(false);
-    }, 3000);
+  //   setLoading(true);
+  //   // Simulate an API call
+  //   setTimeout(() => {
+  //     console.log("Deleted task task");
+  //     setLoading(false);
+  //     setShow(false);
+  //   }, 3000);
 
-    setData(newState);
-    setShowDeleteWarning(false);
-    setTaskToDelete(null); // Clear the task to delete
-    setShowDeleteWarningAfter(true);
-    setTimeout(() => {
-      setShowDeleteWarningAfter(false);
-    }, 6000);
-    <test />;
-  };
+  //   setData(newState);
+  //   setShowDeleteWarning(false);
+  //   setTaskToDelete(null); // Clear the task to delete
+  //   setShowDeleteWarningAfter(true);
+  //   setTimeout(() => {
+  //     setShowDeleteWarningAfter(false);
+  //   }, 6000);
+  //   <test />;
+  // };
 
   // Cancel delete operation
   const handleCancelDelete = () => {
@@ -308,39 +178,82 @@ export default function PojectBoard() {
 
   return (
     <>
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <div className="boardStyle">
-          <div className="addTaskDiv">
-            <Button variant="primary" onClick={handleShow}>
-              <MdOutlineAddTask className="addTaskIconApp" />
-            </Button>
-          </div>
-
-          <div className="d-flex flex-column columnBoard">
-            <h2>All Projects</h2>
-            <div className="taskColumnBoard">
-              {data?.columnOrder?.map((columnId) => {
-                const column = data?.columns[columnId];
-                const tasks = column?.taskIds?.map(
-                  (taskId) => data?.tasks[taskId]
-                );
-
-                return (
-                  <ProjectColumn
-                    key={column?.id}
-                    column={column}
-                    tasks={tasks}
-                    onEdit={handleEditStart}
-                    onDelete={handleDeleteTaskWarning}
-                  />
-                );
-              })}
-            </div>
-          </div>
+      <div className="boardStyle">
+        <div className="addTaskDiv">
+          <Button variant="primary" onClick={handleShow}>
+            <MdOutlineAddTask className="addTaskIconApp" />
+          </Button>
         </div>
-      </DragDropContext>
+        <h2 className="pt-5 mt-5">All Projects</h2>
 
-      {isEditing && (
+        {isLoading && (
+          <div className="p-5 mt-5">
+            <h1>Loading......</h1>
+          </div>
+        )}
+        {error && (
+          <div className="p-5 mt-5">
+            <h1>{error}</h1>
+          </div>
+        )}
+        {/* <button className="p-2 mt-5 mb-3" onClick={handleShow}>Add task</button>   
+          <div className="taskColumnBoard"> */}
+        <div className="grid-container">
+          {projects &&
+            projects.map((project, key) => {
+              console.log(project);
+              const { id, title, completed } = project;
+              return (
+                <Project
+                  id={id}
+                  index={key}
+                  projectTitle={title}
+                  completed={completed}
+                  onEdit={onEdit}
+                  onDelete={onDeleteProject}
+                />
+              );
+              // return (
+              //   <div className="p-2 m-1 bg-secondary">
+              //     <div className="d-flex align-items-center justify-content-between ps-3 pe-3">
+              //       <RiDeleteBin5Line onClick={() => onDeleteProject(id)} />
+              //       <FaRegEdit
+              //         className="editIcon"
+              //         onClick={() => handleEditStart(id, title, completed)}
+              //       />
+              //     </div>
+
+              //     {/* <div className="p-2 bg-secondary">
+              //       <h6>{title.slice(title, 10)}</h6>
+              //       <h6>{id}</h6>
+              //       <h6>{completed}</h6>
+              //     </div> */}
+              //   </div>
+              // );
+            })}
+        </div>
+
+        {/* <div className="d-flex flex-column columnBoard">
+          <h2>All Projects</h2>
+          <div className="taskColumnBoard">
+            {projects.map((project, key) => {
+              const { id, title, completed } = project;
+              return (
+                <Project
+                  id={id}
+                  index={key}
+                  projectTitle={title}
+                  completed={completed}
+                  onEdit={onEdit}
+                  onDeleteTask={onDeleteProject}
+                />
+              );
+            })}
+          </div>
+        </div> */}
+      </div>
+
+      {/* {isEditing && (
         <Modal show="true">
           <div className="edit-form">
             <form onSubmit={handleEditSubmit}>
@@ -392,9 +305,9 @@ export default function PojectBoard() {
             </form>
           </div>
         </Modal>
-      )}
+      )} */}
 
-      {showDeleteWarning && (
+      {/* {showDeleteWarning && (
         <Modal className="deleteWarning" show="true">
           <Modal.Header>
             <Modal.Title>Delete Task</Modal.Title>
@@ -415,7 +328,7 @@ export default function PojectBoard() {
             </Button>
           </Modal.Footer>
         </Modal>
-      )}
+      )} */}
 
       {showDeleteWarningAfter && (
         <Alert
@@ -438,8 +351,8 @@ export default function PojectBoard() {
               <Form.Control
                 type="text"
                 placeholder="Named Your Project"
-                value={newTaskTitle}
-                onChange={(e) => setNewTaskTitle(e.target.value)}
+                value={newProjectTitle}
+                onChange={(e) => setNewProjectTitle(e.target.value)}
               />
             </Form.Group>
 
