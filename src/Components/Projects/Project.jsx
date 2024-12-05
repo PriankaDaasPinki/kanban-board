@@ -1,8 +1,7 @@
 // import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { FaRegEdit, FaUserSecret } from "react-icons/fa";
+import { FaList, FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { GrStatusInfo, GrView } from "react-icons/gr";
 import { Modal, Button } from "react-bootstrap";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -48,29 +47,26 @@ export default function Project({
   return (
     <>
       <Container
-        className="project projectContainer p-4"
-        onDoubleClick={() => (nevigate("/project-module"))} // Double-click to start editing
+        className="project projectContainer"
+        onDoubleClick={() => nevigate("/project-module")} // Double-click to start editing
       >
-        <div className="editDeletionIcon">
-          <FaRegEdit
-            className="editIcon"
-            onClick={() => onEdit(id, projectTitle, completed)}
-          />
-          <GrView className="editIcon" onClick={handleView} />
+        <div className="iconListBar">
+          <FaList className="icons icon" onClick={handleView} />
+          <div className="iconsList">
+            <FaRegEdit
+              className="icons"
+              onClick={() => onEdit(id, projectTitle, completed)}
+            />
+            {/* <GrView className="icons" onClick={handleView} /> */}
+            <RiDeleteBin5Line className="icons" onClick={() => onDelete(id)} />
+          </div>
         </div>
 
         <div className="p-2">
-          <div className="taskTitle">{projectTitle}</div>
-          <div className="taskDesc">
-            {completed} {index}
+          <div className="projectTitle">{projectTitle}</div>
+          <div className="projectModule">
+            Number of Module: {index}
           </div>
-        </div>
-        <div className="taskFooter align-items-start">
-          <p className="dueDate">Date: {currentDate}</p>
-          <RiDeleteBin5Line
-            className="deleteIcon text-red"
-            onClick={() => onDelete(id)}
-          />
         </div>
       </Container>
       <Modal show={view} onHide={handleViewClose}>

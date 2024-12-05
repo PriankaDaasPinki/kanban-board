@@ -4,68 +4,59 @@
   display: flex;
 } */
 
-.navbar{
-    background-color: #EBECF0;
-    padding: 0 !important;
-    position: fixed;
-    --bs-navbar-padding-y: 0;
+.navbar {
+  background-color: #ebecf0;
+  padding: 0 !important;
+  position: fixed;
+  --bs-navbar-padding-y: 0;
+}
+
+.esquireLogo {
+  height: auto;
+  max-width: 10rem !important;
+}
+
+/* Nav right bar */
+.nav-item{
+  padding: 1rem;
+}
+
+.nav-icon{
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* .rotating{
+  animation: loading 3s linear infinite;
+  @keyframes loading {
+   0% { 
+     transform: rotate(0); 
+   }
+   100% { 
+     transform: rotate(360deg);
+   }
   }
-  
-  .esquireLogo{
-    height: auto;
-    max-width: 10rem !important;
-  }
-  
-  
-  /* Nav Search bar */
-  .search-bar {
-    width: 2.5rem;
-    height: 2.5rem;
-    margin: auto;
-    background-color: white;
-    display: flex;
-    border-radius: 30px 30px 30px 30px;
-    transition: width 1s;
-    /* box-shadow: 5px 5px 20px #d8e6fd, -5px -5px 25px white; */
-    top: 102px;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .search-icon {
-    margin: auto;
-    border-radius: 50%;
-    font-size: 1.5rem;
-  }
-  .search-bar:hover {
-    width: 400px;
-    border-radius: 30px 30px 30px 30px;
-  }
-  .search-input {
-    margin: auto;
-    display: none;
-    transition: display 12s;
-    outline: none;
-    border: none;
-    font-family: Arial, Helvetica, sans-serif;
-    border-radius: 25px;
-    padding-left: 10px;
-  }
-  .search-bar:hover .search-input {
-    display: inline-flex;
-    width: 78%;
-    height: 70%;
-  }
-  input[type="submit"] {
-    display: none;
-  }
-  @media only screen and (max-width: 600px) {
-    .search-bar:hover {
-      display: block;
-      width: 200px;
-      padding: 0.4rem;
-      border-radius: 30px 30px 30px 30px;
-    }
-  }
-  
+ } */
+
+
+/* .onhover-dropdown:hover .onhover-show-div {
+  opacity: 1;
+  transform: translateY(0px);
+  visibility: visible;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.notification-dropdown {
+  top: 52px;
+  width: 300px;
+  right: -20px !important;
+  left: unset;
+}
+
+.onhover-show-div {
+  width: 330px;
+  top: 50px;
+  right: 0;
+  left: unset;
+} */

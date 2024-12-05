@@ -224,17 +224,14 @@ export default function Board() {
     setEditTaskAssignee(currentAssignee); // Populate the input with current task assignee
   };
 
-
-  const onEditTask = (taskId, currentTitle, currentContent) => {
-    dispatch(updateTask(taskId, currentTitle, currentContent));
-    // setShowDeleteWarning(true);
-  };
-
   const handleEditSubmit = (e) => {
-    console.log(isEditing);
-    console.log(editTaskTitle);
-    console.log(editTaskContent);
-    e.preventDefault();    
+    e.preventDefault();  
+    const UpdatedTask = {
+      id: isEditing,
+      title: editTaskTitle,
+      completed: editTaskContent,
+    };
+    dispatch(updateTask(UpdatedTask));
 
     const updatedTasks = {
       ...data?.tasks,
