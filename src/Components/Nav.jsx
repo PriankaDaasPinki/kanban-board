@@ -27,6 +27,7 @@ const NavBar = () => {
               <a
                 class="text-dark"
                 href="#!"
+                // eslint-disable-next-line
                 onclick="javascript:toggleFullScreen()"
               >
                 <svg
