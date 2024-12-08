@@ -24,12 +24,7 @@ const NavBar = () => {
         <div class="d-flex p-0">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center justify-cintent-end">
             <li className="nav-item">
-              <a
-                class="text-dark"
-                href="#!"
-                // eslint-disable-next-line
-                onclick="javascript:toggleFullScreen()"
-              >
+              <a class="text-dark" href="#!" onclick="">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
