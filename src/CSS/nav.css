@@ -1,8 +1,15 @@
-/* src/App.css */
-/* Body and Sidebar Layout */
-/* body {
-  display: flex;
-} */
+p,a {
+  margin: 0;
+  text-decoration: none;
+}
+
+.navText {
+  padding: 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #0D5178;
+  text-decoration: none;
+}
 
 .navbar {
   background-color: #ebecf0;
@@ -17,27 +24,57 @@
 }
 
 /* Nav right bar */
-.nav-item{
+.nav-item {
   padding: 1rem;
 }
 
-.nav-icon{
-  font-size: 1.5rem;
+.nav-icon {
+  font-size: 1.3rem;
   cursor: pointer;
+  color: #0D5178;
+  font-weight: 600;
 }
 
-/* .rotating{
-  animation: loading 3s linear infinite;
-  @keyframes loading {
-   0% { 
-     transform: rotate(0); 
-   }
-   100% { 
-     transform: rotate(360deg);
-   }
-  }
- } */
+.big-icon{
+  font-size: 1rem;
+  cursor: pointer;
+  color: #0D5178;
+  font-weight: 600;
+}
 
+.profile {
+  animation: rotating 3s linear infinite;
+}
+@keyframes rotating {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.nav-seceondary {
+  top: 6rem;
+}
+
+.navSecondaryContainer{
+  justify-content: flex-start !important;
+}
+
+.pageHeaderContainer{
+  /* margin-top: 4rem; */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 2px 2px aqua;
+}
+
+.pageHeaderMenu{
+  font-weight: 600;
+  color: #0D5178;
+}
 
 /* .onhover-dropdown:hover .onhover-show-div {
   opacity: 1;

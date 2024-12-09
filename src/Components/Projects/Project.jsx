@@ -24,14 +24,7 @@ function bgcolorChange(props) {
     : "#fffada";
 }
 
-export default function Project({
-  id,
-  index,
-  projectTitle,
-  completed,
-  onEdit,
-  onDelete,
-}) {
+function Project({ id, index, projectTitle, completed, onEdit, onDelete }) {
   // console.log("columnId " +columnId);
   const [view, setView] = useState(false);
   const handleViewClose = () => setView(false);
@@ -64,9 +57,7 @@ export default function Project({
 
         <div className="p-2">
           <div className="projectTitle">{projectTitle}</div>
-          <div className="projectModule">
-            Number of Module: {index}
-          </div>
+          <div className="projectModule">Number of Module: {index}</div>
         </div>
       </Container>
       <Modal show={view} onHide={handleViewClose}>
@@ -105,3 +96,5 @@ export default function Project({
     </>
   );
 }
+
+export default Project;

@@ -1,13 +1,13 @@
 .boardStyle {
   text-align: center;
-  margin-top: 6%;
+  /* margin-top: 1%; */
   /* background-color: #f4f5f7; */
 }
 
 @media only screen and (max-width: 600px) {
   .boardStyle {
     text-align: center;
-    margin-top: 15%;
+    margin-top: 10%;
   }
 }
 
@@ -19,7 +19,7 @@
 .taskColumnBoard {
   display: flex;
   /* flex-direction: column; */
-  /* justify-content: space-around; */   
+  /* justify-content: space-around; */
   padding: 0 30px;
   flex-shrink: 0;
   /* overflow-x: auto; */
@@ -27,22 +27,22 @@
   /* overflow-y: auto; */
 }
 
-.columnBoard{
+.columnBoard {
   display: flex;
   /* background-color: #f4f5f7; */
   padding: 30px;
   flex-shrink: 0;
 }
 
-.deleteWarning{
+.deleteWarning {
   margin-top: 10%;
 }
 
-.okButton{
+.okButton {
   cursor: pointer;
 }
 
-.alartDiv{
+.alartDiv {
   top: 21%;
   right: 0.1%;
 }

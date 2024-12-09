@@ -52,7 +52,7 @@ export default function PojectBoard() {
       console.log("Saved Project");
       setLoading(false);
       setShow(false);
-    }, 3000);
+    }, 300);
 
     setNewProjectTitle(""); // Clear the input field
     setNewProjectContent(""); // Clear the input field
@@ -132,13 +132,13 @@ export default function PojectBoard() {
 
   return (
     <>
-      <div className="boardStyle">
+      <div className="boardStyle" id="elementFull">
         <div className="addTaskDiv">
           <Button variant="primary" onClick={handleShow}>
             <MdOutlineAddTask className="addTaskIconApp" />
           </Button>
         </div>
-        <h2 className="pt-5 mt-5">All Projects</h2>
+        {/* <h2 className="pt-3">All Projects</h2> */}
 
         {isLoading && (
           <div className="p-5 mt-5">
@@ -154,7 +154,7 @@ export default function PojectBoard() {
         <div className="grid-container">
           {projects &&
             projects.map((project, key) => {
-              console.log(project);
+              // console.log(project);
               const { id, title, completed } = project;
               return (
                 <Project

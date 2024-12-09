@@ -29,6 +29,10 @@
   padding: 0.3rem 0.5rem 0.3rem 1rem !important;
   --bs-btn-padding-x: 0 !important;
 }
+
+.mainBody{
+  margin-top: 10rem;
+}
 /* .btn:hover{
   border-color: var(--bs-btn-hover-border-color);
 } */
