@@ -6,7 +6,7 @@ import { Modal, Button } from "react-bootstrap";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import "../../CSS/projectStyle.css";
+import "../../CSS/moduleStyle.css";
 
 const Container = styled.div`
   background-color: ${(props) => bgcolorChange(props)};
@@ -24,7 +24,7 @@ function bgcolorChange(props) {
     : "#fffada";
 }
 
-function Project({ id, index, projectTitle, completed, onEdit, onDelete }) {
+function Module({ id, index, moduleTitle, completed, onEdit, onDelete }) {
   // console.log("columnId " +columnId);
   const [view, setView] = useState(false);
   const handleViewClose = () => setView(false);
@@ -37,23 +37,18 @@ function Project({ id, index, projectTitle, completed, onEdit, onDelete }) {
   const date = today.getDate();
   const currentDate = month + "/" + date + "/" + year;
 
-  const handleDoubleClick = () => {
-    // onGetPageTitle(projectTitle);
-    nevigate("/project-module", { state: { id, name: projectTitle } });
-  };
-
   return (
     <>
       <Container
-        className="project projectContainer"
-        onDoubleClick={handleDoubleClick} // Double-click to start editing
+        className="module moduleContainer"
+        onDoubleClick={() => nevigate("/module-module")} // Double-click to start editing
       >
         <div className="iconListBar">
           <FaList className="icons icon" onClick={handleView} />
           <div className="iconsList">
             <FaRegEdit
               className="icons"
-              onClick={() => onEdit(id, projectTitle, completed)}
+              onClick={() => onEdit(id, moduleTitle, completed)}
             />
             {/* <GrView className="icons" onClick={handleView} /> */}
             <RiDeleteBin5Line className="icons" onClick={() => onDelete(id)} />
@@ -61,32 +56,32 @@ function Project({ id, index, projectTitle, completed, onEdit, onDelete }) {
         </div>
 
         <div className="p-2">
-          <div className="projectTitle">{projectTitle}</div>
-          <div className="projectModule">Number of Module: {index}</div>
+          <div className="moduleTitle">{moduleTitle}</div>
+          <div className="moduleModule">Number of Module: {index}</div>
         </div>
       </Container>
       <Modal show={view} onHide={handleViewClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Project {projectTitle} Details</Modal.Title>
+          <Modal.Title>Module {moduleTitle} Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            <strong>Project ID:</strong> {id}
+            <strong>Module ID:</strong> {id}
           </p>
           <p>
-            <strong>Project Name:</strong> {projectTitle}
+            <strong>Module Name:</strong> {moduleTitle}
           </p>
           <p>
-            <strong>Project Requirements:</strong> {completed}
+            <strong>Module Requirements:</strong> {completed}
           </p>
           <p>
-            Project under supervision of <strong>assignee</strong>
+            Module under supervision of <strong>assignee</strong>
           </p>
           <p>
             <strong>Due Date:</strong> {currentDate}
           </p>
           <p>
-            <strong>Project Status:</strong> {completed}
+            <strong>Module Status:</strong> {completed}
           </p>
         </Modal.Body>
         <Modal.Footer>
@@ -99,4 +94,4 @@ function Project({ id, index, projectTitle, completed, onEdit, onDelete }) {
   );
 }
 
-export default Project;
+export default React.memo(Module);

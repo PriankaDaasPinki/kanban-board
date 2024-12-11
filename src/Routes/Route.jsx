@@ -7,7 +7,7 @@ import Modules from "../Pages/Modules";
 import Error from "../Pages/Error";
 import Navbar from "../Components/Common/Header/Nav";
 import NavSecondary from "../Components/Common/Header/NavSecondery";
-import PageHeaderNav from "../Components/Common/Header/PageHeaderNav";
+// import PageHeaderNav from "../Components/Common/Header/PageHeaderNav";
 
 const RoutesAll = () => {
   return (
@@ -15,7 +15,6 @@ const RoutesAll = () => {
       <div className="mb-1">
         <Navbar />
         <NavSecondary />
-        <PageHeaderNav />
       </div>
       <Routes>
         <Route path="*" element={<Error />} />

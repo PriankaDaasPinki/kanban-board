@@ -3,60 +3,69 @@ import { Button } from "react-bootstrap";
 import { MdOutlineAddTask } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
-import { fetchProjects } from "./ProjectSlice";
-import Project from "./Project";
+import { fetchModules } from "./ModuleSlice";
+import Module from "./Module";
 import "../../CSS/boardStyle.css";
-import ProjectModal from "./modals/ProjectModal";
 import DeleteModal from "./modals/DeleteModal";
 import PageHeaderNav from "../Common/Header/PageHeaderNav";
+// eslint-disable-next-line
+import AddModule from "./modals/New_Module_Modal";
+import { useLocation } from "react-router-dom";
 
-export default function ProjectBoard() {
+export default function ModuleBoard() {
   const dispatch = useDispatch();
-  const { isLoading, projects, error } = useSelector(
-    (state) => state.projectsReducer
+  const { isLoading, modules, error } = useSelector(
+    (state) => state.modulesReducer
   );
   const [showAddEditModal, setShowAddEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [currentProject, setCurrentProject] = useState(null);
+  const [currentModule, setCurrentModule] = useState(null);
+  // const [currentModule, setCurrentModule] = useState(null);
 
-  // Fetch projects on mount
+  // Fetch modules on mount
   useEffect(() => {
-    dispatch(fetchProjects());
+    dispatch(fetchModules());
   }, [dispatch]);
 
   // Open Add/Edit Modal
-  const handleOpenAddEditModal = (project) => {
-    setCurrentProject(project);
+  const handleOpenAddEditModal = (module) => {
+    setCurrentModule(module);
     setShowAddEditModal(true);
   };
 
   // Close Add/Edit Modal
   const handleCloseAddEditModal = () => {
     setShowAddEditModal(false);
-    setCurrentProject(null);
+    setCurrentModule(null);
   };
 
   // Open Delete Modal
-  const handleOpenDeleteModal = (projectId) => {
-    setCurrentProject({ id: projectId });
+  const handleOpenDeleteModal = (moduleId) => {
+    setCurrentModule({ id: moduleId });
     setShowDeleteModal(true);
   };
 
   // Close Delete Modal
   const handleCloseDeleteModal = () => {
     setShowDeleteModal(false);
-    setCurrentProject(null);
+    setCurrentModule(null);
   };
 
-  // const pageTitle = (titleFromProject) => {
-  //   console.log("titleFromProject " + titleFromProject);
-  // };
+  const breadcrumbItems = [
+    // { label: <FaHome className="nav-icon" />, link: "/" },
+    { label: "Projects", link: "/project-list" },
+    { label: "Modules", link: "/module-list" },
+  ];
 
-  const breadcrumbItems = [{ label: "Projects", link: "/project-list" }];
+  const location = useLocation();
+  console.log("location " + location.state.name);
 
   return (
     <>
-      <PageHeaderNav pageTitle={""} breadcrumbItems={breadcrumbItems} />
+      <PageHeaderNav
+        pageTitle={location.state.name}
+        breadcrumbItems={breadcrumbItems}
+      />
       <div className="boardStyle" id="elementFull">
         <div className="addTaskDiv">
           <Button
@@ -65,7 +74,7 @@ export default function ProjectBoard() {
               handleOpenAddEditModal({ id: null, title: "", content: "" })
             }
           >
-            <MdOutlineAddTask className="addProjectIcon" />
+            <MdOutlineAddTask className="addModuleIcon" />
           </Button>
         </div>
 
@@ -81,32 +90,32 @@ export default function ProjectBoard() {
         )}
 
         <div className="grid-container">
-          {projects &&
-            projects.map((project, key) => (
-              <Project
-                key={project.id}
-                id={project.id}
+          {modules &&
+            modules.map((module, key) => (
+              <Module
+                key={module.id}
+                id={module.id}
                 index={key}
-                projectTitle={project.title}
-                completed={project.completed}
-                onEdit={() => handleOpenAddEditModal(project)}
-                onDelete={() => handleOpenDeleteModal(project.id)}
+                moduleTitle={module.title}
+                completed={module.completed}
+                onEdit={() => handleOpenAddEditModal(module)}
+                onDelete={() => handleOpenDeleteModal(module.id)}
               />
             ))}
         </div>
 
         {/* Add/Edit Modal */}
-        <ProjectModal
+        <AddModule
           show={showAddEditModal}
           onClose={handleCloseAddEditModal}
-          project={currentProject}
+          module={currentModule}
         />
 
         {/* Delete Warning Modal */}
         <DeleteModal
           show={showDeleteModal}
           onClose={handleCloseDeleteModal}
-          projectId={currentProject?.id}
+          moduleId={currentModule?.id}
         />
       </div>
     </>

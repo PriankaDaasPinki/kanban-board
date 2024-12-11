@@ -1,5 +1,5 @@
 import React from "react";
-import ModuleBoard from "../Components/ProjectModules/ModuleBoard";
+import ModuleBoard from "../Components/Project_Modules/ModuleBoard";
 
 const Modules = () => {
   return (

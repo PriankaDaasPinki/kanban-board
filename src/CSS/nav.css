@@ -1,13 +1,19 @@
-p,a {
+p,
+a {
   margin: 0;
   text-decoration: none;
+  color: #0d5178;
 }
-
+span,
+p,
+h1 {
+  color: #0d5178;
+}
 .navText {
   padding: 0 0.5rem;
   font-size: 1rem;
   font-weight: 500;
-  color: #0D5178;
+  color: #0d5178;
   text-decoration: none;
 }
 
@@ -31,14 +37,21 @@ p,a {
 .nav-icon {
   font-size: 1.3rem;
   cursor: pointer;
-  color: #0D5178;
+  color: #0d5178;
   font-weight: 600;
 }
 
-.big-icon{
+.big-icon {
   font-size: 1rem;
   cursor: pointer;
-  color: #0D5178;
+  color: #0d5178;
+  font-weight: 600;
+}
+
+.small-icon {
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #0d5178;
   font-weight: 600;
 }
 
@@ -55,45 +68,72 @@ p,a {
 }
 
 .nav-seceondary {
-  top: 6rem;
+  min-width: -webkit-fill-available;
+  top: 5rem;
 }
 
-.navSecondaryContainer{
+.navSecondaryContainer {
   justify-content: flex-start !important;
 }
 
-.pageHeaderContainer{
+.pageHeaderContainer {
   /* margin-top: 4rem; */
-  position: relative;
+  padding: 10px 12px;
+  /* position: relative; */
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-shadow: 2px 2px aqua;
 }
 
-.pageHeaderMenu{
-  font-weight: 600;
-  color: #0D5178;
+.pageHeaderMenu {
+  font-weight: 700;
+  color: #0d5178;
 }
 
-/* .onhover-dropdown:hover .onhover-show-div {
+.dropdown-toggle::after {
+  display: none;
+}
+
+.dropdown-item {
+  color: #0d5178;
+}
+
+.dropdown-title {
+  text-align: center;
+  color: #0d5178;
+  padding: 1rem 0 0;
+}
+
+.notifications {
+  text-align: center;
+  color: #0d5178;
+}
+
+.onhover-dropdown:hover .onhover-show-div {
+  /* opacity: 1;
+  border-radius: 5px;
+  display: block;
+  transform: translateY(0px);
+  transition: all linear 0.5s; */
+
   opacity: 1;
   transform: translateY(0px);
   visibility: visible;
-  border-radius: 5px;
   overflow: hidden;
 }
 
-.notification-dropdown {
-  top: 52px;
-  width: 300px;
+.onhover-show-div {
+  box-shadow: 1px 1px 10px #0d5178;
+  visibility: hidden;
+  display: block;
+  border-radius: 5px;
+  position: absolute;
+  background-color: #fff;
+  top: 5rem;
+  width: 250px;
   right: -20px !important;
   left: unset;
+  transform: translateY(30px);
+  transition: all linear 0.3s;
 }
-
-.onhover-show-div {
-  width: 330px;
-  top: 50px;
-  right: 0;
-  left: unset;
-} */

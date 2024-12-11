@@ -1,11 +1,12 @@
 /* src/App.css */
 .addTaskIconApp {
   font-size: 2rem;
+  color: white;
 }
 
 .addTaskDiv {
   position: fixed;
-  margin-top: 3%;
+  margin-top: 2%;
   /* padding: 0.3rem 0.5rem 0.3rem 0.5rem; */
   background-color: #0d6efd;
   border-top-right-radius: 10rem;
@@ -17,7 +18,7 @@
     position: fixed;
     /* padding: 0.3rem 0.5rem 0.3rem 0.5rem; */
     background-color: #0d6efd;
-    margin-top: 12%;
+    /* margin-top: 12%; */
     border-top-right-radius: 10rem;
     border-bottom-right-radius: 10rem;
   }
@@ -31,7 +32,7 @@
 }
 
 .mainBody{
-  margin-top: 10rem;
+  margin-top: 9rem;
 }
 /* .btn:hover{
   border-color: var(--bs-btn-hover-border-color);

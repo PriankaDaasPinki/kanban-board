@@ -1,16 +1,28 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-import { IoChevronBackCircle } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Breadcrumb from "./Breadcrumb";
+import { IoIosArrowBack } from "react-icons/io";
 
-const PageHeaderNav = () => {
+const PageHeaderNav = ({ pageTitle, breadcrumbItems }) => {
+  const navigate = useNavigate();
+  // console.log("pageTitle " + pageTitle);
   return (
-    <Container fluid className="ps-4 pe-4 pageHeaderContainer">
-      <div className="pageHeaderMenu">Project List</div>
-      <Link className="d-flex align-items-center p-3" to={"/"}>
-        <IoChevronBackCircle className="nav-icon" />
-        {/* <p className="navText">Dashboard</p> */}
-      </Link>
+    <Container fluid className="pageHeaderContainer">
+      <div className="pageHeaderMenu ps-2">
+        {pageTitle ? pageTitle + " | Project Details" : "Project List"}
+      </div>
+
+      <div className="d-flex align-items-center pb-2">
+        <Breadcrumb items={breadcrumbItems} />
+        <div
+          className="d-flex align-items-center ms-5 me-4 ps-1 pe-1 border border-secondary rounded"
+          onClick={() => navigate(-1)}
+        >
+          <IoIosArrowBack className="nav-icon" />
+          {/* <p className="navText">Dashboard</p> */}
+        </div>
+      </div>
     </Container>
   );
 };

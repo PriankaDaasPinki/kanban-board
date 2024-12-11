@@ -6,14 +6,12 @@ import { useSelector, useDispatch } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
-// import { useSelector, useDispatch } from "react-redux";
-// import { getAllTasks } from "../Services/actions/taskActions";
 
 import "../../CSS/boardStyle.css";
 import Column from "./Column";
 import { assigneeOptions } from "../../Data/initial-data";
 import { addTask, deleteTask, fetchTasks, updateTask } from "./TasksSlice";
-
+import PageHeaderNav from "../Common/Header/PageHeaderNav";
 
 export default function Board() {
   const dispatch = useDispatch();
@@ -225,7 +223,7 @@ export default function Board() {
   };
 
   const handleEditSubmit = (e) => {
-    e.preventDefault();  
+    e.preventDefault();
     const UpdatedTask = {
       id: isEditing,
       title: editTaskTitle,
@@ -318,8 +316,15 @@ export default function Board() {
     setTaskToDelete(null); // Reset taskToDelete when canceling
   };
 
+  const breadcrumbItems = [
+    // { label: <FaHome className="nav-icon" />, link: "/" },
+    { label: "Projects", link: "/project-list" },
+    { label: "Tasks", link: "/all-task" },
+  ];
+
   return (
     <>
+      <PageHeaderNav breadcrumbItems={breadcrumbItems} />
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="boardStyle">
           <div className="addTaskDiv">
@@ -389,7 +394,6 @@ export default function Board() {
       {isEditing && (
         <Modal show="true">
           <div className="edit-form">
-            
             <form onSubmit={handleEditSubmit}>
               <Modal.Header>
                 <Modal.Title>Edit Task</Modal.Title>
