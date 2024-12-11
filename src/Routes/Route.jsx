@@ -20,8 +20,11 @@ const RoutesAll = () => {
         <Route path="*" element={<Error />} />
         <Route path="/" element={<Projects />} />
         <Route path="/project-list" element={<Projects />} />
+        <Route path="/project/:name" element={<Projects />} />
         <Route path="/project-module" element={<Modules />} />
+        <Route path="/project-module/:name" element={<Modules />} />
         <Route path="/all-task" element={<Board />} />
+        <Route path="/all-task/:name" element={<Board />} />
       </Routes>
     </Router>
   );

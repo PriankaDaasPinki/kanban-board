@@ -42,8 +42,6 @@ function AddTaskModal() {
       },
     };
 
-    console.log(initialData);
-
     setData(newState);
     setNewTaskContent(""); // Clear the input field
   };

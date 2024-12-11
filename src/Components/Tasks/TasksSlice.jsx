@@ -37,7 +37,6 @@ export const tasksSlice = createSlice({
     },
     updateTask: (state, action) => {
       const { id, title, completed } = action.payload;
-      console.log("action.payload  " + action.payload.completed);
       const isTaskExist = state.tasks.filter((task) => task.id === id);
       if (isTaskExist) {
         isTaskExist[0].title = title;

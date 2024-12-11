@@ -39,7 +39,7 @@ function Project({ id, index, projectTitle, completed, onEdit, onDelete }) {
 
   const handleDoubleClick = () => {
     // onGetPageTitle(projectTitle);
-    nevigate("/project-module", { state: { id, name: projectTitle } });
+    nevigate("/project-module/" + projectTitle);
   };
 
   return (

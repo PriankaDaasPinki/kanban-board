@@ -10,12 +10,12 @@ export default function New_Module_Modal({ show, onClose, module }) {
   const [formData, setFormData] = useState({});
   useEffect(() => {
     setFormData({
-      title: module?.title,
+      title: module?.title || "",
       content: module?.content || "",
+      position: module?.id || "",
     });
   }, [module]);
 
-  module && console.log("formData.title  " + formData.id);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = (e) => {
@@ -36,7 +36,6 @@ export default function New_Module_Modal({ show, onClose, module }) {
     }, 300);
   };
 
-  // console.log("module", module?.title);
 
   return (
     <Modal show={show} onHide={onClose}>
@@ -59,13 +58,25 @@ export default function New_Module_Modal({ show, onClose, module }) {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Module Requirements</Form.Label>
+            <Form.Label>Module Description</Form.Label>
             <Form.Control
               as="textarea"
               placeholder="Describe Your Requirements"
               value={formData.content}
               onChange={(e) =>
                 setFormData({ ...formData, content: e.target.value })
+              }
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Module Position</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Module Position"
+              value={formData.position}
+              onChange={(e) =>
+                setFormData({ ...formData, position: e.target.value })
               }
             />
           </Form.Group>

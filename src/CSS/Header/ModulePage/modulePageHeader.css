@@ -1,0 +1,15 @@
+.projectLogo {
+  height: 4rem;
+  width: auto;
+}
+
+.infoButton {
+  border: 1px solid #0d6efd;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  margin-top: 0.5rem;
+  margin-left: -1rem;
+  box-shadow: 1px 1px 5px #0d6efd;
+}

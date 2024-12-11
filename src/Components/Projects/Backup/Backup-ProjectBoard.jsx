@@ -50,7 +50,6 @@ export default function PojectBoard() {
       completed: newProjectContent,
     };
 
-    console.log("newProject " + project.title);
     dispatch(addProject(project));
 
     setLoading(true);

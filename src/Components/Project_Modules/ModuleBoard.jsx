@@ -10,7 +10,8 @@ import DeleteModal from "./modals/DeleteModal";
 import PageHeaderNav from "../Common/Header/PageHeaderNav";
 // eslint-disable-next-line
 import AddModule from "./modals/New_Module_Modal";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import ModulePageHeader from "../Common/Header/Module_Page_Header/ModulePageHeader";
 
 export default function ModuleBoard() {
   const dispatch = useDispatch();
@@ -29,6 +30,7 @@ export default function ModuleBoard() {
 
   // Open Add/Edit Modal
   const handleOpenAddEditModal = (module) => {
+    console.log(module);
     setCurrentModule(module);
     setShowAddEditModal(true);
   };
@@ -54,18 +56,19 @@ export default function ModuleBoard() {
   const breadcrumbItems = [
     // { label: <FaHome className="nav-icon" />, link: "/" },
     { label: "Projects", link: "/project-list" },
-    { label: "Modules", link: "/module-list" },
+    { label: "Modules", link: "#" },
   ];
 
-  const location = useLocation();
-  console.log("location " + location.state.name);
+  const { name } = useParams();
 
   return (
     <>
       <PageHeaderNav
-        pageTitle={location.state.name}
+        pageTitle={name}
+        subTitle={"Project Details"}
         breadcrumbItems={breadcrumbItems}
       />
+      <ModulePageHeader />
       <div className="boardStyle" id="elementFull">
         <div className="addTaskDiv">
           <Button
@@ -92,15 +95,17 @@ export default function ModuleBoard() {
         <div className="grid-container">
           {modules &&
             modules.map((module, key) => (
-              <Module
-                key={module.id}
-                id={module.id}
-                index={key}
-                moduleTitle={module.title}
-                completed={module.completed}
-                onEdit={() => handleOpenAddEditModal(module)}
-                onDelete={() => handleOpenDeleteModal(module.id)}
-              />
+              <>
+                <Module
+                  id={module.id}
+                  projectName={name}
+                  position={key}
+                  moduleTitle={module.title}
+                  completed={module.completed}
+                  onEdit={() => handleOpenAddEditModal(module)}
+                  onDelete={() => handleOpenDeleteModal(module.id)}
+                />
+              </>
             ))}
         </div>
 

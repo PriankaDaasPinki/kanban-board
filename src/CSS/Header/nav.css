@@ -79,11 +79,10 @@ h1 {
 .pageHeaderContainer {
   /* margin-top: 4rem; */
   padding: 10px 12px;
-  /* position: relative; */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 2px 2px aqua;
+  box-shadow: 2px 2px #EBECF0;
 }
 
 .pageHeaderMenu {

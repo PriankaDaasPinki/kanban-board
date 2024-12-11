@@ -12,6 +12,8 @@ import Column from "./Column";
 import { assigneeOptions } from "../../Data/initial-data";
 import { addTask, deleteTask, fetchTasks, updateTask } from "./TasksSlice";
 import PageHeaderNav from "../Common/Header/PageHeaderNav";
+import { useLocation, useParams } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 
 export default function Board() {
   const dispatch = useDispatch();
@@ -195,7 +197,7 @@ export default function Board() {
       console.log("Saved task");
       setLoading(false);
       setShow(false);
-    }, 3000);
+    }, 300);
 
     setData(newState);
     setNewTaskTitle(""); // Clear the input field
@@ -251,7 +253,7 @@ export default function Board() {
       console.log("Updated task");
       setLoading(false);
       setShow(false);
-    }, 3000);
+    }, 300);
 
     setData(newState);
     setIsEditing(null); // Close the edit mode
@@ -298,7 +300,7 @@ export default function Board() {
       console.log("Deleted task task");
       setLoading(false);
       setShow(false);
-    }, 3000);
+    }, 300);
 
     setData(newState);
     setShowDeleteWarning(false);
@@ -316,15 +318,23 @@ export default function Board() {
     setTaskToDelete(null); // Reset taskToDelete when canceling
   };
 
+  const location = useLocation();
+  const { name } = useParams();
+
   const breadcrumbItems = [
     // { label: <FaHome className="nav-icon" />, link: "/" },
     { label: "Projects", link: "/project-list" },
-    { label: "Tasks", link: "/all-task" },
+    { label: "Modules", link: "/project-module/" + location.state.projectName },
+    { label: "Tasks", link: "#" },
   ];
 
   return (
     <>
-      <PageHeaderNav breadcrumbItems={breadcrumbItems} />
+      <PageHeaderNav
+        pageTitle={location.state.projectName}
+        subTitle={name}
+        breadcrumbItems={breadcrumbItems}
+      />
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="boardStyle">
           <div className="addTaskDiv">

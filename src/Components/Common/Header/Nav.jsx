@@ -1,14 +1,13 @@
 import React from "react";
-import "../../../CSS/nav.css";
 import { Container, Navbar } from "react-bootstrap";
 import { IoIosNotifications } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { BiFullscreen } from "react-icons/bi";
 import { RxExit } from "react-icons/rx";
-// import { NavLink } from "react-router-dom";
-// import { MdLightMode } from "react-icons/md";
-// import { FullScreen, useFullScreenHandle } from "react-full-screen";
+
+
+import "../../../CSS/Header/nav.css";
 
 const NavBar = () => {
   // const [showDropdown, setShowDropdown] = useState(false);
@@ -36,7 +35,7 @@ const NavBar = () => {
   return (
     <Navbar fixed="top" className="bg-body-tertiary">
       <Container fluid>
-        <Navbar.Brand href="https://www.esquiretechnology.com/">
+        <Navbar.Brand href="/">
           <img
             src="http://www.esquiretechnology.com//storage/settings/March2024/yG8aSc4ffvkxLnKF9mLR.png"
             alt="esquireLogo"

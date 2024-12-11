@@ -24,8 +24,15 @@ function bgcolorChange(props) {
     : "#fffada";
 }
 
-function Module({ id, index, moduleTitle, completed, onEdit, onDelete }) {
-  // console.log("columnId " +columnId);
+function Module({
+  id,
+  projectName,
+  position,
+  moduleTitle,
+  completed,
+  onEdit,
+  onDelete,
+}) {
   const [view, setView] = useState(false);
   const handleViewClose = () => setView(false);
   const handleView = () => setView(true);
@@ -37,27 +44,30 @@ function Module({ id, index, moduleTitle, completed, onEdit, onDelete }) {
   const date = today.getDate();
   const currentDate = month + "/" + date + "/" + year;
 
+  const handleDoubleClick = () => {
+    // onGetPageTitle(projectTitle);
+    nevigate("/all-task/" + moduleTitle, {
+      state: { projectName: projectName },
+    });
+  };
+
   return (
     <>
       <Container
         className="module moduleContainer"
-        onDoubleClick={() => nevigate("/module-module")} // Double-click to start editing
+        onDoubleClick={handleDoubleClick} // Double-click to start editing
       >
         <div className="iconListBar">
           <FaList className="icons icon" onClick={handleView} />
           <div className="iconsList">
-            <FaRegEdit
-              className="icons"
-              onClick={() => onEdit(id, moduleTitle, completed)}
-            />
-            {/* <GrView className="icons" onClick={handleView} /> */}
+            <FaRegEdit className="icons" onClick={() => onEdit()} />
             <RiDeleteBin5Line className="icons" onClick={() => onDelete(id)} />
           </div>
         </div>
 
         <div className="p-2">
           <div className="moduleTitle">{moduleTitle}</div>
-          <div className="moduleModule">Number of Module: {index}</div>
+          <div className="moduleModule">Number of Tasks: {position}</div>
         </div>
       </Container>
       <Modal show={view} onHide={handleViewClose}>
@@ -72,7 +82,7 @@ function Module({ id, index, moduleTitle, completed, onEdit, onDelete }) {
             <strong>Module Name:</strong> {moduleTitle}
           </p>
           <p>
-            <strong>Module Requirements:</strong> {completed}
+            <strong>Module Description:</strong> {completed}
           </p>
           <p>
             Module under supervision of <strong>assignee</strong>
@@ -81,7 +91,7 @@ function Module({ id, index, moduleTitle, completed, onEdit, onDelete }) {
             <strong>Due Date:</strong> {currentDate}
           </p>
           <p>
-            <strong>Module Status:</strong> {completed}
+            <strong>Module Position:</strong> {position}
           </p>
         </Modal.Body>
         <Modal.Footer>

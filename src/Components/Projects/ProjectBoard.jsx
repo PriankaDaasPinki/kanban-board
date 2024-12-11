@@ -56,7 +56,11 @@ export default function ProjectBoard() {
 
   return (
     <>
-      <PageHeaderNav pageTitle={""} breadcrumbItems={breadcrumbItems} />
+      <PageHeaderNav
+        pageTitle={""}
+        subTitle={""}
+        breadcrumbItems={breadcrumbItems}
+      />
       <div className="boardStyle" id="elementFull">
         <div className="addTaskDiv">
           <Button

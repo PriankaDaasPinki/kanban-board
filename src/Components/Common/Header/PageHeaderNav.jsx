@@ -4,13 +4,13 @@ import { useNavigate } from "react-router-dom";
 import Breadcrumb from "./Breadcrumb";
 import { IoIosArrowBack } from "react-icons/io";
 
-const PageHeaderNav = ({ pageTitle, breadcrumbItems }) => {
+const PageHeaderNav = ({ pageTitle, subTitle, breadcrumbItems }) => {
   const navigate = useNavigate();
   // console.log("pageTitle " + pageTitle);
   return (
-    <Container fluid className="pageHeaderContainer">
-      <div className="pageHeaderMenu ps-2">
-        {pageTitle ? pageTitle + " | Project Details" : "Project List"}
+    <Container fluid className="pageHeaderContainer pb-2">
+      <div className="pageHeaderMenu ps-2 pb-2">
+        {pageTitle ? pageTitle + " | " + subTitle : "Project List"}
       </div>
 
       <div className="d-flex align-items-center pb-2">
