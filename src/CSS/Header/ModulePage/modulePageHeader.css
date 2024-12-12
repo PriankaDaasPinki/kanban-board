@@ -28,3 +28,17 @@
     color: white;
   }
 }
+
+/* Modal CSS */
+.modal-dialog {
+  max-width: 50%;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 50%;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}

@@ -1,0 +1,145 @@
+import React, { useState } from "react";
+import { Table, Button, Form } from "react-bootstrap";
+
+const WorkProcessTable = () => {
+  const [rows, setRows] = useState([]); // Stores all rows
+  const [workProcessList, setWorkProcessList] = useState([]); // Final submitted work processes
+
+  // Add an empty row
+  const addRow = () => {
+    setRows([...rows, { processName: "", position: "", forward: "" }]);
+  };
+
+  // Update a specific row
+  const updateRow = (index, field, value) => {
+    const updatedRows = rows.map((row, i) =>
+      i === index ? { ...row, [field]: value } : row
+    );
+    setRows(updatedRows);
+  };
+
+  // Delete a row
+  const deleteRow = (index) => {
+    const updatedRows = rows.filter((_, i) => i !== index);
+    setRows(updatedRows);
+  };
+
+  
+
+  // Handle submission
+  const handleSubmit = () => {
+    // Filter out incomplete rows and sort by position
+    const validRows = rows
+      .filter((row) => row.processName && row.position && !isNaN(row.position))
+      .sort((a, b) => Number(a.position) - Number(b.position));
+
+    setWorkProcessList(validRows);
+    setRows([]); // Clear the table after submission
+  };
+
+  return (
+    <div className="p-3">
+      <h3 className="mb-4">Work Process Table</h3>
+
+      <Table bordered hover>
+        <thead>
+          <tr>
+            <th>Process Name</th>
+            <th>Position</th>
+            <th>Forward</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, index) => (
+            <tr key={index}>
+              <td>
+                <Form.Control
+                  type="text"
+                  placeholder="Process Name"
+                  value={row.processName}
+                  onChange={(e) =>
+                    updateRow(index, "processName", e.target.value)
+                  }
+                />
+              </td>
+              <td>
+                <Form.Control
+                  type="number"
+                  placeholder="Position"
+                  value={row.position}
+                  onChange={(e) => updateRow(index, "position", e.target.value)}
+                />
+              </td>
+              <td>
+                <Form.Control
+                  type="number"
+                  placeholder="Forward"
+                  value={row.forward}
+                  onChange={(e) => updateRow(index, "forward", e.target.value)}
+                />
+              </td>
+              <td>
+                <Button variant="danger" onClick={() => deleteRow(index)}>
+                  Delete
+                </Button>
+              </td>
+            </tr>
+          ))}
+          {rows.length === 0 && (
+            <tr>
+              <td colSpan="4" className="text-center">
+                <Button variant="success" onClick={addRow}>
+                  Add Row
+                </Button>
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
+
+      {/* Add Row Button */}
+      {rows.length > 0 && (
+        <div className="text-center my-3">
+          <Button variant="success" onClick={addRow}>
+            Add Row
+          </Button>
+        </div>
+      )}
+
+      {/* Submit Button */}
+      <div className="text-center mt-4">
+        <Button variant="primary" onClick={handleSubmit}>
+          Submit
+        </Button>
+      </div>
+
+      {/* Display Work Process List */}
+      {workProcessList.length > 0 && (
+        <div className="mt-5">
+          <h4>Work Process List</h4>
+          <Table bordered>
+            <thead>
+              <tr>
+                <th>Process Name</th>
+                <th>Position</th>
+                <th>Forward</th>
+              </tr>
+            </thead>
+            <tbody>
+              {workProcessList.map((process, index) => (
+                <tr key={index}>
+                  <td>{process.processName}</td>
+                  <td>{process.position}</td>
+                  <td>{process.forward}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default WorkProcessTable;
