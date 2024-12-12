@@ -18,7 +18,7 @@ export default function DeleteModal({ show, onClose, projectId }) {
   };
 
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal show={show} onHide={onClose} centered>
       <Modal.Header>
         <Modal.Title>Delete Project</Modal.Title>
       </Modal.Header>

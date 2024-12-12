@@ -48,7 +48,7 @@ function AddTaskModal() {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="primary" onClick={handleShow} centered>
         <MdOutlineAddTask className="addTaskIconApp" />
       </Button>
 

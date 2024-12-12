@@ -325,14 +325,14 @@ export default function Board() {
   const breadcrumbItems = [
     // { label: <FaHome className="nav-icon" />, link: "/" },
     { label: "Projects", link: "/project-list" },
-    { label: "Modules", link: "/project-module/" + location.state.projectName },
+    { label: "Modules", link: "/project-module/" + location?.state?.projectName },
     { label: "Tasks", link: "#" },
   ];
 
   return (
     <>
       <PageHeaderNav
-        pageTitle={location.state.projectName}
+        pageTitle={location?.state?.projectName}
         subTitle={name}
         breadcrumbItems={breadcrumbItems}
       />

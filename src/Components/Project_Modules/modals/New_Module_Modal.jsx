@@ -38,7 +38,7 @@ export default function New_Module_Modal({ show, onClose, module }) {
 
 
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal show={show} onHide={onClose} centered>
       <form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
           <Modal.Title>

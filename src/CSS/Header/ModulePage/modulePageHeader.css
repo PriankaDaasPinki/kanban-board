@@ -13,3 +13,18 @@
   margin-left: -1rem;
   box-shadow: 1px 1px 5px #0d6efd;
 }
+
+.addWorkProcessButton {
+  background-color: #0d6efd;
+  p {
+    color: white;
+  }
+}
+
+.addWorkProcessButton:hover,
+.dropdown-item:hover {
+  background-color: #0c59ce;
+  p {
+    color: white;
+  }
+}

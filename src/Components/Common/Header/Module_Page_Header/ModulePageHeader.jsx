@@ -4,6 +4,7 @@ import { Container } from "react-bootstrap";
 import "../../../../CSS/Header/ModulePage/modulePageHeader.css";
 import { IoIosArrowDown } from "react-icons/io";
 import AddWorkProcess from "./modal_for_header/AddWorkProcess";
+import { FaEdit, FaPlus } from "react-icons/fa";
 
 const ModulePageHeader = ({ ProjectImage }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -109,9 +110,9 @@ const ModulePageHeader = ({ ProjectImage }) => {
           </div>
           {showDropdown && (
             <ul className="dropdown-menu show workProcess">
-              <li className="d-flex flex-column justify-content-center align-items-center">
-                <p className="dropdown-item text-center" onClick={openModal}>
-                  +
+              <li className="dropdown-item d-flex flex-column justify-content-center align-items-center addWorkProcessButton">
+                <p className="text-center" onClick={openModal}>
+                  <FaPlus /> / <FaEdit />
                 </p>
               </li>
 
