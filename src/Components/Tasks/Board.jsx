@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
@@ -354,7 +355,7 @@ export default function Board() {
             </div>
           )}
           {/* <button className="p-2 mt-5 mb-3" onClick={handleShow}>Add task</button> */}
-          <div className="d-flex flex-wrap bg-warning pt-5 mt-5 justify-content-center">
+          {/* <div className="d-flex flex-wrap bg-warning pt-5 mt-5 justify-content-center">
             {tasks &&
               tasks.map((taskDetails) => {
                 const { id, title, completed } = taskDetails;
@@ -375,10 +376,10 @@ export default function Board() {
                   </div>
                 );
               })}
-          </div>
+          </div> */}
 
           <div className="d-flex flex-column columnBoard">
-            <h2>All Task Of Your Project's Module</h2>
+            {/* <h2>All Task Of Your Project's Module</h2> */}
             <div className="taskColumnBoard">
               {data?.columnOrder?.map((columnId) => {
                 const column = data?.columns[columnId];
