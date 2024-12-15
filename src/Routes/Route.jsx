@@ -7,6 +7,8 @@ import Modules from "../Pages/Modules";
 import Error from "../Pages/Error";
 import Navbar from "../Components/Common/Header/Nav";
 import NavSecondary from "../Components/Common/Header/NavSecondery";
+import UserRegister from "../Pages/Registration_and_Login/UserRegister";
+import Login from "../Pages/Registration_and_Login/Login";
 // import PageHeaderNav from "../Components/Common/Header/PageHeaderNav";
 
 const RoutesAll = () => {
@@ -18,6 +20,8 @@ const RoutesAll = () => {
       </div>
       <Routes>
         <Route path="*" element={<Error />} />
+        <Route path="/registration" element={<UserRegister />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/" element={<Projects />} />
         <Route path="/project-list" element={<Projects />} />
         <Route path="/project/:name" element={<Projects />} />

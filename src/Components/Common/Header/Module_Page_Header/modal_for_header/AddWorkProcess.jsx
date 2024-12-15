@@ -4,11 +4,12 @@ import { Table, Modal, Button, Form } from "react-bootstrap";
 const AddWorkProcess = ({
   show,
   handleClose,
-  handleSubmit,
+  handleAddWorkProcess,
+  workProcesses,
   inputValue,
   setInputValue,
 }) => {
-  const [rows, setRows] = useState([]); // Stores all rows
+  const [rows, setRows] = useState(workProcesses); // Stores all rows
   // const [workProcessList, setWorkProcessList] = useState([]); // Final submitted work processes
   // Add an empty row
   const addRow = () => {
@@ -26,6 +27,17 @@ const AddWorkProcess = ({
   const deleteRow = (index) => {
     const updatedRows = rows.filter((_, i) => i !== index);
     setRows(updatedRows);
+  };
+
+  // Handle submission
+  const handleSubmit = () => {
+    // Filter out incomplete rows and sort by position
+    const validRows = rows
+      .filter((row) => row.processName && row.position && !isNaN(row.position))
+      .sort((a, b) => Number(a.position) - Number(b.position));
+
+    setInputValue(validRows);
+    setRows([]); // Clear the table after submission
   };
 
   return (
@@ -48,7 +60,7 @@ const AddWorkProcess = ({
           <Table bordered className="rounded" hover>
             <thead className="text-center">
               <tr>
-                <th style={{width: "300px"}}>Process Name</th>
+                <th style={{ width: "300px" }}>Process Name</th>
                 <th>Position</th>
                 <th>Forward</th>
                 <th>Actions</th>

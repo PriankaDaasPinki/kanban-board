@@ -108,7 +108,7 @@ const NavBar = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a href="/logout/">
+              <a href="/login">
                 <RxExit className="nav-icon" />
               </a>
             </li>

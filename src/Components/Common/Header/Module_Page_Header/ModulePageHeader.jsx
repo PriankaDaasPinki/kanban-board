@@ -10,11 +10,11 @@ const ModulePageHeader = ({ ProjectImage }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showTaskDropdown, setShowTaskDropdown] = useState(false);
   const [workProcesses, setWorkProcesses] = useState([
-    { id: 1, name: "Requirements", count: 1 },
-    { id: 2, name: "Development", count: 3 },
-    { id: 3, name: "Testing", count: 2 },
-    { id: 4, name: "Debug", count: 0 },
-    { id: 5, name: "Implement & Training", count: 0 },
+    { id: 1, processName: "Requirements", position: 1, count: 1 },
+    { id: 2, processName: "Development", position: 2, count: 3 },
+    { id: 3, processName: "Testing", position: 3, count: 2 },
+    { id: 4, processName: "Debug", position: 4, count: 0 },
+    { id: 5, processName: "Implement & Training", position: 5, count: 0 },
   ]);
 
   const taskStatuses = [
@@ -75,7 +75,7 @@ const ModulePageHeader = ({ ProjectImage }) => {
     if (newWorkProcess.trim()) {
       setWorkProcesses([
         ...workProcesses,
-        { id: workProcesses.length + 1, name: newWorkProcess, count: 0 },
+        { id: workProcesses.length + 1, processName: newWorkProcess, count: 0 },
       ]);
       closeModal();
     }
@@ -123,10 +123,10 @@ const ModulePageHeader = ({ ProjectImage }) => {
                 >
                   <a
                     className="dropdown-item text-center"
-                    href={`/${process.name.replace(" ", "-")}`}
+                    href={`/${process.processName.replace(" ", "-")}`}
                   >
                     <p>
-                      {process.name} [{process.count}]
+                      {process.processName} [{process.count}]
                     </p>
                   </a>
                   {workProcesses.length !== process.id && <IoIosArrowDown />}
@@ -202,7 +202,8 @@ const ModulePageHeader = ({ ProjectImage }) => {
       <AddWorkProcess
         show={showModal}
         handleClose={closeModal}
-        handleSubmit={handleAddWorkProcess}
+        handleAddWorkProcess={handleAddWorkProcess}
+        workProcesses={workProcesses}
         inputValue={newWorkProcess}
         setInputValue={setNewWorkProcess}
       />
