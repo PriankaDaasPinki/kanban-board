@@ -81,11 +81,11 @@ const Login = () => {
           <Form.Check type="checkbox" label="Remember me" />
         </Form.Group>
         {!loading ? (
-          <Button className="w-100" variant="primary" type="submit">
+          <Button className="w-100" variant="success" type="submit">
             Log In
           </Button>
         ) : (
-          <Button className="w-100" variant="primary" type="submit" disabled>
+          <Button className="w-100" variant="success" type="submit" disabled>
             Logging In...
           </Button>
         )}

@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Base URL of your backend
-const baseURL = 'http://10.20.2.39';  // Replace with your actual base URL
+const baseURL = 'http://10.20.2.39/drf-finance/login/';  // Replace with your actual base URL
 
 // Initial state
 const initialState = {
@@ -19,7 +19,7 @@ export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async (credentials, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${baseURL}/drf-finance/login/`, credentials, {
+      const response = await axios.post(baseURL, credentials, {
         headers: {
           'Content-Type': 'application/json',
         },

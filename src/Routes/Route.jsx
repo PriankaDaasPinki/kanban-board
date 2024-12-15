@@ -17,18 +17,21 @@ const RoutesAll = () => {
       <div className="mb-1">
         <Navbar />
         <NavSecondary />
+
+        <Routes>
+          <Route path="/registration" element={<UserRegister />} />
+          <Route path="/project-list" element={<Projects />} />
+          <Route path="/project/:name" element={<Projects />} />
+          <Route path="/project-module" element={<Modules />} />
+          <Route path="/project-module/:name" element={<Modules />} />
+          <Route path="/all-task" element={<Board />} />
+          <Route path="/all-task/:name" element={<Board />} />
+        </Routes>
       </div>
       <Routes>
-        <Route path="*" element={<Error />} />
-        <Route path="/registration" element={<UserRegister />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Projects />} />
-        <Route path="/project-list" element={<Projects />} />
-        <Route path="/project/:name" element={<Projects />} />
-        <Route path="/project-module" element={<Modules />} />
-        <Route path="/project-module/:name" element={<Modules />} />
-        <Route path="/all-task" element={<Board />} />
-        <Route path="/all-task/:name" element={<Board />} />
+        <Route path="/" element={<Login />} />
+        <Route path="*" element={<Error />} />
       </Routes>
     </Router>
   );

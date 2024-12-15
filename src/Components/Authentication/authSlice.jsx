@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const baseURL = "http://10.20.2.39"; // Replace with your actual base URL
+const usersUrl = "http://10.20.2.39/drf-finance/login/"; // Replace with your actual base URL
 
 // Sign in user thunk with axios
 export const signInUser = createAsyncThunk(
@@ -39,7 +39,7 @@ export const signInUser = createAsyncThunk(
   }
 );
 
-const usersUrl = "http://10.20.2.39/drf-finance/login/";
+
 
 export const logInUsers = createAsyncThunk("users/logInUsers", async () => {
   const res = await axios.post(usersUrl, userInfo);
