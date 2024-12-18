@@ -5,11 +5,15 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { BiFullscreen } from "react-icons/bi";
 import { RxExit } from "react-icons/rx";
-
+import { useSelector } from "react-redux";
 
 import "../../../CSS/Header/nav.css";
+import { useUser } from "../../Authentication/authSlice";
 
 const NavBar = () => {
+  const userObject = useSelector(useUser);
+  const { user } = userObject;
+  console.log("user ", user);
   // const [showDropdown, setShowDropdown] = useState(false);
   // const handle = useFullScreenHandle();
   const handleFullScreen = () => {
@@ -95,8 +99,8 @@ const NavBar = () => {
               <div className="d-flex align-items-center">
                 <FaUser className="nav-icon" />
                 <div className="ps-4">
-                  <p>Prianka</p>
-                  <p>Software Engineer</p>
+                  <p className="text-capitalize">{user?.first_name}</p>
+                  <p>{user?.username}</p>
                   {/* <p className="mb-0 font-roboto">Software Engineer</p> */}
                 </div>
               </div>

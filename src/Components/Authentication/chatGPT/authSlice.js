@@ -1,305 +1,183 @@
-// src/redux/authSlice.js
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-// Base URL of your backend
-const baseURL = 'http://10.20.2.39/drf-finance/login/';  // Replace with your actual base URL
+const userUrl = "http://10.20.2.39/drf-finance/login/"; // Replace with your actual base URL
 
-// Initial state
-const initialState = {
-  user: null,
-  token: localStorage.getItem('token') || null,
-  loading: false,
-  error: null,
-  isAuthenticated: false,
-};
+// Configure Axios instance
+const api = axios.create({
+  baseURL: userUrl,
+});
 
-// Async thunk for login
-export const loginUser = createAsyncThunk(
-  'auth/loginUser',
-  async (credentials, { rejectWithValue }) => {
+// AsyncThunk to log in user
+export const logInUser = createAsyncThunk(
+  "user/logInUser",
+  async (userInfo, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.post(baseURL, credentials, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      return response.data;
+      const response = await axios.post(userUrl, userInfo);
+      const data = response.data; // Assuming the token and user info are in `data`
+
+      // Save token and user info to localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data));
+
+      // Set token for authenticated requests
+      api.defaults.headers.common["Authorization"] = `token ${data.token}`;
+
+      // After successful login, trigger loading the user data
+      dispatch(loadUser());
+
+      return data; // Return the data for `fulfilled` case
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'Something went wrong');
+      return rejectWithValue(error.response?.data?.message || "Login failed");
     }
   }
 );
 
-const authSlice = createSlice({
-  name: 'auth',
-  initialState,
-  reducers: {
-    logout: (state) => {
-      state.user = null;
-      state.token = null;
-      state.isAuthenticated = false;
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-    },
-    setUser: (state, action) => {
-      state.user = action.payload;
-      state.isAuthenticated = true;
-    },
+// Load user data if token exists
+export const loadUser = createAsyncThunk(
+  "auth/loadUser",
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem("token");
+    if (!token) return rejectWithValue("No token found. Please log in again.");
+
+    try {
+      const { data } = await axios.get(
+        "http://10.20.2.39/drf-finance/profiles/me/",
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      const status = error.response?.status;
+      const message =
+        status === 401
+          ? "Unauthorized access. Please log in again."
+          : status === 403
+          ? "Access forbidden. Contact support if this persists."
+          : error.response?.data?.detail || "Error loading user data.";
+      return rejectWithValue(message);
+    }
+  }
+);
+
+export const chekAuthentication = createAsyncThunk(
+  "auth/chekAuthentication",
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem("token");
+    if (!token) return rejectWithValue("No token found");
+
+    try {
+      const { data } = await axios.get(
+        "http://10.20.2.39/drf-finance/token-status/",
+        {
+          headers: { Authorization: `Token ${token}` },
+        }
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Error loading user data");
+    }
+  }
+);
+
+// Auth slice
+export const authSlice = createSlice({
+  name: "user",
+  initialState: {
+    msg: "",
+    user: localStorage.getItem("user") || null,
+    token: localStorage.getItem("token") || "",
+    isAuthenticate: null,
+    isLoading: false,
+    error: null,
   },
+
   extraReducers: (builder) => {
-    builder
-      .addCase(loginUser.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.loading = false;
-        const { token, user } = action.payload;
-        state.token = token;
-        state.user = user;
-        state.isAuthenticated = true;
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+    builder.addCase(logInUser.pending, (state) => {
+      state.isLoading = true;
+    });
+
+    builder.addCase(logInUser.fulfilled, (state, action) => {
+      console.log("action if fulfill", action);
+      state.isLoading = false;
+      state.error = action.payload.non_field_errors || null;
+
+      if (state.error) {
+        toast.error("Username or password is incorrect");
+      } else {
+        state.msg = action.payload.msg;
+        state.token = action.payload.token;
+        state.isAuthenticate = true;
+        toast.success("Sign-in successful");
+      }
+    });
+
+    builder.addCase(logInUser.rejected, (state, action) => {
+      state.isLoading = false;
+      if (state.error === "Request failed with status code 401") {
+        state.error = "Access Denied! Invalid Credentials";
+      } else {
+        state.error = action.error.message;
+      }
+      state.error =
+        action.payload?.non_field_errors ||
+        action.error?.message ||
+        "An error occurred";
+      toast.error(state.error);
+    });
+
+    // LoadUser cases
+    builder.addCase(loadUser.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(loadUser.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(loadUser.rejected, (state, action) => {
+      const { payload, error } = action;
+      state.isLoading = false;
+      state.error = payload || error.message;
+    });
+
+    // Check Authentication cases
+    builder.addCase(chekAuthentication.fulfilled, (state, action) => {
+      state.isAuthenticate = action.payload.status === "valid";
+      if (!state.isAuthenticate) {
+        state.token = null;
+        state.user = null;
+        localStorage.clear();
+      }
+    });
+    builder.addCase(chekAuthentication.rejected, (state, action) => {
+      const { payload, error } = action;
+      state.isAuthenticate = false;
+      state.error = payload || error.message;
+    });
+  },
+
+  reducers: {
+    addToken: (state) => {
+      state.token = localStorage.getItem("token");
+    },
+
+    logOutUser: (state) => {
+      // Clear state and localStorage on logout
+      state.user = null;
+      state.token = "";
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+    },
   },
 });
 
-export const { logout, setUser } = authSlice.actions;
-
-export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
-export const selectUser = (state) => state.auth.user;
-
+export const useIsLoggedIn = (state) => state.user.isAuthenticate;
+export const useUser = (state) => state.user.user;
+export const useToken = (state) => state.user.token;
+export const { addToken, logOutUser } = authSlice.actions;
 export default authSlice.reducer;
-
-
-
-
-
-// src/redux/store.js
-import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './authSlice';
-
-const store = configureStore({
-  reducer: {
-    auth: authReducer,
-  },
-});
-
-export default store;
-
-
-
-
-
-
-// Set Up Axios Instance (Optional)
-// If you want to add the Authorization token in your Axios requests automatically, you can set up an Axios instance.
-// src/axios.js
-import axios from 'axios';
-
-// Base URL for API requests
-const baseURL = 'http://10.20.2.39'; // Replace with your base URL
-
-const authAxios = axios.create({
-  baseURL,
-});
-
-authAxios.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Token ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-export default authAxios;
-
-
-
-
-
-// Set Up Login Component
-// Now let’s create a React component for the login form where users will input their credentials.
-// src/components/Login.js
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginUser } from '../redux/authSlice';
-import { useNavigate } from 'react-router-dom';
-import { selectIsAuthenticated } from '../redux/authSlice';
-
-const Login = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const credentials = { email, password };
-
-    dispatch(loginUser(credentials))
-      .unwrap()
-      .then(() => {
-        navigate('/dashboard'); // Redirect to a protected route after login
-      })
-      .catch((err) => {
-        setError(err || 'Login failed');
-      });
-  };
-
-  if (isAuthenticated) {
-    navigate('/dashboard'); // Redirect to dashboard if already authenticated
-    return null;
-  }
-
-  return (
-    <div>
-      <h2>Login</h2>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
-  );
-};
-
-export default Login;
-
-
-
-
-
-
-
-// Set Up React Router
-// You need to set up React Router to handle navigation after login.
-// src/App.js
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from './redux/store';
-import Login from './components/Login';
-
-const App = () => {
-  return (
-    <Provider store={store}>
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          {/* Add other routes, like dashboard */}
-          <Route path="/dashboard" element={<div>Dashboard</div>} />
-        </Routes>
-      </Router>
-    </Provider>
-  );
-};
-
-export default App;
-
-
-
-
-
-
-
-
-
-
-
-// Protecting Routes (Optional)
-// If you want to protect a route, you can create a custom ProtectedRoute component that only allows authenticated users to access certain pages.
-// src/components/ProtectedRoute.js
-import React from 'react';
-import { Redirect } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectIsAuthenticated } from '../redux/authSlice';
-
-const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-
-  if (!isAuthenticated) {
-    return <Redirect to="/login" />;
-  }
-
-  return children;
-};
-
-export default ProtectedRoute;
-
-
-
-
-
-
-
-
-// Inside App.js
-import ProtectedRoute from './components/ProtectedRoute';
-
-<ProtectedRoute>
-  <Route path="/dashboard" element={<Dashboard />} />
-</ProtectedRoute>
-
-
-
-
-
-
-
-
-// Add the Dashboard or Protected Page
-// Create a simple Dashboard component to be accessed after login.
-// src/components/Dashboard.js
-import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../redux/authSlice';
-import { useNavigate } from 'react-router-dom';
-
-const Dashboard = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const user = useSelector((state) => state.auth.user);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate('/login'); // Redirect to login page after logout
-  };
-
-  return (
-    <div>
-      <h1>Welcome, {user?.name}</h1>
-      <button onClick={handleLogout}>Logout</button>
-    </div>
-  );
-};
-
-export default Dashboard;

@@ -3,10 +3,13 @@ import axios from "axios";
 
 const projectsUrl = "https://jsonplaceholder.typicode.com/todos";
 
-export const fetchProjects = createAsyncThunk("projects/fetchProjects", async () => {
-  const res = await axios.get(projectsUrl);
-  return res.data;
-});
+export const fetchProjects = createAsyncThunk(
+  "projects/fetchProjects",
+  async () => {
+    const res = await axios.get(projectsUrl);
+    return res.data;
+  }
+);
 
 export const projectsSlice = createSlice({
   name: "projects",

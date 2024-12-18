@@ -7,28 +7,41 @@ import Modules from "../Pages/Modules";
 import Error from "../Pages/Error";
 import Navbar from "../Components/Common/Header/Nav";
 import NavSecondary from "../Components/Common/Header/NavSecondery";
-import UserRegister from "../Pages/Registration_and_Login/UserRegister";
+// import UserRegister from "../Pages/Registration_and_Login/UserRegister";
 import Login from "../Pages/Registration_and_Login/Login";
+import Protected from "./Protected";
 // import PageHeaderNav from "../Components/Common/Header/PageHeaderNav";
 
 const RoutesAll = () => {
   return (
     <Router>
-      <div className="mb-1">
-        <Navbar />
-        <NavSecondary />
+      <Navbar />
+      <NavSecondary />
 
-        <Routes>
-          <Route path="/registration" element={<UserRegister />} />
-          <Route path="/project-list" element={<Projects />} />
-          <Route path="/project/:name" element={<Projects />} />
-          <Route path="/project-module" element={<Modules />} />
-          <Route path="/project-module/:name" element={<Modules />} />
-          <Route path="/all-task" element={<Board />} />
-          <Route path="/all-task/:name" element={<Board />} />
-        </Routes>
-      </div>
       <Routes>
+        {/* <Route path="/registration" element={<UserRegister />} /> */}
+        <Route path="/home" element={<Protected page={<Projects />} />} />
+        <Route
+          path="/project-list"
+          element={<Protected page={<Projects />} />}
+        />
+        <Route
+          path="/project/:name"
+          element={<Protected page={<Projects />} />}
+        />
+        <Route
+          path="/project-module"
+          element={<Protected page={<Modules />} />}
+        />
+        <Route
+          path="/project-module/:name"
+          element={<Protected page={<Modules />} />}
+        />
+        <Route path="/all-task" element={<Board />} />
+        <Route
+          path="/all-task/:name"
+          element={<Protected page={<Board />} />}
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Login />} />
         <Route path="*" element={<Error />} />

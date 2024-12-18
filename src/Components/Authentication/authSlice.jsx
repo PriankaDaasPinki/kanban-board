@@ -1,98 +1,167 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
 
-const usersUrl = "http://10.20.2.39/drf-finance/login/"; // Replace with your actual base URL
+const BASE_URL = "http://10.20.2.39/drf-finance/";
 
-// Sign in user thunk with axios
-export const signInUser = createAsyncThunk(
-  "signinuser",
-  async (body, { dispatch, rejectWithValue }) => {
-    try {
-      // Make a POST request using Axios
-      const res = await axios.post(`${baseURL}/drf-finance/login/`, body, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+// Configure Axios instance
+const api = axios.create({
+  baseURL: BASE_URL,
+});
 
-      // If the response is successful, store the token and user info in localStorage
-      if (res.status === 200) {
-        const data = res.data;
-
-        // Save token and user info to localStorage before dispatching loadUser
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data));
-
-        // After successful login, trigger loading the user data
-        dispatch(loadUser());
-
-        return data;
-      } else {
-        return rejectWithValue("Authentication failed");
-      }
-    } catch (error) {
-      // Handle errors, including network issues or server errors
-      return rejectWithValue(
-        error.response?.data || error.message || "Something went wrong"
-      );
-    }
+api.interceptors.request.use(
+  (config) => {
+    config.headers.Authorization = `token ${localStorage.getItem('token')}`;
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
 );
 
 
 
-export const logInUsers = createAsyncThunk("users/logInUsers", async () => {
-  const res = await axios.post(usersUrl, userInfo);
-  return res.data;
-});
 
+// AsyncThunk to log in user
+export const logInUser = createAsyncThunk(
+  "user/logInUser",
+  async (userInfo, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.post("login/", userInfo);
+      const data = response.data;
+
+      // Save token and user info to localStorage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data));
+
+      // Set token for authenticated requests
+      api.defaults.headers.common["Authorization"] = `Token ${data.token}`;
+
+      // Trigger loading the user data
+      dispatch(loadUser());
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Login failed");
+    }
+  }
+);
+
+// Load user data if token exists
+export const loadUser = createAsyncThunk(
+  "auth/loadUser",
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem("token");
+    if (!token) return rejectWithValue("No token found. Please log in again.");
+
+    try {
+      const response = await api.get("profiles/me/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      const message =
+        error.response?.data?.detail || "Error loading user data.";
+      return rejectWithValue(message);
+    }
+  }
+);
+
+// Check authentication status
+export const chekAuthentication = createAsyncThunk(
+  "auth/chekAuthentication",
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem("token");
+    if (!token) return rejectWithValue("No token found");
+
+    try {
+      const response = await api.get("token-status/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Error checking authentication status"
+      );
+    }
+  }
+);
+
+// Auth slice
 export const authSlice = createSlice({
-  name: "users",
+  name: "user",
   initialState: {
     msg: "",
     user: JSON.parse(localStorage.getItem("user")) || null,
     token: localStorage.getItem("token") || "",
+    isAuthenticate: null,
     isLoading: false,
     error: null,
   },
-
+  reducers: {
+    addToken: (state) => {
+      state.token = localStorage.getItem("token");
+    },
+    logOutUser: (state) => {
+      state.user = null;
+      state.token = "";
+      localStorage.clear();
+    },
+  },
   extraReducers: (builder) => {
-    builder.addCase(fetchModules.pending, (state) => {
+    // Handle logInUser cases
+    builder.addCase(logInUser.pending, (state) => {
       state.isLoading = true;
-    });
-    builder.addCase(fetchModules.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.modules = action.payload;
       state.error = null;
     });
-    builder.addCase(fetchModules.rejected, (state, action) => {
+    builder.addCase(logInUser.fulfilled, (state, { payload }) => {
       state.isLoading = false;
-      state.modules = [];
-      state.error = action.error.message;
+      state.msg = payload.msg;
+      state.token = payload.token;
+      state.isAuthenticate = true;
+      toast.success("Sign-in successful");
     });
-  },
+    builder.addCase(logInUser.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.error = payload || "Login failed";
+      toast.error(state.error);
+    });
 
-  reducers: {
-    showModules: (state) => state,
-    addModule: (state, action) => {
-      state.modules.push(action.payload);
-    },
-    updateModule: (state, action) => {
-      const { id, title, completed } = action.payload;
-      const isExist = state.modules.filter((module) => module.id === id);
-      if (isExist) {
-        isExist[0].title = title;
-        isExist[0].completed = completed;
+    // Handle loadUser cases
+    builder.addCase(loadUser.pending, (state) => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(loadUser.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.user = payload;
+    });
+    builder.addCase(loadUser.rejected, (state, { payload }) => {
+      state.isLoading = false;
+      state.error = payload || "Failed to load user data";
+    });
+
+    // Handle chekAuthentication cases
+    builder.addCase(chekAuthentication.fulfilled, (state, { payload }) => {
+      state.isAuthenticate = payload.status === "valid";
+      if (!state.isAuthenticate) {
+        state.token = null;
+        state.user = null;
+        localStorage.clear();
       }
-    },
-
-    deleteModule: (state, action) => {
-      const id = action.payload;
-      state.modules = state.projects.filter((module) => module.id !== id);
-    },
+    });
+    builder.addCase(chekAuthentication.rejected, (state, { payload }) => {
+      state.isAuthenticate = false;
+      state.error = payload || "Authentication check failed";
+    });
   },
 });
 
-export const { showModules, addModule, deleteModule, updateModule } =
-  authSlice.actions;
+export const { addToken, logOutUser } = authSlice.actions;
+
+// Selectors
+export const useIsLoggedIn = (state) => state?.authReducer?.isAuthenticate;
+export const useUser = (state) => state?.authReducer?.user;
+export const useToken = (state) => state?.authReducer?.token;
+
 export default authSlice.reducer;
