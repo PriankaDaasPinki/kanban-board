@@ -20,6 +20,8 @@ const RoutesAll = () => {
 
       <Routes>
         {/* <Route path="/registration" element={<UserRegister />} /> */}
+        <Route path="/" element={<Protected page={<Projects />} />} />
+        <Route path="*" element={<Protected page={<Error />} />} />
         <Route path="/home" element={<Protected page={<Projects />} />} />
         <Route
           path="/project-list"
@@ -43,8 +45,6 @@ const RoutesAll = () => {
           element={<Protected page={<Board />} />}
         />
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Login />} />
-        <Route path="*" element={<Error />} />
       </Routes>
     </Router>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Navbar } from "react-bootstrap";
 import { IoIosNotifications } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -8,14 +8,15 @@ import { RxExit } from "react-icons/rx";
 import { useSelector } from "react-redux";
 
 import "../../../CSS/Header/nav.css";
-import { useUser } from "../../Authentication/authSlice";
+import { logOutUser, useUser } from "../../Authentication/authSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
-  const userObject = useSelector(useUser);
-  const { user } = userObject;
-  console.log("user ", user);
-  // const [showDropdown, setShowDropdown] = useState(false);
-  // const handle = useFullScreenHandle();
+  const user = useSelector(useUser);
+  // const user = JSON.parse(userObject);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleFullScreen = () => {
     const element = document.documentElement; // The whole document
     if (element.requestFullscreen) {
@@ -31,10 +32,10 @@ const NavBar = () => {
       element.msRequestFullscreen();
     }
   };
-
-  // const toggleDropdown = () => {
-  //   setShowDropdown(!showDropdown);
-  // };
+  const handleLogOut = () => {
+    dispatch(logOutUser());
+    navigate("/login");
+  };
 
   return (
     <Navbar fixed="top" className="bg-body-tertiary">
@@ -112,9 +113,9 @@ const NavBar = () => {
               </a>
             </li>
             <li className="nav-item">
-              <a href="/login">
+              <div onClick={handleLogOut}>
                 <RxExit className="nav-icon" />
-              </a>
+              </div>
             </li>
           </ul>
         </div>

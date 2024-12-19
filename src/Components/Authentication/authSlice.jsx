@@ -11,16 +11,13 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    config.headers.Authorization = `token ${localStorage.getItem('token')}`;
+    config.headers.Authorization = `Token ${localStorage.getItem("token")}`;
     return config;
   },
   (error) => {
     return Promise.reject(error);
   }
 );
-
-
-
 
 // AsyncThunk to log in user
 export const logInUser = createAsyncThunk(
@@ -29,16 +26,14 @@ export const logInUser = createAsyncThunk(
     try {
       const response = await api.post("login/", userInfo);
       const data = response.data;
-
       // Save token and user info to localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));
-
       // Set token for authenticated requests
-      api.defaults.headers.common["Authorization"] = `Token ${data.token}`;
+      // api.defaults.headers.common["Authorization"] = `Token ${data.token}`;
 
       // Trigger loading the user data
-      dispatch(loadUser());
+      // dispatch(loadUser());
 
       return data;
     } catch (error) {
@@ -48,44 +43,45 @@ export const logInUser = createAsyncThunk(
 );
 
 // Load user data if token exists
-export const loadUser = createAsyncThunk(
-  "auth/loadUser",
-  async (_, { rejectWithValue }) => {
-    const token = localStorage.getItem("token");
-    if (!token) return rejectWithValue("No token found. Please log in again.");
+// export const loadUser = createAsyncThunk(
+//   "auth/loadUser",
+//   async (_, { rejectWithValue }) => {
+//     const token = localStorage.getItem("token");
 
-    try {
-      const response = await api.get("profiles/me/", {
-        headers: { Authorization: `Token ${token}` },
-      });
-      return response.data;
-    } catch (error) {
-      const message =
-        error.response?.data?.detail || "Error loading user data.";
-      return rejectWithValue(message);
-    }
-  }
-);
+//     if (!token) return rejectWithValue("No token found. Please log in again.");
+
+//     try {
+//       const response = await api.get("profiles/me/", {
+//         headers: { Authorization: `Token ${token}` },
+//       });
+//       return response.data;
+//     } catch (error) {
+//       const message =
+//         error.response?.data?.detail || "Error loading user data.";
+//       return rejectWithValue(message);
+//     }
+//   }
+// );
 
 // Check authentication status
-export const chekAuthentication = createAsyncThunk(
-  "auth/chekAuthentication",
-  async (_, { rejectWithValue }) => {
-    const token = localStorage.getItem("token");
-    if (!token) return rejectWithValue("No token found");
+// export const chekAuthentication = createAsyncThunk(
+//   "auth/chekAuthentication",
+//   async (_, { rejectWithValue }) => {
+//     const token = localStorage.getItem("token");
+//     if (!token) return rejectWithValue("No token found");
 
-    try {
-      const response = await api.get("token-status/", {
-        headers: { Authorization: `Token ${token}` },
-      });
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(
-        error.response?.data || "Error checking authentication status"
-      );
-    }
-  }
-);
+//     try {
+//       const response = await api.get("token-status/", {
+//         headers: { Authorization: `Token ${token}` },
+//       });
+//       return response.data;
+//     } catch (error) {
+//       return rejectWithValue(
+//         error.response?.data || "Error checking authentication status"
+//       );
+//     }
+//   }
+// );
 
 // Auth slice
 export const authSlice = createSlice({
@@ -94,7 +90,7 @@ export const authSlice = createSlice({
     msg: "",
     user: JSON.parse(localStorage.getItem("user")) || null,
     token: localStorage.getItem("token") || "",
-    isAuthenticate: null,
+    isAuthenticate: localStorage.getItem("token") ? true : false,
     isLoading: false,
     error: null,
   },
@@ -103,57 +99,56 @@ export const authSlice = createSlice({
       state.token = localStorage.getItem("token");
     },
     logOutUser: (state) => {
-      state.user = null;
-      state.token = "";
       localStorage.clear();
+      state.isAuthenticate = false;
     },
   },
   extraReducers: (builder) => {
     // Handle logInUser cases
     builder.addCase(logInUser.pending, (state) => {
       state.isLoading = true;
-      state.error = null;
     });
     builder.addCase(logInUser.fulfilled, (state, { payload }) => {
       state.isLoading = false;
       state.msg = payload.msg;
       state.token = payload.token;
+      state.user = payload;
       state.isAuthenticate = true;
       toast.success("Sign-in successful");
     });
-    builder.addCase(logInUser.rejected, (state, { payload }) => {
+    builder.addCase(logInUser.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = payload || "Login failed";
+      state.error = action.error.message || "Login failed";
       toast.error(state.error);
     });
 
     // Handle loadUser cases
-    builder.addCase(loadUser.pending, (state) => {
-      state.isLoading = true;
-      state.error = null;
-    });
-    builder.addCase(loadUser.fulfilled, (state, { payload }) => {
-      state.isLoading = false;
-      state.user = payload;
-    });
-    builder.addCase(loadUser.rejected, (state, { payload }) => {
-      state.isLoading = false;
-      state.error = payload || "Failed to load user data";
-    });
+    // builder.addCase(loadUser.pending, (state) => {
+    //   state.isLoading = true;
+    // });
+    // builder.addCase(loadUser.fulfilled, (state, { payload }) => {
+    //   state.isLoading = false;
+    //   state.user = payload;
+    // });
+    // builder.addCase(loadUser.rejected, (state, action) => {
+    //   state.isLoading = false;
+    //   state.error = action.error.message || "Failed to load user data";
+    // });
 
     // Handle chekAuthentication cases
-    builder.addCase(chekAuthentication.fulfilled, (state, { payload }) => {
-      state.isAuthenticate = payload.status === "valid";
-      if (!state.isAuthenticate) {
-        state.token = null;
-        state.user = null;
-        localStorage.clear();
-      }
-    });
-    builder.addCase(chekAuthentication.rejected, (state, { payload }) => {
-      state.isAuthenticate = false;
-      state.error = payload || "Authentication check failed";
-    });
+    // builder.addCase(chekAuthentication.fulfilled, (state, { payload }) => {
+    //   state.isAuthenticate = payload.status === "valid";
+    //   console.log("payload chekAuthentication ", payload);
+    //   if (!state.isAuthenticate) {
+    //     state.token = null;
+    //     state.user = null;
+    //     localStorage.clear();
+    //   }
+    // });
+    // builder.addCase(chekAuthentication.rejected, (state, { payload }) => {
+    //   state.isAuthenticate = false;
+    //   state.error = payload || "Authentication check failed";
+    // });
   },
 });
 
