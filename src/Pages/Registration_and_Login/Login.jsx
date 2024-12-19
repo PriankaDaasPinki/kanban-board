@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 
-import BackgroundImage from "../../assets/images/background.png";
+// import BackgroundImage from "../../assets/images/background.png";
+import BackgroundImage from "../../assets/images/backgroundImage.webp";
 import "../../CSS/Authentication/login_signup.css";
 import {
   logInUser,
@@ -27,10 +28,9 @@ const Login = () => {
 
   useEffect(() => {
     if (isLoggedIn === true) {
-        navigate("/home");
+      navigate("/home");
     }
-}, [isLoggedIn, navigate]);
-
+  }, [isLoggedIn, navigate]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

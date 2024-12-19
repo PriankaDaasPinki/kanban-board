@@ -13,6 +13,11 @@
   border-bottom-right-radius: 10rem;
 }
 
+
+.toastContainerApp{
+  /* z-index: 11000; */
+}
+
 @media only screen and (max-width: 1000px) {
   .addTaskDiv {
     position: fixed;

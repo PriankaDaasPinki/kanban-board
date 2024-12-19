@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Container, Navbar } from "react-bootstrap";
 import { IoIosNotifications } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 const NavBar = () => {
   const user = useSelector(useUser);
   // const user = JSON.parse(userObject);
+  const URL = "http://10.20.2.39";
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleFullScreen = () => {
@@ -98,7 +99,16 @@ const NavBar = () => {
 
             <li className="nav-item">
               <div className="d-flex align-items-center">
-                <FaUser className="nav-icon" />
+                {user.user_profile.image ? (
+                  <img
+                    className="nav-icon" style={{maxHeight:'3rem', borderRadius:"50%"}}
+                    src={`${URL}${user.user_profile.image}`}
+                    alt="userImage"
+                  />
+                ) : (
+                  <FaUser className="nav-icon" />
+                )}
+
                 <div className="ps-4">
                   <p className="text-capitalize">{user?.first_name}</p>
                   <p>{user?.username}</p>

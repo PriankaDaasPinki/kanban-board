@@ -101,12 +101,14 @@ export const authSlice = createSlice({
     logOutUser: (state) => {
       localStorage.clear();
       state.isAuthenticate = false;
+      toast.error("Logged Out");
     },
   },
   extraReducers: (builder) => {
     // Handle logInUser cases
     builder.addCase(logInUser.pending, (state) => {
       state.isLoading = true;
+      state.error = null;
     });
     builder.addCase(logInUser.fulfilled, (state, { payload }) => {
       state.isLoading = false;
@@ -114,6 +116,7 @@ export const authSlice = createSlice({
       state.token = payload.token;
       state.user = payload;
       state.isAuthenticate = true;
+      state.error = null;
       toast.success("Sign-in successful");
     });
     builder.addCase(logInUser.rejected, (state, action) => {
