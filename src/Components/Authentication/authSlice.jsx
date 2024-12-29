@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const BASE_URL = "http://10.20.2.39/drf-finance/";
+// const BASE_URL = "http://127.0.0.1:8000/";
 
 // Configure Axios instance
 const api = axios.create({
@@ -25,7 +26,9 @@ export const logInUser = createAsyncThunk(
   async (userInfo, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.post("login/", userInfo);
+      // const TokenResponse = await api.post("login/", userInfo);
       const data = response.data;
+      console.log('data ',data);
       // Save token and user info to localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));

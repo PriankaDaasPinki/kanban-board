@@ -99,7 +99,7 @@ const NavBar = () => {
 
             <li className="nav-item">
               <div className="d-flex align-items-center">
-                {user.user_profile.image ? (
+                {user?.user_profile?.image ? (
                   <img
                     className="nav-icon" style={{maxHeight:'3rem', borderRadius:"50%"}}
                     src={`${URL}${user.user_profile.image}`}
