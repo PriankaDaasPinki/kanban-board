@@ -2,42 +2,40 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const BASE_URL = "http://10.20.2.39/drf-finance/";
-// const BASE_URL = "http://127.0.0.1:8000/";
+// const BASE_URL = "http://10.20.2.39/drf-finance/";
+const BASE_URL = "http://127.0.0.1:8000/";
 
 // Configure Axios instance
 const api = axios.create({
   baseURL: BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-api.interceptors.request.use(
-  (config) => {
-    config.headers.Authorization = `Token ${localStorage.getItem("token")}`;
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+// Add token to headers if available
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-);
+  return config;
+});
 
 // AsyncThunk to log in user
 export const logInUser = createAsyncThunk(
   "user/logInUser",
   async (userInfo, { dispatch, rejectWithValue }) => {
     try {
-      const response = await api.post("login/", userInfo);
-      // const TokenResponse = await api.post("login/", userInfo);
+      const response = await api.post("/auth/login", userInfo);
+      console.log("response ", response);
+      localStorage.setItem("token", response.data.token);
+      // localStorage.setItem("session_token", response.data.session_token);
       const data = response.data;
-      console.log('data ',data);
+      console.log("data ", data);
       // Save token and user info to localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));
-      // Set token for authenticated requests
-      // api.defaults.headers.common["Authorization"] = `Token ${data.token}`;
-
-      // Trigger loading the user data
-      // dispatch(loadUser());
-
       return data;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || "Login failed");
@@ -90,8 +88,10 @@ export const logInUser = createAsyncThunk(
 export const authSlice = createSlice({
   name: "user",
   initialState: {
-    msg: "",
+    message: "",
     user: JSON.parse(localStorage.getItem("user")) || null,
+    // access_token: localStorage.getItem("access_token") || "",
+    // session_token: localStorage.getItem("session_token") || "",
     token: localStorage.getItem("token") || "",
     isAuthenticate: localStorage.getItem("token") ? true : false,
     isLoading: false,

@@ -71,7 +71,7 @@ export default function ProjectModal({ show, onClose, project }) {
             <Form.Label>Project Logo</Form.Label>
             <Form.Control
               type="file"
-              placeholder="Describe Your Description"
+              // placeholder="Describe Your Description"
               // value={formData.content}
               // onChange={(e) =>
               //   setFormData({ ...formData, content: e.target.value })

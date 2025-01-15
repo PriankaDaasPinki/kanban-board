@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const user = useSelector(useUser);
+  console.log("user", user);
   // const user = JSON.parse(userObject);
   const URL = "http://10.20.2.39";
   const dispatch = useDispatch();
@@ -110,8 +111,8 @@ const NavBar = () => {
                 )}
 
                 <div className="ps-4">
-                  <p className="text-capitalize">{user?.first_name}</p>
-                  <p>{user?.username}</p>
+                  <p className="text-capitalize">{user?.user?.full_name}</p>
+                  <p className="text-capitalize">{user?.user?.designation}</p>
                   {/* <p className="mb-0 font-roboto">Software Engineer</p> */}
                 </div>
               </div>

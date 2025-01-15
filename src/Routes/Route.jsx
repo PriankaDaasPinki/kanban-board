@@ -10,6 +10,7 @@ import NavSecondary from "../Components/Common/Header/NavSecondery";
 // import UserRegister from "../Pages/Registration_and_Login/UserRegister";
 import Login from "../Pages/Registration_and_Login/Login";
 import Protected from "./Protected";
+import User from "../Pages/User";
 // import PageHeaderNav from "../Components/Common/Header/PageHeaderNav";
 
 const RoutesAll = () => {
@@ -23,6 +24,8 @@ const RoutesAll = () => {
         <Route path="/" element={<Protected page={<Projects />} />} />
         <Route path="*" element={<Protected page={<Error />} />} />
         <Route path="/home" element={<Protected page={<Projects />} />} />
+        <Route path="/user" element={<Protected page={<User />} />} />
+        <Route path="/user/:username" element={<Protected page={<User />} />} />
         <Route
           path="/project-list"
           element={<Protected page={<Projects />} />}

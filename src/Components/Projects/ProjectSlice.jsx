@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const projectsUrl = "https://jsonplaceholder.typicode.com/todos";
+const projectsUrl = "http://127.0.0.1:8000/projects/list";
 
 export const fetchProjects = createAsyncThunk(
   "projects/fetchProjects",
   async () => {
     const res = await axios.get(projectsUrl);
-    return res.data;
+    return res.data.projects;
   }
 );
 
@@ -48,7 +48,7 @@ export const projectsSlice = createSlice({
     },
     deleteProject: (state, action) => {
       const id = action.payload;
-      state.projects = state.projects.filter((project) => project.id !== id);
+      state.projects = state.projects.filter((project) => project.project_id !== id);
     },
   },
 });

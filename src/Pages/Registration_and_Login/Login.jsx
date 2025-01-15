@@ -15,12 +15,7 @@ import { useSelector } from "react-redux";
 const Login = () => {
   const [username, setUsername] = useState("admin");
   const [password, setPassword] = useState("admin");
-  // console.log("localStorage token data",localStorage.getItem("user"));
-  // const [show, setShow] = useState(false);
   const { isLoading, error } = useSelector((state) => state.authReducer);
-  // const [loading, setLoading] = useState(false);
-  // console.log('useSelector((state) => state.authReducer)');
-  // console.log(useSelector((state) => state.authReducer));
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -38,23 +33,10 @@ const Login = () => {
       username,
       password,
     };
-
     dispatch(logInUser(userInfo));
-
-    // setLoading(true);
-    // await delay(500);
-    // console.log(`Username :${inputUsername}, Password :${inputPassword}`);
-    // if (inputUsername !== "admin" || inputPassword !== "admin") {
-    //   setShow(true);
-    // }
-    // setLoading(false);
   };
 
   const handlePassword = () => {};
-
-  // function delay(ms) {
-  //   return new Promise((resolve) => setTimeout(resolve, ms));
-  // }
 
   return (
     <div
@@ -65,12 +47,6 @@ const Login = () => {
       <div className="sign-in__backdrop"></div>
       {/* Form */}
       <Form className="shadow p-4 bg-white rounded" onSubmit={handleSubmit}>
-        {/* Header */}
-        {/* <img
-          className="img-thumbnail mx-auto d-block mb-2"
-          src={Logo}
-          alt="logo"
-        /> */}
         <div className="h4 mb-2 text-center">Sign In</div>
         {/* ALert */}
         {error && (

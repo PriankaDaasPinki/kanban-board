@@ -88,13 +88,12 @@ export default function ProjectBoard() {
           {projects &&
             projects.map((project, key) => (
               <Project
-                key={project.id}
-                id={project.id}
-                index={key}
-                projectTitle={project.title}
+                id={project.project_id}
+                key={key}
+                projectTitle={project.project_name}
                 completed={project.completed}
                 onEdit={() => handleOpenAddEditModal(project)}
-                onDelete={() => handleOpenDeleteModal(project.id)}
+                onDelete={() => handleOpenDeleteModal(project.project_id)}
               />
             ))}
         </div>
@@ -110,7 +109,7 @@ export default function ProjectBoard() {
         <DeleteModal
           show={showDeleteModal}
           onClose={handleCloseDeleteModal}
-          projectId={currentProject?.id}
+          projectId={currentProject?.project_id}
         />
       </div>
     </>
