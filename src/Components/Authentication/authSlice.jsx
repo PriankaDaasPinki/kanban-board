@@ -1,17 +1,19 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+// import axios from "axios";
 import { toast } from "react-toastify";
 
+import api from "./api";
+
 // const BASE_URL = "http://10.20.2.39/drf-finance/";
-const BASE_URL = "http://127.0.0.1:8000/";
+// const BASE_URL = "http://127.0.0.1:8000/";
 
 // Configure Axios instance
-const api = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+// const api = axios.create({
+//   baseURL: BASE_URL,
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+// });
 
 // Add token to headers if available
 api.interceptors.request.use((config) => {
@@ -44,45 +46,45 @@ export const logInUser = createAsyncThunk(
 );
 
 // Load user data if token exists
-// export const loadUser = createAsyncThunk(
-//   "auth/loadUser",
-//   async (_, { rejectWithValue }) => {
-//     const token = localStorage.getItem("token");
+export const loadUser = createAsyncThunk(
+  "auth/loadUser",
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem("token");
 
-//     if (!token) return rejectWithValue("No token found. Please log in again.");
+    if (!token) return rejectWithValue("No token found. Please log in again.");
 
-//     try {
-//       const response = await api.get("profiles/me/", {
-//         headers: { Authorization: `Token ${token}` },
-//       });
-//       return response.data;
-//     } catch (error) {
-//       const message =
-//         error.response?.data?.detail || "Error loading user data.";
-//       return rejectWithValue(message);
-//     }
-//   }
-// );
+    try {
+      const response = await api.get("profiles/me/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      const message =
+        error.response?.data?.detail || "Error loading user data.";
+      return rejectWithValue(message);
+    }
+  }
+);
 
 // Check authentication status
-// export const chekAuthentication = createAsyncThunk(
-//   "auth/chekAuthentication",
-//   async (_, { rejectWithValue }) => {
-//     const token = localStorage.getItem("token");
-//     if (!token) return rejectWithValue("No token found");
+export const chekAuthentication = createAsyncThunk(
+  "auth/chekAuthentication",
+  async (_, { rejectWithValue }) => {
+    const token = localStorage.getItem("token");
+    if (!token) return rejectWithValue("No token found");
 
-//     try {
-//       const response = await api.get("token-status/", {
-//         headers: { Authorization: `Token ${token}` },
-//       });
-//       return response.data;
-//     } catch (error) {
-//       return rejectWithValue(
-//         error.response?.data || "Error checking authentication status"
-//       );
-//     }
-//   }
-// );
+    try {
+      const response = await api.get("token-status/", {
+        headers: { Authorization: `Token ${token}` },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || "Error checking authentication status"
+      );
+    }
+  }
+);
 
 // Auth slice
 export const authSlice = createSlice({
@@ -129,32 +131,32 @@ export const authSlice = createSlice({
     });
 
     // Handle loadUser cases
-    // builder.addCase(loadUser.pending, (state) => {
-    //   state.isLoading = true;
-    // });
-    // builder.addCase(loadUser.fulfilled, (state, { payload }) => {
-    //   state.isLoading = false;
-    //   state.user = payload;
-    // });
-    // builder.addCase(loadUser.rejected, (state, action) => {
-    //   state.isLoading = false;
-    //   state.error = action.error.message || "Failed to load user data";
-    // });
+    builder.addCase(loadUser.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(loadUser.fulfilled, (state, { payload }) => {
+      state.isLoading = false;
+      state.user = payload;
+    });
+    builder.addCase(loadUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error.message || "Failed to load user data";
+    });
 
     // Handle chekAuthentication cases
-    // builder.addCase(chekAuthentication.fulfilled, (state, { payload }) => {
-    //   state.isAuthenticate = payload.status === "valid";
-    //   console.log("payload chekAuthentication ", payload);
-    //   if (!state.isAuthenticate) {
-    //     state.token = null;
-    //     state.user = null;
-    //     localStorage.clear();
-    //   }
-    // });
-    // builder.addCase(chekAuthentication.rejected, (state, { payload }) => {
-    //   state.isAuthenticate = false;
-    //   state.error = payload || "Authentication check failed";
-    // });
+    builder.addCase(chekAuthentication.fulfilled, (state, { payload }) => {
+      state.isAuthenticate = payload.status === "valid";
+      console.log("payload chekAuthentication ", payload);
+      if (!state.isAuthenticate) {
+        state.token = null;
+        state.user = null;
+        localStorage.clear();
+      }
+    });
+    builder.addCase(chekAuthentication.rejected, (state, { payload }) => {
+      state.isAuthenticate = false;
+      state.error = payload || "Authentication check failed";
+    });
   },
 });
 

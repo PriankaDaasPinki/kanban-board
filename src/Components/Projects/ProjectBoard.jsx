@@ -1,28 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { MdOutlineAddTask } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-
-import { fetchProjects } from "./ProjectSlice";
 import Project from "./Project";
 import "../../CSS/boardStyle.css";
 import ProjectModal from "./modals/ProjectModal";
 import DeleteModal from "./modals/DeleteModal";
 import PageHeaderNav from "../Common/Header/PageHeaderNav";
+// import api from "../Authentication/api"; // Assuming you have api.js file with axios instance
+import axios from "axios";
+import { API_URL } from "../Authentication/api";
 
 export default function ProjectBoard() {
-  const dispatch = useDispatch();
-  const { isLoading, projects, error } = useSelector(
-    (state) => state.projectsReducer
-  );
+  const projectsUrl = "/projects/list";
+  // const createProjectUrl = "/projects/create";
+  // const updateProjectUrl = "/projects/update";
+  // const deleteProjectUrl = "/projects";
+
   const [showAddEditModal, setShowAddEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentProject, setCurrentProject] = useState(null);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Fetch projects on mount
+  // Fetch projects
+  const fetchProjects = async () => {
+    setLoading(true);
+    setError(null); // Clear previous error if any
+    try {
+      // const response = await api.get(projectsUrl);
+      const response = await axios.get(API_URL + projectsUrl);
+      console.log("response", response);
+      setProjects(response.data.projects); // Assuming the API response has 'projects'
+    } catch (err) {
+      setError("Failed to fetch projects.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    dispatch(fetchProjects());
-  }, [dispatch]);
+    fetchProjects(); // Fetch data when the component mounts
+  }, []);
 
   // Open Add/Edit Modal
   const handleOpenAddEditModal = (project) => {
@@ -38,9 +57,16 @@ export default function ProjectBoard() {
 
   // Open Delete Modal
   const handleOpenDeleteModal = (projectId) => {
-    setCurrentProject({ id: projectId });
+    console.log(
+      "projectId project board inside handle delete modal",
+      projectId
+    );
+    setCurrentProject(projectId);
     setShowDeleteModal(true);
+    console.log("object inside ", currentProject);
   };
+  console.log("object ", currentProject);
+
 
   // Close Delete Modal
   const handleCloseDeleteModal = () => {
@@ -48,10 +74,7 @@ export default function ProjectBoard() {
     setCurrentProject(null);
   };
 
-  // const pageTitle = (titleFromProject) => {
-  //   console.log("titleFromProject " + titleFromProject);
-  // };
-
+  // Breadcrumb navigation
   const breadcrumbItems = [{ label: "Projects", link: "/project-list" }];
 
   return (
@@ -73,17 +96,21 @@ export default function ProjectBoard() {
           </Button>
         </div>
 
-        {isLoading && (
+        {/* Loading State */}
+        {loading && (
           <div className="p-5 mt-5">
-            <h1>Loading......</h1>
+            <h1>Loading...</h1>
           </div>
         )}
+
+        {/* Error State */}
         {error && (
           <div className="p-5 mt-5">
             <h1>{error}</h1>
           </div>
         )}
 
+        {/* Projects Grid */}
         <div className="grid-container">
           {projects &&
             projects.map((project, key) => (
@@ -94,6 +121,7 @@ export default function ProjectBoard() {
                 completed={project.completed}
                 onEdit={() => handleOpenAddEditModal(project)}
                 onDelete={() => handleOpenDeleteModal(project.project_id)}
+                fetchProjects={fetchProjects}
               />
             ))}
         </div>
@@ -103,13 +131,15 @@ export default function ProjectBoard() {
           show={showAddEditModal}
           onClose={handleCloseAddEditModal}
           project={currentProject}
+          fetchProjects={fetchProjects}
         />
 
         {/* Delete Warning Modal */}
         <DeleteModal
           show={showDeleteModal}
           onClose={handleCloseDeleteModal}
-          projectId={currentProject?.project_id}
+          projectId={currentProject}
+          fetchProjects={fetchProjects}
         />
       </div>
     </>

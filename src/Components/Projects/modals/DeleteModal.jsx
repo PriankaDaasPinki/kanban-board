@@ -1,20 +1,30 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
+import { API_URL } from "../../Authentication/api";
 
-import { deleteProject } from "../ProjectSlice";
+// import { deleteProject } from "../ProjectSlice";
 
-export default function DeleteModal({ show, onClose, projectId }) {
-  const dispatch = useDispatch();
+export default function DeleteModal({
+  show,
+  onClose,
+  projectId,
+  fetchProjects,
+}) {
+  // const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+
+  console.log("projectId ", projectId);
 
   const handleDelete = () => {
     setLoading(true);
-    dispatch(deleteProject(projectId));
-    setTimeout(() => {
-      setLoading(false);
+    (async () => {
+      await axios.delete(`${API_URL}/projects/${projectId}`);
+      fetchProjects(); // Fetch projects after delete a new one
       onClose();
-    }, 300);
+      setLoading(false);
+    })();
   };
 
   return (

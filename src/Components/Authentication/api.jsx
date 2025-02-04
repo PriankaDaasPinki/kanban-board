@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:8000"; // Replace with your backend URL
+const API_URL = "http://10.20.2.14:8000"; // Replace with your backend URL
 
 const api = axios.create({
   baseURL: API_URL,
@@ -19,3 +19,4 @@ api.interceptors.request.use((config) => {
 });
 
 export default api;
+export { API_URL };
