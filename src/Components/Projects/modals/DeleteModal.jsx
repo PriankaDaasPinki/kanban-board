@@ -15,8 +15,6 @@ export default function DeleteModal({
   // const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
-  console.log("projectId ", projectId);
-
   const handleDelete = () => {
     setLoading(true);
     (async () => {

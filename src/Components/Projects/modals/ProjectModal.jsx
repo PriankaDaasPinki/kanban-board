@@ -14,12 +14,11 @@ export default function ProjectModal({
 }) {
   // Get the logged-in user from Redux
   const user = useSelector(useUser);
-  console.log("user", user.user.user_id);
 
   const [formData, setFormData] = useState({
     project_name: "",
     description: "",
-    owner_id: user.user.user_id || "", // Assign owner_id from logged-in user
+    owner_id: "", // Assign owner_id from logged-in user
     // logo: null, // Handle file for logo
   });
 
@@ -27,11 +26,10 @@ export default function ProjectModal({
 
   // Populate form data if editing an existing project
   useEffect(() => {
-    console.log("user?.user_id ", user.user.user_id);
     if (project) {
       setFormData({
-        project_name: project.title || "",
-        description: project.content || "",
+        project_name: project.project_name || "",
+        description: project.description || "",
         logo: project.logo || null,
         owner_id: user.user.user_id || "",
       });
@@ -68,6 +66,7 @@ export default function ProjectModal({
           formPayload,
           { headers: { "Content-Type": "application/json" } }
         );
+        fetchProjects(); // Fetch projects after update project data
         alert("Project updated successfully!");
       } else {
         // Create new project

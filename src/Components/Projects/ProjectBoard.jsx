@@ -30,7 +30,6 @@ export default function ProjectBoard() {
     try {
       // const response = await api.get(projectsUrl);
       const response = await axios.get(API_URL + projectsUrl);
-      console.log("response", response);
       setProjects(response.data.projects); // Assuming the API response has 'projects'
     } catch (err) {
       setError("Failed to fetch projects.");
@@ -57,15 +56,9 @@ export default function ProjectBoard() {
 
   // Open Delete Modal
   const handleOpenDeleteModal = (projectId) => {
-    console.log(
-      "projectId project board inside handle delete modal",
-      projectId
-    );
     setCurrentProject(projectId);
     setShowDeleteModal(true);
-    console.log("object inside ", currentProject);
   };
-  console.log("object ", currentProject);
 
 
   // Close Delete Modal
