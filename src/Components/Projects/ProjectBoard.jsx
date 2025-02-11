@@ -30,7 +30,7 @@ export default function ProjectBoard() {
     try {
       // const response = await api.get(projectsUrl);
       const response = await axios.get(API_URL + projectsUrl);
-      setProjects(response.data.projects); // Assuming the API response has 'projects'
+      setProjects(response.data.projects);
     } catch (err) {
       setError("Failed to fetch projects.");
     } finally {

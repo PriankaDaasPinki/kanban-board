@@ -39,14 +39,16 @@ function Project({ id, projectTitle, completed, onEdit, onDelete }) {
 
   const handleDoubleClick = () => {
     // onGetPageTitle(projectTitle);
-    nevigate("/project-module/" + projectTitle);
+    nevigate("/project-module/" + projectTitle, {
+      state: { id }
+    });
   };
 
   return (
     <>
       <Container
         className="project projectContainer"
-        onDoubleClick={handleDoubleClick} // Double-click to start editing
+        onDoubleClick={handleDoubleClick}     // Double-click to start editing
       >
         <div className="iconListBar">
           <FaList className="icons icon" onClick={handleView} />

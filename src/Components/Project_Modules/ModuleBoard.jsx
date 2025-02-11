@@ -1,36 +1,56 @@
+// /* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { MdOutlineAddTask } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useParams } from "react-router-dom";
+import axios from "axios";
 
-import { fetchModules } from "./ModuleSlice";
-import Module from "./Module";
 import "../../CSS/boardStyle.css";
+
+import Module from "./Module";
 import DeleteModal from "./modals/DeleteModal";
 import PageHeaderNav from "../Common/Header/PageHeaderNav";
-// eslint-disable-next-line
 import AddModule from "./modals/New_Module_Modal";
-import { useParams } from "react-router-dom";
 import ModulePageHeader from "../Common/Header/Module_Page_Header/ModulePageHeader";
 
+import { API_URL } from "../Authentication/api";
+
 export default function ModuleBoard() {
-  const dispatch = useDispatch();
-  const { isLoading, modules, error } = useSelector(
-    (state) => state.modulesReducer
-  );
+  const location = useLocation();
+  const project_id = location.state?.id; // Access the passed value
+
+  const projectModuleUrl = `/project_module/${project_id}`;
+
   const [showAddEditModal, setShowAddEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentModule, setCurrentModule] = useState(null);
-  // const [currentModule, setCurrentModule] = useState(null);
+  const [modules, setModules] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Fetch modules on mount
+  // Fetch projects
+  const fetchProject_Module = async () => {
+    setLoading(true);
+    setError(null); // Clear previous error if any
+    try {
+      const response = await axios.get(API_URL + projectModuleUrl);
+      setModules(response.data.project_modules);
+    } catch (err) {
+      setError("Failed to fetch project module.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  console.log("modules  ", modules);
+
   useEffect(() => {
-    dispatch(fetchModules());
-  }, [dispatch]);
+    fetchProject_Module(); // Fetch data when the component mounts
+    // eslint-disable-next-line
+  }, []);
 
   // Open Add/Edit Modal
   const handleOpenAddEditModal = (module) => {
-    console.log(module);
     setCurrentModule(module);
     setShowAddEditModal(true);
   };
@@ -74,14 +94,19 @@ export default function ModuleBoard() {
           <Button
             variant="primary"
             onClick={() =>
-              handleOpenAddEditModal({ id: null, title: "", content: "" })
+              handleOpenAddEditModal({
+                id: "",
+                module_name: "",
+                description: "",
+                content: "",
+              })
             }
           >
             <MdOutlineAddTask className="addModuleIcon" />
           </Button>
         </div>
 
-        {isLoading && (
+        {loading && (
           <div className="p-5 mt-5">
             <h1>Loading......</h1>
           </div>
@@ -93,20 +118,24 @@ export default function ModuleBoard() {
         )}
 
         <div className="grid-container">
-          {modules &&
+          {modules.length > 0 ? (
+            modules &&
             modules.map((module, key) => (
               <>
                 <Module
                   id={module.id}
                   projectName={name}
                   position={key}
-                  moduleTitle={module.title}
+                  moduleTitle={module.module_name}
                   completed={module.completed}
                   onEdit={() => handleOpenAddEditModal(module)}
-                  onDelete={() => handleOpenDeleteModal(module.id)}
+                  onDelete={() => handleOpenDeleteModal(module.module_id)}
                 />
               </>
-            ))}
+            ))
+          ) : (
+            <h3 className="pt-5">No Module Found for project - {name}</h3>
+          )}
         </div>
 
         {/* Add/Edit Modal */}
@@ -114,13 +143,16 @@ export default function ModuleBoard() {
           show={showAddEditModal}
           onClose={handleCloseAddEditModal}
           module={currentModule}
+          project_id={project_id}
+          fetchProject_Module={fetchProject_Module}
         />
 
         {/* Delete Warning Modal */}
         <DeleteModal
           show={showDeleteModal}
           onClose={handleCloseDeleteModal}
-          moduleId={currentModule?.id}
+          moduleId={currentModule?.module_id}
+          fetchProject_Module={fetchProject_Module}
         />
       </div>
     </>
