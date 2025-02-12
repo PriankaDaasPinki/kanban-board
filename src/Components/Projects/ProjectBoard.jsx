@@ -56,10 +56,9 @@ export default function ProjectBoard() {
 
   // Open Delete Modal
   const handleOpenDeleteModal = (projectId) => {
-    setCurrentProject(projectId);
+    setCurrentProject({ project_id: projectId });
     setShowDeleteModal(true);
   };
-
 
   // Close Delete Modal
   const handleCloseDeleteModal = () => {
@@ -131,7 +130,7 @@ export default function ProjectBoard() {
         <DeleteModal
           show={showDeleteModal}
           onClose={handleCloseDeleteModal}
-          projectId={currentProject}
+          projectId={currentProject?.project_id}
           fetchProjects={fetchProjects}
         />
       </div>

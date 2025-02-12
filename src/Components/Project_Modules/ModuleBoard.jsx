@@ -42,8 +42,6 @@ export default function ModuleBoard() {
     }
   };
 
-  console.log("modules  ", modules);
-
   useEffect(() => {
     fetchProject_Module(); // Fetch data when the component mounts
     // eslint-disable-next-line
@@ -63,7 +61,7 @@ export default function ModuleBoard() {
 
   // Open Delete Modal
   const handleOpenDeleteModal = (moduleId) => {
-    setCurrentModule({ id: moduleId });
+    setCurrentModule({ module_id: moduleId });
     setShowDeleteModal(true);
   };
 
@@ -123,7 +121,7 @@ export default function ModuleBoard() {
             modules.map((module, key) => (
               <>
                 <Module
-                  id={module.id}
+                  id={module.module_id}
                   projectName={name}
                   position={key}
                   moduleTitle={module.module_name}
