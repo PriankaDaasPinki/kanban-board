@@ -17,6 +17,7 @@ import { API_URL } from "../Authentication/api";
 
 export default function ModuleBoard() {
   const location = useLocation();
+  console.log("location of module board", location);
   const project_id = location.state?.id; // Access the passed value
 
   const projectModuleUrl = `/project_module/${project_id}`;
@@ -121,8 +122,9 @@ export default function ModuleBoard() {
             modules.map((module, key) => (
               <>
                 <Module
-                  id={module.module_id}
+                  moduleId={module.module_id}
                   projectName={name}
+                  project_id={project_id}
                   position={key}
                   moduleTitle={module.module_name}
                   completed={module.completed}

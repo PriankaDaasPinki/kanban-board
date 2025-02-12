@@ -25,8 +25,9 @@ function bgcolorChange(props) {
 }
 
 function Module({
-  id,
+  moduleId,
   projectName,
+  project_id,
   position,
   moduleTitle,
   completed,
@@ -47,7 +48,7 @@ function Module({
   const handleDoubleClick = () => {
     // onGetPageTitle(projectTitle);
     nevigate("/all-task/" + moduleTitle, {
-      state: { projectName: projectName },
+      state: { projectName: projectName, project_id: project_id },
     });
   };
 
@@ -61,7 +62,10 @@ function Module({
           <FaList className="icons icon" onClick={handleView} />
           <div className="iconsList">
             <FaRegEdit className="icons" onClick={() => onEdit()} />
-            <RiDeleteBin5Line className="icons" onClick={() => onDelete(id)} />
+            <RiDeleteBin5Line
+              className="icons"
+              onClick={() => onDelete(moduleId)}
+            />
           </div>
         </div>
 
@@ -76,7 +80,7 @@ function Module({
         </Modal.Header>
         <Modal.Body>
           <p>
-            <strong>Module ID:</strong> {id}
+            <strong>Module ID:</strong> {moduleId}
           </p>
           <p>
             <strong>Module Name:</strong> {moduleTitle}

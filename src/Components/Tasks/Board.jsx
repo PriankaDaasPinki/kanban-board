@@ -325,9 +325,16 @@ export default function Board() {
   const breadcrumbItems = [
     // { label: <FaHome className="nav-icon" />, link: "/" },
     { label: "Projects", link: "/project-list" },
-    { label: "Modules", link: "/project-module/" + location?.state?.projectName },
+    {
+      label: "Modules",
+      link: {
+        pathname: "/project-module/" + location?.state?.projectName,
+        state: { id: location?.state?.project_id }, // Ensure project_id exists
+      },
+    },
     { label: "Tasks", link: "#" },
   ];
+  console.log("location?.state?.project_id  ", location?.state?.project_id)
 
   return (
     <>

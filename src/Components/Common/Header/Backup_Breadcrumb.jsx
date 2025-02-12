@@ -1,18 +1,8 @@
 import React from "react";
 import { FaHome } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Breadcrumb = ({ items }) => {
-  const nevigate = useNavigate();
-
-  const handleClick = (link) => {
-    console.log("link from breadcrumb", link);
-    // onGetPageTitle(projectTitle);
-    link.pathname?
-    nevigate(link.pathname, {
-      state: { id: link.state?.id },
-    }) : nevigate(link);
-  };
 
   return (
     <nav aria-label="breadcrumb" className="align-items-center">
@@ -26,13 +16,14 @@ const Breadcrumb = ({ items }) => {
         {items.map((item, index) => (
           <React.Fragment key={index}>
             <li>
+              {console.log("item.link   ", item.link.state?.id)}
               {item.link ? (
-                <button className="btn p-0"
-                  onClick={() => handleClick(item.link)}
+                <Link
+                  to={item.link}
                   style={{ textDecoration: "none", color: "#0D5178" }}
                 >
                   {item.label}
-                </button>
+                </Link>
               ) : (
                 <span>{item.label}</span>
               )}
