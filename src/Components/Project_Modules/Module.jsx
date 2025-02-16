@@ -48,7 +48,11 @@ function Module({
   const handleDoubleClick = () => {
     // onGetPageTitle(projectTitle);
     nevigate("/all-task/" + moduleTitle, {
-      state: { projectName: projectName, project_id: project_id },
+      state: {
+        projectName: projectName,
+        project_id: project_id,
+        module_id: moduleId,
+      },
     });
   };
 

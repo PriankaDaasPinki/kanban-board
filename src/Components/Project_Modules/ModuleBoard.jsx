@@ -17,7 +17,6 @@ import { API_URL } from "../Authentication/api";
 
 export default function ModuleBoard() {
   const location = useLocation();
-  console.log("location of module board", location);
   const project_id = location.state?.id; // Access the passed value
 
   const projectModuleUrl = `/project_module/${project_id}`;
@@ -29,7 +28,7 @@ export default function ModuleBoard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch projects
+  // Fetch modules
   const fetchProject_Module = async () => {
     setLoading(true);
     setError(null); // Clear previous error if any

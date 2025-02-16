@@ -1,6 +1,6 @@
 import { Draggable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { FaRegEdit, FaUserSecret } from "react-icons/fa";
+import { FaList, FaRegEdit, FaUserSecret } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { Button, Modal } from "react-bootstrap";
 import { GrStatusInfo, GrView } from "react-icons/gr";
@@ -25,6 +25,7 @@ function bgcolorChange(props) {
 }
 
 export default function Task({ task, index, onEdit, onDelete, columnId }) {
+  console.log("task ", task);
   const [view, setView] = useState(false);
   const handleViewClose = () => setView(false);
   const handleView = () => setView(true);
@@ -36,7 +37,7 @@ export default function Task({ task, index, onEdit, onDelete, columnId }) {
   const currentDate = month + "/" + date + "/" + year;
   return (
     <>
-      <Draggable draggableId={task.id} index={index}>
+      <Draggable draggableId={task?.id} index={index}>
         {(provided, snapshot) => (
           <Container
             className="task taskContainer"
@@ -46,33 +47,32 @@ export default function Task({ task, index, onEdit, onDelete, columnId }) {
             isDragging={snapshot.isDragging}
             // onDoubleClick={() => onEdit(task.id, task.title, task.content)} // Double-click to start editing
           >
-            <div className="editDeletionIcon">
-              <FaRegEdit
-                className="editIcon"
-                onClick={() =>
-                  onEdit(task.id, task.title, task.content, task.assignee)
-                }
-              />
-              <GrView className="editIcon" onClick={handleView} />
-            </div>
-
-            <div className="taskTitle">{task.title}</div>
-            <div className="taskDesc">{task.content}</div>
-            <div className="taskFooter flex-column align-items-start">
-              <p className="dueDate">
-                Date: {task.date ? task.date : currentDate}
-              </p>
-              <div className="assigneeIcon">
-                <FaUserSecret /> {task.assignee}
+            {/* ///wedgbuibhbhj */}
+            <div className="iconListBar">
+              <FaList className="icons icon" onClick={handleView} />
+              <div className="iconsList">
+                <FaRegEdit
+                  className="icons"
+                  onClick={() =>
+                    onEdit(task?.id, task?.title, task?.content, task?.assignee)
+                  }
+                />
+                <RiDeleteBin5Line
+                  className="icons"
+                  onClick={() => onDelete(task?.id, columnId)}
+                />
+                {/* <GrStatusInfo className="icons" /> */}
               </div>
             </div>
-            <div className="mt-3 editDeletionIcon">
-              <RiDeleteBin5Line
-                className="deleteIcon"
-                onClick={() => onDelete(task.id, columnId)}
-              />
-              <div className="d-flex align-items-center">
-                <GrStatusInfo /> <p className="m-0 ps-2">{columnId}</p>
+
+            <div className="taskTitle">{task?.title}</div>
+            <div className="taskDesc">{task?.content}</div>
+            <div className="taskFooter flex-column align-items-start">
+              <p className="dueDate">
+                Date: {task?.date ? task?.date : currentDate}
+              </p>
+              <div className="assigneeIcon">
+                <FaUserSecret /> {task?.assignee}
               </div>
             </div>
           </Container>
@@ -80,23 +80,23 @@ export default function Task({ task, index, onEdit, onDelete, columnId }) {
       </Draggable>
       <Modal show={view} onHide={handleViewClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Task {task.title} Details</Modal.Title>
+          <Modal.Title>Task {task?.title} Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>
-            <strong>Task ID:</strong> {task.id}
+            <strong>Task ID:</strong> {task?.id}
           </p>
           <p>
-            <strong>Task Name:</strong> {task.title}
+            <strong>Task Name:</strong> {task?.title}
           </p>
           <p>
-            <strong>Task Details:</strong> {task.content}
+            <strong>Task Details:</strong> {task?.content}
           </p>
           <p>
-            Responsibility of <strong>{task.assignee}</strong>
+            Responsibility of <strong>{task?.assignee}</strong>
           </p>
           <p>
-            <strong>Due Date:</strong> {task.date ? task.date : currentDate}
+            <strong>Due Date:</strong> {task?.date ? task?.date : currentDate}
           </p>
           <p>
             <strong>Task Status:</strong> {columnId}
