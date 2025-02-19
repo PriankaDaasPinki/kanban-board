@@ -1,46 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { MdOutlineAddTask } from "react-icons/md";
+
 import Project from "./Project";
 import "../../CSS/boardStyle.css";
 import ProjectModal from "./modals/ProjectModal";
 import DeleteModal from "./modals/DeleteModal";
 import PageHeaderNav from "../Common/Header/PageHeaderNav";
-// import api from "../Authentication/api"; // Assuming you have api.js file with axios instance
-import axios from "axios";
-import { API_URL } from "../Authentication/api";
+import useCallAPI from "../../HOOKS/useCallAPI";
 
 export default function ProjectBoard() {
   const projectsUrl = "/projects/list";
-  // const createProjectUrl = "/projects/create";
-  // const updateProjectUrl = "/projects/update";
-  // const deleteProjectUrl = "/projects";
 
   const [showAddEditModal, setShowAddEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentProject, setCurrentProject] = useState(null);
   const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  // Fetch projects
-  const fetchProjects = async () => {
-    setLoading(true);
-    setError(null); // Clear previous error if any
-    try {
-      // const response = await api.get(projectsUrl);
-      const response = await axios.get(API_URL + projectsUrl);
-      setProjects(response.data.projects);
-    } catch (err) {
-      setError("Failed to fetch projects.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  const { data, loading, error, fetchData } = useCallAPI(projectsUrl, []);
+  // Fetch data when component mounts
   useEffect(() => {
-    fetchProjects(); // Fetch data when the component mounts
+    fetchData();
   }, []);
+
+  // Update `projects` when `data` changes
+  useEffect(() => {
+    if (data?.projects) {
+      setProjects(data.projects);
+    }
+  }, [data]);
 
   // Open Add/Edit Modal
   const handleOpenAddEditModal = (project) => {
@@ -111,9 +99,10 @@ export default function ProjectBoard() {
                 key={key}
                 projectTitle={project.project_name}
                 completed={project.completed}
+                moduleNumber={project.module_count}
                 onEdit={() => handleOpenAddEditModal(project)}
                 onDelete={() => handleOpenDeleteModal(project.project_id)}
-                fetchProjects={fetchProjects}
+                fetchProjects={fetchData} /// fetchProjects={fetchProjects}
               />
             ))}
         </div>
@@ -123,7 +112,7 @@ export default function ProjectBoard() {
           show={showAddEditModal}
           onClose={handleCloseAddEditModal}
           project={currentProject}
-          fetchProjects={fetchProjects}
+          fetchProjects={fetchData} /////fetchProjects={fetchProjects}
         />
 
         {/* Delete Warning Modal */}
@@ -131,7 +120,7 @@ export default function ProjectBoard() {
           show={showDeleteModal}
           onClose={handleCloseDeleteModal}
           projectId={currentProject?.project_id}
-          fetchProjects={fetchProjects}
+          fetchProjects={fetchData} //////fetchProjects={fetchProjects}
         />
       </div>
     </>

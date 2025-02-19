@@ -3,10 +3,12 @@ import styled from "styled-components";
 import { FaList, FaRegEdit, FaUserSecret } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { Button, Modal } from "react-bootstrap";
-import { GrStatusInfo, GrView } from "react-icons/gr";
-import { useState } from "react";
+// import { GrStatusInfo, GrView } from "react-icons/gr";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 import "../../CSS/taskStyle.css";
+import { API_URL } from "../Authentication/api";
 
 const Container = styled.div`
   background-color: ${(props) => bgcolorChange(props)};
@@ -27,14 +29,47 @@ function bgcolorChange(props) {
 export default function Task({ task, index, onEdit, onDelete, columnId }) {
   console.log("task ", task);
   const [view, setView] = useState(false);
+  const [assignee, setAssignee] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const handleViewClose = () => setView(false);
   const handleView = () => setView(true);
 
-  const today = new Date();
-  const month = today.getMonth() + 1;
-  const year = today.getFullYear();
-  const date = today.getDate();
-  const currentDate = month + "/" + date + "/" + year;
+  const dateFormate = (dateToFormate) => {
+    const today = new Date(dateToFormate);
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
+    const date = today.getDate();
+    const formatedDate = month + "/" + date + "/" + year;
+    return formatedDate;
+  };
+
+  const start_date = dateFormate(task?.start_date);
+  const end_date = dateFormate(task?.end_date);
+
+  const assignee_url = `/tasks/assignee/`;
+
+  const fetchAssignee = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const assigneeFetchData = await axios.get(
+        API_URL + assignee_url + task?.assignee
+      );
+      setAssignee(assigneeFetchData.data.assignee[0]);
+      return assigneeFetchData;
+    } catch (err) {
+      setError("Failed to fetch assignee.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAssignee(); // Fetch data when the component mounts
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <>
       <Draggable draggableId={task?.id} index={index}>
@@ -54,7 +89,7 @@ export default function Task({ task, index, onEdit, onDelete, columnId }) {
                 <FaRegEdit
                   className="icons"
                   onClick={() =>
-                    onEdit(task?.id, task?.title, task?.content, task?.assignee)
+                    onEdit(task)
                   }
                 />
                 <RiDeleteBin5Line
@@ -69,10 +104,16 @@ export default function Task({ task, index, onEdit, onDelete, columnId }) {
             <div className="taskDesc">{task?.content}</div>
             <div className="taskFooter flex-column align-items-start">
               <p className="dueDate">
-                Date: {task?.date ? task?.date : currentDate}
+                Start Date: {start_date ? start_date : "date not set"}
               </p>
-              <div className="assigneeIcon">
-                <FaUserSecret /> {task?.assignee}
+              <p className="dueDate">
+                End Date: {end_date ? end_date : "date not set"}
+              </p>
+              <div className="d-flex align-items-center py-1">
+                <FaUserSecret />
+                <p className="m-0 p-1">
+                  {loading? "loading..." : error? error : assignee.first_name + " " + assignee.last_name}
+                </p>
               </div>
             </div>
           </Container>
@@ -93,10 +134,15 @@ export default function Task({ task, index, onEdit, onDelete, columnId }) {
             <strong>Task Details:</strong> {task?.content}
           </p>
           <p>
-            Responsibility of <strong>{task?.assignee}</strong>
+            Responsibility of{" "}
+            <strong>{assignee.first_name + " " + assignee.last_name}</strong>
           </p>
           <p>
-            <strong>Due Date:</strong> {task?.date ? task?.date : currentDate}
+            <strong>Start Date:</strong>{" "}
+            {start_date ? start_date : "date is not set"}
+          </p>
+          <p>
+            <strong>End Date:</strong> {end_date ? end_date : "date is not set"}
           </p>
           <p>
             <strong>Task Status:</strong> {columnId}

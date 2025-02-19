@@ -11,6 +11,7 @@ import NavSecondary from "../Components/Common/Header/NavSecondery";
 import Login from "../Pages/Registration_and_Login/Login";
 import Protected from "./Protected";
 import User from "../Pages/User";
+import AllTask from "../Components/Tasks/AllTask";
 // import PageHeaderNav from "../Components/Common/Header/PageHeaderNav";
 
 const RoutesAll = () => {
@@ -42,7 +43,7 @@ const RoutesAll = () => {
           path="/project-module/:name"
           element={<Protected page={<Modules />} />}
         />
-        <Route path="/all-task" element={<Board />} />
+        <Route path="/all-task" element={<AllTask />} />
         <Route
           path="/all-task/:name"
           element={<Protected page={<Board />} />}

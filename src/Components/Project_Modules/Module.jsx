@@ -31,6 +31,7 @@ function Module({
   position,
   moduleTitle,
   completed,
+  taskNumber,
   onEdit,
   onDelete,
 }) {
@@ -75,7 +76,7 @@ function Module({
 
         <div className="p-2">
           <div className="moduleTitle">{moduleTitle}</div>
-          <div className="moduleModule">Number of Tasks: {position}</div>
+          <div className="moduleModule">Number of Tasks: {taskNumber}</div>
         </div>
       </Container>
       <Modal show={view} onHide={handleViewClose}>

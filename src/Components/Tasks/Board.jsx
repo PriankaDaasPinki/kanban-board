@@ -24,7 +24,7 @@ export default function Board() {
     columnOrder: ["To Do", "In Progress", "Paused", "Completed"],
     assigneeOptions: ["Ram", "Sam", "Madhu", "Unassigned"],
   });
-  const [allTasks, setAllTasks] = useState([]);
+  // const [allTasks, setAllTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [show, setShow] = useState(false);
@@ -50,7 +50,9 @@ export default function Board() {
           id: `task-${item.task_id}`,
           title: item.task_name,
           content: item.description,
-          assignee: "Unassigned",
+          start_date: item.start_date,
+          end_date: item.end_date,
+          assignee: item.assignee || "Unassigned",
         };
         return acc;
       }, {});
@@ -257,25 +259,20 @@ export default function Board() {
   const [editTaskContent, setEditTaskContent] = useState(""); // For task content editing
   const [editTaskAssignee, setEditTaskAssignee] = useState("");
 
-  const handleEditStart = (
-    taskId,
-    currentTitle,
-    currentContent,
-    currentAssignee
-  ) => {
-    setIsEditing(taskId); // Set the task being edited
-    setEditTaskTitle(currentTitle); // Populate the input with current task title
-    setEditTaskContent(currentContent); // Populate the input with current task content
-    setEditTaskAssignee(currentAssignee); // Populate the input with current task assignee
+  const handleEditStart = (task) => {
+    setIsEditing(task.task_id); // Set the task being edited
+    setEditTaskTitle(task.task_name); // Populate the input with current task title
+    setEditTaskContent(task.description); // Populate the input with current task content
+    setEditTaskAssignee(task.assignee); // Populate the input with current task assignee
   };
 
   const handleEditSubmit = (e) => {
     e.preventDefault();
-    const UpdatedTask = {
-      id: isEditing,
-      title: editTaskTitle,
-      completed: editTaskContent,
-    };
+    // const UpdatedTask = {
+    //   id: isEditing,
+    //   title: editTaskTitle,
+    //   completed: editTaskContent,
+    // };
     // dispatch(updateTask(UpdatedTask));
 
     const updatedTasks = {

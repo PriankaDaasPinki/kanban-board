@@ -35,7 +35,7 @@ export default function New_Module_Modal({
 
     // Basic validation to check if project name is provided
     if (!formData.module_name.trim()) {
-      alert("Project name is required");
+      alert("Module name is required");
       setLoading(false);
       return;
     }
@@ -66,7 +66,7 @@ export default function New_Module_Modal({
           headers: { "Content-Type": "application/json" },
         });
         fetchProject_Module(); // Fetch projects after creating a new one
-        alert("Project created successfully!");
+        alert("Project Module created successfully!");
       }
 
       // Reset form data and close the modal after successful operation

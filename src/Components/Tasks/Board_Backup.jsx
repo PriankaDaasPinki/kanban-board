@@ -24,7 +24,7 @@ export default function Board() {
     columnOrder: ["To Do", "In Progress", "Paused", "Completed"],
     assigneeOptions: ["Ram", "Sam", "Madhu", "Unassigned"],
   });
-  const [allTasks, setAllTasks] = useState([]);
+  // const [allTasks, setAllTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [show, setShow] = useState(false);
@@ -271,11 +271,11 @@ export default function Board() {
 
   const handleEditSubmit = (e) => {
     e.preventDefault();
-    const UpdatedTask = {
-      id: isEditing,
-      title: editTaskTitle,
-      completed: editTaskContent,
-    };
+    // const UpdatedTask = {
+    //   id: isEditing,
+    //   title: editTaskTitle,
+    //   completed: editTaskContent,
+    // };
     // dispatch(updateTask(UpdatedTask));
 
     const updatedTasks = {

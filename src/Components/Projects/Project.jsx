@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import "../../CSS/projectStyle.css";
+// import useCallAPI from "../../HOOKS/useCallAPI";
 
 const Container = styled.div`
   background-color: ${(props) => bgcolorChange(props)};
@@ -24,23 +25,51 @@ function bgcolorChange(props) {
     : "#fffada";
 }
 
-function Project({ id, projectTitle, completed, onEdit, onDelete }) {
-  // console.log("columnId " +columnId);
+function Project({
+  id,
+  projectTitle,
+  completed,
+  onEdit,
+  onDelete,
+  moduleNumber,
+}) {
+  console.log("moduleNumber " + moduleNumber);
   const [view, setView] = useState(false);
   const handleViewClose = () => setView(false);
   const handleView = () => setView(true);
   const nevigate = useNavigate();
-
   const today = new Date();
   const month = today.getMonth() + 1;
   const year = today.getFullYear();
   const date = today.getDate();
   const currentDate = month + "/" + date + "/" + year;
 
+  // const moduleUrl = `/project_module/${id}`;
+  // const { data, loading, error, fetchData } = useCallAPI(moduleUrl, []);
+  // const [moduleNumber, setModuleNumber] = useState();
+  // const [module, setModule] = useState();
+
+  // Fetch data when component mounts
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+  // const moduleNumber = data?.number_modules;
+  // const module = data?.project_modules;
+
+  // console.log("data  ", data);
+
+  // Update `module and ` when `data` changes
+  // useEffect(() => {
+  //   if (data) {
+  //     setModuleNumber(data.number_modules);
+  //     setModule(data.project_modules);
+  //   }
+  // }, [data]);
+
   const handleDoubleClick = () => {
     // onGetPageTitle(projectTitle);
     nevigate("/project-module/" + projectTitle, {
-      state: { id }
+      state: { id, module },
     });
   };
 
@@ -48,7 +77,7 @@ function Project({ id, projectTitle, completed, onEdit, onDelete }) {
     <>
       <Container
         className="project projectContainer"
-        onDoubleClick={handleDoubleClick}     // Double-click to start editing
+        onDoubleClick={handleDoubleClick} // Double-click to start editing
       >
         <div className="iconListBar">
           <FaList className="icons icon" onClick={handleView} />
@@ -64,7 +93,7 @@ function Project({ id, projectTitle, completed, onEdit, onDelete }) {
 
         <div className="p-2">
           <div className="projectTitle">{projectTitle}</div>
-          <div className="projectModule">Number of Module: {id}</div>
+          <div className="projectModule">Number of Module: {moduleNumber}</div>
         </div>
       </Container>
       <Modal show={view} onHide={handleViewClose}>
