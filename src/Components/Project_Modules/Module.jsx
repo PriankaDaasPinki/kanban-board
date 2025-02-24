@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { FaList, FaRegEdit } from "react-icons/fa";
+import { FaExternalLinkAlt, FaList, FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { Modal, Button } from "react-bootstrap";
 import { useState } from "react";
@@ -66,6 +66,7 @@ function Module({
         <div className="iconListBar">
           <FaList className="icons icon" onClick={handleView} />
           <div className="iconsList">
+            <FaExternalLinkAlt className="icons icon" onClick={handleDoubleClick} />
             <FaRegEdit className="icons" onClick={() => onEdit()} />
             <RiDeleteBin5Line
               className="icons"

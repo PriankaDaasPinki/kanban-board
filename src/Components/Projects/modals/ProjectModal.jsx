@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 
 import { useUser } from "../../Authentication/authSlice";
 import { API_URL } from "../../Authentication/api";
+import { toast } from "react-toastify";
 
 export default function ProjectModal({
   show,
@@ -42,7 +43,8 @@ export default function ProjectModal({
 
     // Basic validation to check if project name is provided
     if (!formData.project_name.trim()) {
-      alert("Project name is required");
+      toast.error("Project name is required");
+      // alert("Project name is required");
       setLoading(false);
       return;
     }
@@ -67,14 +69,16 @@ export default function ProjectModal({
           { headers: { "Content-Type": "application/json" } }
         );
         fetchProjects(); // Fetch projects after update project data
-        alert("Project updated successfully!");
+        toast.success("Project updated successfully!");
+        // alert("Project updated successfully!");
       } else {
         // Create new project
         await axios.post(`${API_URL}/projects/create`, formPayload, {
           headers: { "Content-Type": "application/json" },
         });
         fetchProjects(); // Fetch projects after creating a new one
-        alert("Project created successfully!");
+        toast.success("Project created successfully!");
+        // alert("Project created successfully!");
       }
 
       // Reset form data and close the modal after successful operation
@@ -89,7 +93,8 @@ export default function ProjectModal({
     } catch (error) {
       console.error("Error submitting project:", error);
       setLoading(false);
-      alert("Error while saving project. Please try again.");
+      toast.error("Error while saving project. Please try again.");
+      // alert("Error while saving project. Please try again.");
     }
   };
 

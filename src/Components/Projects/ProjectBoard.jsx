@@ -8,6 +8,24 @@ import ProjectModal from "./modals/ProjectModal";
 import DeleteModal from "./modals/DeleteModal";
 import PageHeaderNav from "../Common/Header/PageHeaderNav";
 import useCallAPI from "../../HOOKS/useCallAPI";
+import { FaPlus } from "react-icons/fa";
+import styled from "styled-components";
+
+const Container = styled.div`
+  background-color: ${(props) => bgcolorChange(props)};
+`;
+
+function bgcolorChange(props) {
+  return props.isDragging
+    ? "lightgreen"
+    : props.isDraggable
+    ? props.isBacklog
+      ? "#F2D7D5"
+      : "#DCDCDC"
+    : props.isBacklog
+    ? "#F2D7D5"
+    : "#fffada";
+}
 
 export default function ProjectBoard() {
   const projectsUrl = "/projects/list";
@@ -65,7 +83,7 @@ export default function ProjectBoard() {
         breadcrumbItems={breadcrumbItems}
       />
       <div className="boardStyle" id="elementFull">
-        <div className="addTaskDiv">
+        {/* <div className="addTaskDiv">
           <Button
             variant="primary"
             onClick={() =>
@@ -74,7 +92,7 @@ export default function ProjectBoard() {
           >
             <MdOutlineAddTask className="addProjectIcon" />
           </Button>
-        </div>
+        </div> */}
 
         {/* Loading State */}
         {loading && (
@@ -105,6 +123,14 @@ export default function ProjectBoard() {
                 fetchProjects={fetchData} /// fetchProjects={fetchProjects}
               />
             ))}
+          <Container
+            className="addModule d-flex align-items-center justify-content-center"
+            onClick={() =>
+              handleOpenAddEditModal({ id: null, title: "", content: "" })
+            }
+          >
+            <FaPlus />
+          </Container>
         </div>
 
         {/* Add/Edit Modal */}

@@ -1,14 +1,14 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 import { CiSearch } from "react-icons/ci";
+import { useSelector } from "react-redux";
 
 import "../../CSS/taskStyle.css";
 import useCallAPI from "../../HOOKS/useCallAPI";
-import { useSelector } from "react-redux";
 import { useUser } from "../Authentication/authSlice";
+import BoardForAllTasks from "./BoardForAllTasks";
 
 const AllTask = () => {
-  // Get the logged-in user from Redux
   const user = useSelector(useUser);
   const activeUserID = user.user.user_id;
   const activeUser = user.user.first_name + " " + user.user.last_name;
@@ -18,18 +18,12 @@ const AllTask = () => {
     loading: userloading,
     fetchData,
   } = useCallAPI("/users/list", []);
-  const [users, setUsers] = useState([
-    { value: null, label: userloading && "loading..." },
-  ]);
-  const [selectedUsers, setSelectedUsers] = useState([
-    { value: activeUserID, label: userloading ? "loading..." : activeUser },
-  ]);
+  const [users, setUsers] = useState([]);
+  const [selectedUsers, setSelectedUsers] = useState([]);
   const [tasks, setTasks] = useState([]);
-  //   const [loading, setLoading] = useState(false);
-
-  // Fetch data when component mounts
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   // Update `projects` when `data` changes
@@ -44,28 +38,27 @@ const AllTask = () => {
 
       setUsers(userOptions);
 
-      // Ensure pre-selected users exist in the fetched list
-      setSelectedUsers((prevSelected) =>
-        prevSelected?.filter((user) =>
-          userOptions.some((opt) => opt.value === user.value)
-        )
-      );
+      // Ensure active user is in selection by default
+      setSelectedUsers((prevSelected) => {
+        return prevSelected.length > 0
+          ? prevSelected
+          : [{ value: activeUserID, label: activeUser }];
+      });
     }
   }, [data]);
 
   const {
     data: fatchedTasks,
     loading,
-    error,
     getTasksByUsers,
   } = useCallAPI("/tasks/all-tasks/users");
 
   // Fetch Tasks Based on Selected Users
   const fetchTasks = async (selectedOptions = selectedUsers) => {
-    let userIds =
-      selectedOptions?.length === 0
-        ? [activeUserID]
-        : selectedOptions.map((user) => user.value);
+    const userIds =
+      selectedOptions.length > 0
+        ? selectedOptions.map((user) => user.value)
+        : [activeUserID];
     await getTasksByUsers(userIds);
   };
 
@@ -77,7 +70,8 @@ const AllTask = () => {
 
   useEffect(() => {
     fetchTasks();
-  }, []);
+    // eslint-disable-next-line
+  }, [selectedUsers]);
 
   // Update tasks as soon as `fatchedTasks` changes
   useEffect(() => {
@@ -86,51 +80,120 @@ const AllTask = () => {
     }
   }, [fatchedTasks]);
 
-  
+  // const dateFormate = (dateToFormate) => {
+  //   const today = new Date(dateToFormate);
+  //   const month = today.getMonth() + 1;
+  //   const year = today.getFullYear();
+  //   const date = today.getDate();
+  //   const formatedDate = month + "/" + date + "/" + year;
+  //   return formatedDate;
+  // };
+
+  // const handleDragEnd = ({ destination, source, draggableId }) => {
+  //   if (!destination) return;
+  //   if (
+  //     destination.droppableId === source.droppableId &&
+  //     destination.index === source.index
+  //   ) {
+  //     return;
+  //   }
+
+  //   const start = data.columns[source.droppableId];
+  //   const finish = data.columns[destination.droppableId];
+
+  //   if (start === finish) {
+  //     const newTaskIds = Array.from(start.taskIds);
+  //     newTaskIds.splice(source.index, 1);
+  //     newTaskIds.splice(destination.index, 0, draggableId);
+  //     setData({
+  //       ...data,
+  //       columns: {
+  //         ...data.columns,
+  //         [start.id]: { ...start, taskIds: newTaskIds },
+  //       },
+  //     });
+  //     // const newColumn = {
+  //     //   ...start,
+  //     //   taskIds: newTaskIds,
+  //     // };
+
+  //     // const newState = {
+  //     //   ...data,
+  //     //   columns: {
+  //     //     ...data.columns,
+  //     //     [newColumn.id]: newColumn,
+  //     //   },
+  //     // };
+
+  //     // setData(newState);
+  //     return;
+  //   }
+
+  //   const startTaskIds = Array.from(start.taskIds);
+  //   startTaskIds.splice(source.index, 1);
+  //   // const newStart = {
+  //   //   ...start,
+  //   //   taskIds: startTaskIds,
+  //   // };
+
+  //   const finishTaskIds = Array.from(finish.taskIds);
+  //   finishTaskIds.splice(destination.index, 0, draggableId);
+  //   // const newFinish = {
+  //   //   ...finish,
+  //   //   taskIds: finishTaskIds,
+  //   // };
+
+  //   // const newState = {
+  //   //   ...data,
+  //   //   columns: {
+  //   //     ...data.columns,
+  //   //     [newStart.id]: newStart,
+  //   //     [newFinish.id]: newFinish,
+  //   //   },
+  //   // };
+
+  //   // setData(newState);
+
+  //   setData({
+  //     ...data,
+  //     columns: {
+  //       ...data.columns,
+  //       [start.id]: { ...start, taskIds: startTaskIds },
+  //       [finish.id]: { ...finish, taskIds: finishTaskIds },
+  //     },
+  //   });
+  // };
+
+  console.log("tasks ", tasks);
 
   return (
-    <div className="task-page">
+    <>
       {/* User Search Dropdown */}
-      <div className="d-flex w-100 justify-content-center p-2">
+      <div className="d-flex w-100 justify-content-center taskSearchBar">
         <Select
           options={users}
           isMulti
           value={selectedUsers}
           onChange={onChangeHandle}
-          placeholder="Search and select users..."
-          className="w-100"
+          placeholder={
+            userloading ? "Loading users..." : "Search and select users..."
+          }
+          className="w-100 pe-1"
         />
 
-        <button
-          onClick={fetchTasks}
-          disabled={loading}
-          className="btn btn-danger px-4"
-        >
-          {loading ? "Loading..." : <CiSearch />}
-        </button>
-
-        {/* <button onClick={() => setSelectedUsers([])} className="clear-btn">
-          Clear Selection
-        </button> */}
+        <div className="d-flex align-items-center">
+          <button
+            onClick={() => fetchTasks(selectedUsers)}
+            disabled={loading}
+            className="btn btn-danger"
+          >
+            {loading ? "Loading..." : <CiSearch className="iconStyle" />}
+          </button>
+        </div>
       </div>
 
-      {/* Display Tasks */}
-      <div className="task-list">
-        {loading ? (
-          <p>Loading tasks...</p>
-        ) : tasks?.length > 0 ? (
-          tasks.map((task, index) => (
-            <div className="m-5">
-              <p>{task.task_name} is task name</p>
-              {/* <p>{task.description}</p> */}
-            </div>
-            // <Task key={task.task_id} task={task} index={index} />
-          ))
-        ) : (
-          <p>No tasks found.</p>
-        )}
-      </div>
-    </div>
+      <BoardForAllTasks tasks={tasks} />
+    </>
   );
 };
 

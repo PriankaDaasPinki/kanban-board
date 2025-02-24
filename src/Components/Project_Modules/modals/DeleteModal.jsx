@@ -3,13 +3,14 @@ import { Modal, Button } from "react-bootstrap";
 import axios from "axios";
 
 import { API_URL } from "../../Authentication/api";
+import { toast } from "react-toastify";
 export default function DeleteModal({
   show,
   onClose,
   moduleId,
   fetchProject_Module,
 }) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); 
 
   const handleDelete = () => {
     setLoading(true);
@@ -18,6 +19,7 @@ export default function DeleteModal({
       fetchProject_Module(); // Fetch projects after delete a new one
       onClose();
       setLoading(false);
+      toast.success("Module deleted successfully");
     })();
   };
 

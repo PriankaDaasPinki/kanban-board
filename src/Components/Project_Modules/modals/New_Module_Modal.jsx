@@ -5,6 +5,7 @@ import axios from "axios";
 
 import { useUser } from "../../Authentication/authSlice";
 import { API_URL } from "../../Authentication/api";
+import { toast } from "react-toastify";
 
 export default function New_Module_Modal({
   show,
@@ -35,7 +36,7 @@ export default function New_Module_Modal({
 
     // Basic validation to check if project name is provided
     if (!formData.module_name.trim()) {
-      alert("Module name is required");
+      toast.error("Module name is required");
       setLoading(false);
       return;
     }
@@ -59,14 +60,14 @@ export default function New_Module_Modal({
           { headers: { "Content-Type": "application/json" } }
         );
         fetchProject_Module(); // Fetch project module after update project data
-        alert("Project Module updated successfully!");
+        toast.success("Project Module updated successfully!");
       } else {
         // Create new project
         await axios.post(`${API_URL}/project_module/create`, formPayload, {
           headers: { "Content-Type": "application/json" },
         });
         fetchProject_Module(); // Fetch projects after creating a new one
-        alert("Project Module created successfully!");
+        toast.success("Project Module created successfully!");
       }
 
       // Reset form data and close the modal after successful operation
@@ -82,16 +83,8 @@ export default function New_Module_Modal({
     } catch (error) {
       console.error("Error submitting project module:", error);
       setLoading(false);
-      alert("Error while saving project module. Please try again.");
+      toast.error("Error while saving project module. Please try again.");
     }
-
-    // if (module?.module_id) {
-    //   dispatch(updateModule({ id: module.module_id, ...formData })); // Edit module
-    //   setFormData("");
-    // } else {
-    //   dispatch(addModule({ id: uuidv4(), ...formData })); // Add new module
-    //   setFormData("");
-    // }
   };
 
   return (

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { API_URL } from "../Components/Authentication/api";
 import axios from "axios";
 
@@ -23,7 +23,6 @@ const useCallAPI = (baseUrl, defaultData = []) => {
       const response = await axios.get(
         `${API_URL.replace(/\/$/, "")}/${baseUrl.replace(/^\//, "")}`
       );
-      console.log("response ", response);
       setData(response.data);
     } catch (err) {
       setError(err.response?.data?.message || err.message);

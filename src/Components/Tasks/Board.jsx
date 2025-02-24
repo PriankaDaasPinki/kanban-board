@@ -415,25 +415,6 @@ export default function Board() {
                   onDelete={handleDeleteTaskWarning}
                 />
               ))}
-
-              {/* {data?.columnOrder?.map((columnId) => {
-                const column = data?.columns[columnId];
-                const tasks = column?.taskIds?.map(
-                  (taskId) => data?.tasks[taskId]
-                );
-
-                console.log("tasks in board before ", tasks);
-
-                return (
-                  <Column
-                    key={column?.id}
-                    column={column}
-                    tasks={tasks}
-                    onEdit={handleEditStart}
-                    onDelete={handleDeleteTaskWarning}
-                  />
-                );
-              })} */}
             </div>
           </div>
         </div>

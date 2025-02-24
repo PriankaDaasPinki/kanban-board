@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Navbar } from "react-bootstrap";
 import { IoIosNotifications } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
-import { FaUser } from "react-icons/fa";
+import { FaClipboardList, FaHome, FaUser } from "react-icons/fa";
 import { BiFullscreen } from "react-icons/bi";
 import { RxExit } from "react-icons/rx";
 import { useSelector } from "react-redux";
@@ -10,12 +10,10 @@ import { useSelector } from "react-redux";
 import "../../../CSS/Header/nav.css";
 import { logOutUser, useUser } from "../../Authentication/authSlice";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const user = useSelector(useUser);
-  // const user = JSON.parse(userObject);
-  const URL = "http://10.20.2.39";
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleFullScreen = () => {
@@ -53,11 +51,12 @@ const NavBar = () => {
 
         <div className="d-flex p-0">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0 d-flex align-items-center justify-cintent-end">
-            <li className="nav-item">
-              <div onClick={handleFullScreen}>
-                <BiFullscreen className="small-icon" />
-              </div>
-            </li>
+            <Link className="d-flex align-items-center p-3 ps-2" to={"/"}>
+              <FaHome className="small-icon" />
+            </Link>
+            <Link className="d-flex align-items-center p-2" to={"/all-task"}>
+              <FaClipboardList className="nav-icon" />
+            </Link>
             {/* <li className="nav-item">
               <div className="mode">
                 <MdLightMode className="small-icon" />
@@ -101,15 +100,16 @@ const NavBar = () => {
               <div className="d-flex align-items-center">
                 {user?.user_profile?.image ? (
                   <img
-                    className="nav-icon" style={{maxHeight:'3rem', borderRadius:"50%"}}
-                    src={`${URL}${user.user_profile.image}`}
+                    className="nav-icon"
+                    style={{ maxHeight: "3rem", borderRadius: "50%" }}
+                    // src={`${URL}${user.user_profile.image}`}
                     alt="userImage"
                   />
                 ) : (
                   <FaUser className="nav-icon" />
                 )}
 
-                <div className="ps-4">
+                <div className="ps-3">
                   <p className="text-capitalize">{user?.user?.first_name}</p>
                   <p className="text-capitalize">{user?.user?.designation}</p>
                   {/* <p className="mb-0 font-roboto">Software Engineer</p> */}
@@ -122,6 +122,12 @@ const NavBar = () => {
                 <IoSettingsOutline className="profile nav-icon" />
               </a>
             </li>
+            <li className="nav-item">
+              <div onClick={handleFullScreen}>
+                <BiFullscreen className="nav-icon" />
+              </div>
+            </li>
+
             <li className="nav-item">
               <div onClick={handleLogOut}>
                 <RxExit className="nav-icon" />

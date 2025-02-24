@@ -1,7 +1,5 @@
 // /* eslint-disable */
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
-import { MdOutlineAddTask } from "react-icons/md";
 import { useLocation, useParams } from "react-router-dom";
 
 import "../../CSS/boardStyle.css";
@@ -12,6 +10,24 @@ import PageHeaderNav from "../Common/Header/PageHeaderNav";
 import AddModule from "./modals/New_Module_Modal";
 import ModulePageHeader from "../Common/Header/Module_Page_Header/ModulePageHeader";
 import useCallAPI from "../../HOOKS/useCallAPI";
+import { FaPlus } from "react-icons/fa";
+import styled from "styled-components";
+
+const Container = styled.div`
+  background-color: ${(props) => bgcolorChange(props)};
+`;
+
+function bgcolorChange(props) {
+  return props.isDragging
+    ? "lightgreen"
+    : props.isDraggable
+    ? props.isBacklog
+      ? "#F2D7D5"
+      : "#DCDCDC"
+    : props.isBacklog
+    ? "#F2D7D5"
+    : "#fffada";
+}
 
 export default function ModuleBoard() {
   const [showAddEditModal, setShowAddEditModal] = useState(false);
@@ -38,33 +54,6 @@ export default function ModuleBoard() {
   }, [data]);
 
   console.log("data  ", data);
-
-  // const fetchProject_Module = () => {
-  //   fetchData();
-  //   setModules(data.projects);
-  // };
-  // console.log("module ", modules);
-  // useEffect(() => {
-  //   fetchProject_Module(); // Fetch data when the component mounts
-  // }, [fetchData]);
-  // Fetch modules
-  // const fetchProject_Module = async () => {
-  //   setLoading(true);
-  //   setError(null); // Clear previous error if any
-  //   try {
-  //     const response = await axios.get(API_URL + projectModuleUrl);
-  //     setModules(response.data.project_modules);
-  //   } catch (err) {
-  //     setError("Failed to fetch project module.");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchProject_Module(); // Fetch data when the component mounts
-  //   // eslint-disable-next-line
-  // }, []);
 
   // Open Add/Edit Modal
   const handleOpenAddEditModal = (module) => {
@@ -107,7 +96,7 @@ export default function ModuleBoard() {
       />
       <ModulePageHeader />
       <div className="boardStyle" id="elementFull">
-        <div className="addTaskDiv">
+        {/* <div className="addTaskDiv">
           <Button
             variant="primary"
             onClick={() =>
@@ -121,7 +110,7 @@ export default function ModuleBoard() {
           >
             <MdOutlineAddTask className="addModuleIcon" />
           </Button>
-        </div>
+        </div> */}
 
         {loading && (
           <div className="p-5 mt-5">
@@ -136,8 +125,8 @@ export default function ModuleBoard() {
 
         <div className="grid-container">
           {modules?.length > 0 ? (
-            modules &&
-            modules?.map((module, key) => (
+            <>
+              {module && modules?.map((module, key) => (
               <>
                 <Module
                   moduleId={module?.module_id}
@@ -151,9 +140,38 @@ export default function ModuleBoard() {
                   onDelete={() => handleOpenDeleteModal(module?.module_id)}
                 />
               </>
-            ))
+              ))}
+              <Container
+                className="addModule d-flex align-items-center justify-content-center"
+                onClick={() =>
+                  handleOpenAddEditModal({
+                    id: "",
+                    module_name: "",
+                    description: "",
+                    content: "",
+                  })
+                }
+              >
+                <FaPlus />
+              </Container>
+            </>
           ) : (
-            <h3 className="pt-5">No Module Found for project - {name}</h3>
+            <div className="d-flex flex-column align-items-center">
+              <h3 className="pt-5">No Module Found for project - {name}</h3>
+              <Container
+                className="addModule w-100"
+                onClick={() =>
+                  handleOpenAddEditModal({
+                    id: "",
+                    module_name: "",
+                    description: "",
+                    content: "",
+                  })
+                }
+              >
+                <FaPlus />
+              </Container>
+            </div>
           )}
         </div>
 

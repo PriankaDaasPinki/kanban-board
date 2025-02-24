@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { FaList, FaRegEdit } from "react-icons/fa";
+import { FaExternalLinkAlt, FaList, FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { Modal, Button } from "react-bootstrap";
 import { useState } from "react";
@@ -44,28 +44,6 @@ function Project({
   const date = today.getDate();
   const currentDate = month + "/" + date + "/" + year;
 
-  // const moduleUrl = `/project_module/${id}`;
-  // const { data, loading, error, fetchData } = useCallAPI(moduleUrl, []);
-  // const [moduleNumber, setModuleNumber] = useState();
-  // const [module, setModule] = useState();
-
-  // Fetch data when component mounts
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
-  // const moduleNumber = data?.number_modules;
-  // const module = data?.project_modules;
-
-  // console.log("data  ", data);
-
-  // Update `module and ` when `data` changes
-  // useEffect(() => {
-  //   if (data) {
-  //     setModuleNumber(data.number_modules);
-  //     setModule(data.project_modules);
-  //   }
-  // }, [data]);
-
   const handleDoubleClick = () => {
     // onGetPageTitle(projectTitle);
     nevigate("/project-module/" + projectTitle, {
@@ -81,7 +59,9 @@ function Project({
       >
         <div className="iconListBar">
           <FaList className="icons icon" onClick={handleView} />
+
           <div className="iconsList">
+            <FaExternalLinkAlt className="icons icon" onClick={handleDoubleClick} />
             <FaRegEdit
               className="icons"
               onClick={() => onEdit(id, projectTitle, completed)}

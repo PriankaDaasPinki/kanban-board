@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Toast } from "react-bootstrap";
 // import { useDispatch } from "react-redux";
 import { API_URL } from "../../Authentication/api";
+import { toast } from "react-toastify";
 
 // import { deleteProject } from "../ProjectSlice";
 
@@ -22,6 +23,7 @@ export default function DeleteModal({
       fetchProjects(); // Fetch projects after delete a new one
       onClose();
       setLoading(false);
+      toast.success("Project deleted successfully");
     })();
   };
 

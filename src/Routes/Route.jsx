@@ -6,7 +6,7 @@ import Board from "../Components/Tasks/Board";
 import Modules from "../Pages/Modules";
 import Error from "../Pages/Error";
 import Navbar from "../Components/Common/Header/Nav";
-import NavSecondary from "../Components/Common/Header/NavSecondery";
+// import NavSecondary from "../Components/Common/Header/NavSecondery";
 // import UserRegister from "../Pages/Registration_and_Login/UserRegister";
 import Login from "../Pages/Registration_and_Login/Login";
 import Protected from "./Protected";
@@ -18,7 +18,7 @@ const RoutesAll = () => {
   return (
     <Router>
       <Navbar />
-      <NavSecondary />
+      {/* <NavSecondary /> */}
 
       <Routes>
         {/* <Route path="/registration" element={<UserRegister />} /> */}

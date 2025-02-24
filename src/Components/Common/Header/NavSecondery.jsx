@@ -37,7 +37,7 @@ const NavSecondary = () => {
         <Link className="d-flex align-items-center p-3 ps-2" to={"/"}>
           <FaHome className="nav-icon" />
           <p className="navText">Dashboard</p>
-        </Link>
+        </Link> 
         <Link to={toggleDropdown} ref={dropdownRef}>
           <div
             className="d-flex align-items-center p-2"

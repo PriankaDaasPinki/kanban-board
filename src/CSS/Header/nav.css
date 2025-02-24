@@ -31,7 +31,7 @@ h1 {
 
 /* Nav right bar */
 .nav-item {
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 .nav-icon {
@@ -49,7 +49,7 @@ h1 {
 }
 
 .small-icon {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   cursor: pointer;
   color: #0d5178;
   font-weight: 600;
@@ -70,6 +70,9 @@ h1 {
 .nav-seceondary {
   min-width: -webkit-fill-available;
   top: 5rem;
+  position: fixed;
+  --bs-bg-opacity: 1;
+  z-index: 1030;
 }
 
 .navSecondaryContainer {
