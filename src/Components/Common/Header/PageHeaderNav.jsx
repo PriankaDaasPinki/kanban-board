@@ -16,7 +16,7 @@ const PageHeaderNav = ({ pageTitle, subTitle, breadcrumbItems }) => {
       <div className="d-flex align-items-center pb-2">
         <Breadcrumb items={breadcrumbItems} />
         <div
-          className="d-flex align-items-center ms-5 me-4 ps-1 pe-1 border border-secondary rounded"
+          className="d-flex align-items-center ms-5 me-1 ps-1 pe-1 border border-secondary rounded"
           onClick={() => navigate(-1)}
         >
           <IoIosArrowBack className="nav-icon" />

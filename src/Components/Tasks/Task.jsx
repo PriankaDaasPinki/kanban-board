@@ -78,7 +78,7 @@ export default function Task({ task, index, onEdit, onDelete, columnId }) {
               </p>
               <div className="d-flex align-items-center py-1">
                 <FaUserSecret />
-                <p className="m-0 p-1">{task?.assignee.name}</p>
+                <p className="m-0 ps-2">{task?.assignee.name}</p>
               </div>
             </div>
           </Container>

@@ -12,3 +12,30 @@ code {
     monospace;
 }
 
+/* Width of the scrollbar */
+::-webkit-scrollbar {
+  width: 8px; /* Adjust width */
+}
+
+/* Track (the background of the scrollbar) */
+::-webkit-scrollbar-track {
+  background: #f8f9fa; /* Bootstrap light gray */
+  border-radius: 10px;
+}
+
+/* Handle (the draggable part of the scrollbar) */
+::-webkit-scrollbar-thumb {
+  background: #6c757d; /* Bootstrap gray-600 */
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #495057; /* Bootstrap gray-700 */
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #6c757d #f8f9fa;
+}

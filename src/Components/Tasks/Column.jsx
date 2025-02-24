@@ -7,7 +7,6 @@ import "../../CSS/columnStyle.css";
 export default function Column({ column, tasks, onEdit, onDelete }) {
   return (
     <div className="column">
-      <div className="column_title">{column?.title}</div>
       <Droppable droppableId={column?.id}>
         {(provided) => (
           <div
@@ -15,6 +14,7 @@ export default function Column({ column, tasks, onEdit, onDelete }) {
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
+            <div className="column_title">{column?.title}</div>
             {tasks?.map((task, index) => (
               <>
                 <Task

@@ -168,7 +168,7 @@ export default function BoardForAllTasks({ tasks = [] }) {
                                     </p>
                                     <div className="d-flex align-items-center py-1">
                                       <FaUserSecret />
-                                      <p className="m-0 p-1">
+                                      <p className="m-0 ps-2">
                                         {task?.assignee.name}
                                       </p>
                                     </div>

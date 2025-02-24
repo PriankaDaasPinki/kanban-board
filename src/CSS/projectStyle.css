@@ -47,7 +47,7 @@
   gap: 1rem; /* Add spacing between columns */
   border-radius: 7px;
   padding: 1rem;
-  margin: 0 1rem;
+  /* margin: 0 1rem; */
   box-shadow: 0 0 4px 0.1 blue;
   font-family: Arial, Helvetica, sans-serif;
 }
